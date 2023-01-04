@@ -22,10 +22,23 @@ class _AjoutPageState extends State<AjoutPage> {
   String _remarques = '';
   String _dateAchat = '';
   String _dateGarantie = '';
-  List<String> _typesNom = [];
-  List<String> _typesId = [];
-  String _dropdownValue = ' ';
+  var items = [
+    'Unité centrale',
+    'Ecran',
+    'Clavier',
+    'Souris',
+    'Imprimante',
+    'Copieur',
+    'NAS',
+    'Serveur',
+    'Switch',
+    'Point accès wifi',
+    'ENI',
+    'TBI'
+  ];
+  String dropdownvalue = '';
   bool _keep = true;
+  int idType = -1;
 
   void sendRequest() async {
     _keep = true;
@@ -38,27 +51,24 @@ class _AjoutPageState extends State<AjoutPage> {
     if (_remarques.isEmpty && _keep) {
       await buildEmptyPopUp('remarques');
     }
-    print(_dropdownValue);
     if (_keep) {
-      var response = await _tool.postMateriel(
-          _marque, _modele, _dateAchat, _dateGarantie, _remarques, '');
+      var response = await _tool.postMateriel(_marque, _modele, _dateAchat,
+          _dateGarantie, _remarques, idType.toString());
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Matériel ajouté'),
         ));
+      } else {
+        print(response.statusCode);
       }
     }
   }
 
   Future<String> recupType() async {
     var response = await _tool.getTypes();
-    log(response.toString());
     if (response.statusCode == 200) {
       var temp = convert.jsonDecode(response.body);
-      for (var elt in temp['hydra:member']) {
-        _typesNom.add(elt['libelle']);
-        _typesId.add(elt['id']);
-      }
+      dropdownvalue = items[1];
     }
     return '';
   }
@@ -115,7 +125,7 @@ class _AjoutPageState extends State<AjoutPage> {
                       return 'Saisie vide';
                     } else {
                       setState(() {
-                        _marque = valeur.toString();
+                        _marque = valeur;
                       });
                     }
                   },
@@ -131,7 +141,7 @@ class _AjoutPageState extends State<AjoutPage> {
                       return 'Saisie vide';
                     } else {
                       setState(() {
-                        _modele = valeur.toString();
+                        _modele = valeur;
                       });
                     }
                   },
@@ -213,23 +223,26 @@ class _AjoutPageState extends State<AjoutPage> {
                     if (valeur == null || valeur.isEmpty) {
                       _remarques = '';
                     } else {
-                      _remarques = valeur.toString();
+                      _remarques = valeur;
                     }
                   },
                 ),
               ),
               DropdownButton(
-                value: _dropdownValue,
+                value: dropdownvalue,
                 icon: const Icon(Icons.keyboard_arrow_down),
-                items: _typesNom.map((String items) {
-                  return DropdownMenuItem(
-                    value: _typesId,
-                    child: Text(items),
+                items: items.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
                   );
                 }).toList(),
-                onChanged: (value) => setState(() {
-                  _dropdownValue = value.toString();
-                }),
+                onChanged: (String? newValue) {
+                  idType = items.indexOf(newValue!) + 1;
+                  setState(() {
+                    dropdownvalue = newValue!;
+                  });
+                },
               ),
               const Padding(padding: EdgeInsets.all(10)),
               ElevatedButton(

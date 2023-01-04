@@ -62,6 +62,13 @@ class ListePageState extends State<ListePage> {
                 width: MediaQuery.of(context).size.width / 5,
                 child: Text(elt['modele'], style: _textStyle),
               ),
+              SizedBox(
+                  height: 100,
+                  width: MediaQuery.of(context).size.width / 5,
+                  child: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => buildDeletePopUp(elt['id'].toString()),
+                  )),
             ],
           ),
         ),
@@ -70,6 +77,46 @@ class ListePageState extends State<ListePage> {
     return Column(
       children: tab,
     );
+  }
+
+  Future<void> buildDeletePopUp(String id) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Champ vide'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('Etes vous sûr de vouloir supprimer cet élément'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Oui'),
+                onPressed: () {
+                  deleteElt(id);
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Annuler'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void deleteElt(id) async {
+    var response = await _tool.deleteMateriel(id);
+    setState(() {
+      buildTab();
+    });
   }
 
   @override

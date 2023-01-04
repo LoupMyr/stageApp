@@ -57,4 +57,9 @@ class Tools {
       body: convert.jsonEncode(body),
     );
   }
+
+  Future<http.Response> deleteMateriel(String id) async {
+    return await http.delete(Uri.parse(
+        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$id'));
+  }
 }

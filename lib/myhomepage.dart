@@ -10,7 +10,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,13 +21,19 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(onPressed: () => null, child: const Text('Consulter la liste compléte')),
+            ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/routeListe'),
+                child: const Text('Consulter la liste compléte')),
             const Padding(padding: EdgeInsets.all(2)),
-            ElevatedButton(onPressed: () => null, child: const Text('Rechercher un type')),
+            ElevatedButton(
+                onPressed: () => null, child: const Text('Rechercher un type')),
             const Padding(padding: EdgeInsets.all(2)),
-            ElevatedButton(onPressed: () => null, child: const Text('Rechercher un état')),
+            ElevatedButton(
+                onPressed: () => null, child: const Text('Rechercher un état')),
             const Padding(padding: EdgeInsets.all(2)),
-            ElevatedButton(onPressed: () => Navigator.pushNamed(context, '/routeAjout'), child: const Text('Ajouter un élément')),
+            ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/routeAjout'),
+                child: const Text('Ajouter un élément')),
           ],
         ),
       ),

@@ -28,8 +28,11 @@ class Tools {
   }
 
   Future<http.Response> getEtatById(int id) async {
-    return await http.get(Uri.parse(
-        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats/$id'));
+    String url =
+        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats/${id.toString()}';
+    print(url);
+    var response = await http.get(Uri.parse(url));
+    return response;
   }
 
   //***********//

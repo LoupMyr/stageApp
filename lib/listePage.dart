@@ -23,6 +23,7 @@ class ListePageState extends State<ListePage> {
   Future<String> recupMateriels() async {
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
+    await Future.delayed(const Duration(milliseconds: 500));
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _materiels = convert.jsonDecode(responseM.body);
       _types = convert.jsonDecode(responseT.body);
@@ -194,24 +195,34 @@ class ListePageState extends State<ListePage> {
             } else {
               recupMateriels();
               children = <Widget>[
-                const SpinKitWave(
-                  color: Colors.teal,
+                const SpinKitThreeInOut(
+                  color: Colors.blueGrey,
                   size: 100,
                 )
               ];
             }
           } else if (snapshot.hasError) {
             children = <Widget>[
-              const SpinKitWave(
+              const Icon(
+                Icons.error_outline,
                 color: Colors.red,
+                size: 125,
+              ),
+              const Text(
+                'Erreur critique.',
+                style: TextStyle(fontSize: 30),
+                textAlign: TextAlign.center,
               )
             ];
           } else {
             children = <Widget>[
-              const SpinKitWave(
-                color: Colors.teal,
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3,
+              ),
+              const SpinKitThreeInOut(
+                color: Colors.blueGrey,
                 size: 100,
-              )
+              ),
             ];
           }
           return Scaffold(
@@ -219,8 +230,8 @@ class ListePageState extends State<ListePage> {
               centerTitle: true,
               title: Text(widget.title),
             ),
-            body: Center(
-              child: SingleChildScrollView(
+            body: SingleChildScrollView(
+              child: Center(
                 child: Column(children: children),
               ),
             ),

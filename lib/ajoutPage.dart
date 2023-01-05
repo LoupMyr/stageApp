@@ -109,8 +109,8 @@ class _AjoutPageState extends State<AjoutPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Center(
           child: Form(
             key: _formKey,
             child: Column(

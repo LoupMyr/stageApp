@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:stage/tools.dart';
@@ -36,7 +35,10 @@ class SearchByEtatState extends State<SearchByEtat> {
   void recupMateriels() async {
     _col = Column(
       children: const <Widget>[
-        SpinKitDualRing(color: Colors.teal),
+        SpinKitDualRing(
+          color: Colors.teal,
+          size: 100,
+        ),
       ],
     );
     var responseM = await _tools.getMateriels();
@@ -46,6 +48,23 @@ class SearchByEtatState extends State<SearchByEtat> {
       _listM = convert.jsonDecode(responseM.body);
       _listT = convert.jsonDecode(responseT.body);
       buildList();
+    } else {
+      setState(() {
+        _col = Column(
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 125,
+            ),
+            Text(
+              'Erreur critique.\nCode d\'erreur: ${responseM.statusCode.toString()}',
+              style: const TextStyle(fontSize: 30),
+              textAlign: TextAlign.center,
+            )
+          ],
+        );
+      });
     }
   }
 
@@ -190,68 +209,70 @@ class SearchByEtatState extends State<SearchByEtat> {
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-            const Text(
-              'Recherchez un état parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-            DropdownButton(
-              value: _dropdownvalue,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              items: _itemsEtat.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                _idSelec = _itemsEtat.indexOf(newValue!);
-                setState(() {
-                  _dropdownvalue = newValue;
-                  recupMateriels();
-                });
-              },
-            ),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: null,
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Type', style: _textStyleHeaders),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Marque', style: _textStyleHeaders),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Modele', style: _textStyleHeaders),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Options', style: _textStyleHeaders),
-                ),
-              ],
-            ),
-            _col,
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+              const Text(
+                'Recherchez un état parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+              DropdownButton(
+                value: _dropdownvalue,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: _itemsEtat.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  _idSelec = _itemsEtat.indexOf(newValue!);
+                  setState(() {
+                    _dropdownvalue = newValue;
+                    recupMateriels();
+                  });
+                },
+              ),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: null,
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Type', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Marque', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Modele', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Options', style: _textStyleHeaders),
+                  ),
+                ],
+              ),
+              _col,
+            ],
+          ),
         ),
       ),
     );

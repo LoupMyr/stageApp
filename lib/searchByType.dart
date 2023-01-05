@@ -56,12 +56,29 @@ class SearchByTypeState extends State<SearchByType> {
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
     var responseType = await _tools.getType(_idSelec);
-    //await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
       _listT = convert.jsonDecode(responseT.body);
       _type = convert.jsonDecode(responseType.body);
       buildList();
+    } else {
+      setState(() {
+        _col = Column(
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 125,
+            ),
+            Text(
+              'Erreur critique.\nCode d\'erreur: ${responseM.statusCode.toString()}',
+              style: const TextStyle(fontSize: 30),
+              textAlign: TextAlign.center,
+            )
+          ],
+        );
+      });
     }
   }
 
@@ -200,68 +217,70 @@ class SearchByTypeState extends State<SearchByType> {
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-            const Text(
-              'Recherchez un type parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-            DropdownButton(
-              value: _dropdownvalue,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              items: _itemsType.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                _idSelec = _itemsType.indexOf(newValue!);
-                setState(() {
-                  _dropdownvalue = newValue;
-                  recupMateriels();
-                });
-              },
-            ),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: null,
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Type', style: _textStyleHeaders),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Marque', style: _textStyleHeaders),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Modele', style: _textStyleHeaders),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Text('Options', style: _textStyleHeaders),
-                ),
-              ],
-            ),
-            _col,
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+              const Text(
+                'Recherchez un type parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+              DropdownButton(
+                value: _dropdownvalue,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: _itemsType.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  _idSelec = _itemsType.indexOf(newValue!);
+                  setState(() {
+                    _dropdownvalue = newValue;
+                    recupMateriels();
+                  });
+                },
+              ),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: null,
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Type', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Marque', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Modele', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: Text('Options', style: _textStyleHeaders),
+                  ),
+                ],
+              ),
+              _col,
+            ],
+          ),
         ),
       ),
     );

@@ -15,13 +15,14 @@ class ListePage extends StatefulWidget {
 class ListePageState extends State<ListePage> {
   var _materiels;
   var _types;
-  Tools _tool = Tools();
+  Tools _tools = Tools();
   bool _recupDataBool = false;
-  final TextStyle _textStyle = TextStyle(fontSize: 20);
+  final TextStyle _textStyle = const TextStyle(fontSize: 20);
+  final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
 
   Future<String> recupMateriels() async {
-    var responseM = await _tool.getMateriels();
-    var responseT = await _tool.getTypes();
+    var responseM = await _tools.getMateriels();
+    var responseT = await _tools.getTypes();
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _materiels = convert.jsonDecode(responseM.body);
       _types = convert.jsonDecode(responseT.body);
@@ -40,6 +41,7 @@ class ListePageState extends State<ListePage> {
         }
       }
       List<dynamic> tableau = [elt, type];
+      AssetImage img = _tools.findImg(type['libelle']);
       tab.add(
         InkWell(
           onTap: () => Navigator.pushNamed(context, "/routeMateriel",
@@ -49,24 +51,39 @@ class ListePageState extends State<ListePage> {
             children: <Widget>[
               SizedBox(
                 height: 100,
-                width: MediaQuery.of(context).size.width / 5,
-                child: Text(type['libelle'], style: _textStyle),
+                width: MediaQuery.of(context).size.width / 7,
+                child: Center(
+                    child: Image(
+                  image: img,
+                  color: Colors.black,
+                )),
               ),
               SizedBox(
                 height: 100,
                 width: MediaQuery.of(context).size.width / 5,
-                child: Text(elt['marque'], style: _textStyle),
+                child: Center(
+                  child: Text(type['libelle'], style: _textStyle),
+                ),
               ),
               SizedBox(
                 height: 100,
                 width: MediaQuery.of(context).size.width / 5,
-                child: Text(elt['modele'], style: _textStyle),
+                child: Center(
+                  child: Text(elt['marque'], style: _textStyle),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: MediaQuery.of(context).size.width / 5,
+                child: Center(
+                  child: Text(elt['modele'], style: _textStyle),
+                ),
               ),
               SizedBox(
                   height: 100,
                   width: MediaQuery.of(context).size.width / 5,
                   child: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () => buildDeletePopUp(elt['id'].toString()),
                   )),
             ],
@@ -113,7 +130,16 @@ class ListePageState extends State<ListePage> {
   }
 
   void deleteElt(id) async {
-    var response = await _tool.deleteMateriel(id);
+    var response = await _tools.deleteMateriel(id);
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Matériel supprimé'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Une erreur est survenue'),
+      ));
+    }
     setState(() {
       buildTab();
     });
@@ -129,6 +155,36 @@ class ListePageState extends State<ListePage> {
             if (_recupDataBool) {
               children = <Widget>[
                 const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: null,
+                    ),
+                    SizedBox(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: Text('Type', style: _textStyleHeaders),
+                    ),
+                    SizedBox(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: Text('Marque', style: _textStyleHeaders),
+                    ),
+                    SizedBox(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: Text('Modele', style: _textStyleHeaders),
+                    ),
+                    SizedBox(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: Text('Options', style: _textStyleHeaders),
+                    ),
+                  ],
+                ),
                 Row(
                   children: <Widget>[
                     buildTab(),

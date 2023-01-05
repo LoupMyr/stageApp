@@ -14,7 +14,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          style: TextStyle(fontSize: 30),
+        ),
       ),
       body: Center(
         child: Column(
@@ -26,10 +30,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('Consulter la liste compléte')),
             const Padding(padding: EdgeInsets.all(2)),
             ElevatedButton(
-                onPressed: () => null, child: const Text('Rechercher un type')),
+                onPressed: () => Navigator.pushNamed(context, '/routeByType'),
+                child: const Text('Rechercher un type')),
             const Padding(padding: EdgeInsets.all(2)),
             ElevatedButton(
-                onPressed: () => null, child: const Text('Rechercher un état')),
+                onPressed: () => Navigator.pushNamed(context, '/routeByEtat'),
+                child: const Text('Rechercher un état')),
             const Padding(padding: EdgeInsets.all(2)),
             ElevatedButton(
                 onPressed: () => Navigator.pushNamed(context, '/routeAjout'),

@@ -39,6 +39,11 @@ class MaterielPageState extends State<MaterielPage> {
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
+                    child: Text('Etat', style: _textStyleHeaders),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 7,
                     child: Text('Marque', style: _textStyleHeaders),
                   ),
                   SizedBox(
@@ -54,8 +59,8 @@ class MaterielPageState extends State<MaterielPage> {
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child:
-                        Text('Date fin de garantie', style: _textStyleHeaders),
+                    child: Text('Date fin de garantie',
+                        style: _textStyleHeaders, overflow: TextOverflow.fade),
                   ),
                   SizedBox(
                     height: 100,
@@ -68,6 +73,11 @@ class MaterielPageState extends State<MaterielPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 7,
+                    child: Text(type['libelle'], style: _textStyle),
+                  ),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,

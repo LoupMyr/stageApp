@@ -1,10 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:stage/tools.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert' as convert;
 
 class AjoutPage extends StatefulWidget {
   const AjoutPage({super.key, required this.title});
@@ -22,7 +19,7 @@ class _AjoutPageState extends State<AjoutPage> {
   String _remarques = '';
   String _dateAchat = '';
   String _dateGarantie = '';
-  var items = [
+  final List<String> _itemsType = [
     'Unité centrale',
     'Ecran',
     'Clavier',
@@ -34,11 +31,15 @@ class _AjoutPageState extends State<AjoutPage> {
     'Switch',
     'Point accès wifi',
     'ENI',
-    'TBI'
+    'TBI',
+    'Autres'
   ];
-  String dropdownvalue = '';
+  final List<String> _itemsEtat = ['Neuf', 'Usagé', 'Ancien', 'Autres'];
+  String _dropdownvalueType = 'Unité centrale';
+  String _dropdownvalueEtat = 'Neuf';
   bool _keep = true;
-  int idType = -1;
+  int _idType = -1;
+  int _idEtat = -1;
 
   void sendRequest() async {
     _keep = true;
@@ -53,30 +54,24 @@ class _AjoutPageState extends State<AjoutPage> {
     }
     if (_keep) {
       var response = await _tool.postMateriel(_marque, _modele, _dateAchat,
-          _dateGarantie, _remarques, idType.toString());
+          _dateGarantie, _remarques, _idType.toString(), _idEtat.toString());
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Matériel ajouté'),
         ));
       } else {
-        print(response.statusCode);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Une erreur est survenue'),
+        ));
+        log(response.statusCode.toString());
       }
     }
-  }
-
-  Future<String> recupType() async {
-    var response = await _tool.getTypes();
-    if (response.statusCode == 200) {
-      var temp = convert.jsonDecode(response.body);
-      dropdownvalue = items[1];
-    }
-    return '';
   }
 
   Future<void> buildEmptyPopUp(String nom) async {
     return showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Champ vide'),
@@ -110,52 +105,92 @@ class _AjoutPageState extends State<AjoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: recupType(),
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          List<Widget> children;
-          if (snapshot.hasData) {
-            children = [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.18,
-                child: TextFormField(
-                  decoration: const InputDecoration(labelText: 'Marque'),
-                  validator: (valeur) {
-                    if (valeur == null || valeur.isEmpty) {
-                      return 'Saisie vide';
-                    } else {
-                      setState(() {
-                        _marque = valeur;
-                      });
-                    }
-                  },
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.18,
-                child: TextFormField(
-                  decoration: const InputDecoration(labelText: 'Modèle'),
-                  validator: (valeur) {
-                    if (valeur == null || valeur.isEmpty) {
-                      return 'Saisie vide';
-                    } else {
-                      setState(() {
-                        _modele = valeur;
-                      });
-                    }
-                  },
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    child: const Text('Date d\'achat: '),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'Marque'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _marque = valeur;
+                        });
+                      }
+                    },
                   ),
-                  IconButton(
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'Modèle'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _modele = valeur;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      child: const Text('Date d\'achat: ',
+                          style: TextStyle(fontSize: 16.5)),
+                    ),
+                    IconButton(
+                        hoverColor: Colors.transparent,
+                        onPressed: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101));
+                          if (pickedDate != null) {
+                            String formattedDate =
+                                DateFormat('dd-MM-yyyy').format(pickedDate);
+                            setState(() {
+                              _dateAchat = formattedDate;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.calendar_today)),
+                    const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+                    Row(
+                      children: <Widget>[
+                        Text(_dateAchat),
+                      ],
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      child: const Text('Date de fin de garanti: ',
+                          style: TextStyle(fontSize: 16.5)),
+                    ),
+                    IconButton(
                       hoverColor: Colors.transparent,
                       onPressed: () async {
                         DateTime? pickedDate = await showDatePicker(
@@ -167,124 +202,91 @@ class _AjoutPageState extends State<AjoutPage> {
                           String formattedDate =
                               DateFormat('dd-MM-yyyy').format(pickedDate);
                           setState(() {
-                            _dateAchat = formattedDate;
+                            _dateGarantie = formattedDate;
                           });
                         }
                       },
-                      icon: const Icon(Icons.calendar_today)),
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
-                  Row(
-                    children: <Widget>[
-                      Text(_dateAchat),
-                    ],
-                  ),
-                ],
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    child: const Text('Date de fin de garanti: '),
-                  ),
-                  IconButton(
-                    hoverColor: Colors.transparent,
-                    onPressed: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101));
-                      if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat('dd-MM-yyyy').format(pickedDate);
-                        setState(() {
-                          _dateGarantie = formattedDate;
-                        });
+                      icon: const Icon(Icons.calendar_today),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(_dateGarantie),
+                      ],
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    maxLines: 5,
+                    decoration: const InputDecoration(hintText: 'Remarques'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        _remarques = '';
+                      } else {
+                        _remarques = valeur;
                       }
                     },
-                    icon: const Icon(Icons.calendar_today),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text(_dateGarantie),
-                    ],
-                  ),
-                ],
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.18,
-                child: TextFormField(
-                  maxLines: 5,
-                  decoration: const InputDecoration(hintText: 'Remarques'),
-                  validator: (valeur) {
-                    if (valeur == null || valeur.isEmpty) {
-                      _remarques = '';
-                    } else {
-                      _remarques = valeur;
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DropdownButton(
+                      value: _dropdownvalueType,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: _itemsType
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        _idType = _itemsType.indexOf(newValue!) + 1;
+                        setState(() {
+                          _dropdownvalueType = newValue;
+                        });
+                      },
+                    ),
+                    const Padding(
+                        padding: EdgeInsetsDirectional.only(end: 100)),
+                    DropdownButton(
+                      value: _dropdownvalueEtat,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: _itemsEtat
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        _idEtat = _itemsEtat.indexOf(newValue!) + 1;
+                        print(_idEtat);
+                        setState(() {
+                          _dropdownvalueEtat = newValue;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      sendRequest();
                     }
                   },
+                  child: const Text("Valider"),
                 ),
-              ),
-              DropdownButton(
-                value: dropdownvalue,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: items.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  idType = items.indexOf(newValue!) + 1;
-                  setState(() {
-                    dropdownvalue = newValue!;
-                  });
-                },
-              ),
-              const Padding(padding: EdgeInsets.all(10)),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    sendRequest();
-                  }
-                },
-                child: const Text("Valider"),
-              ),
-            ];
-          } else if (snapshot.hasError) {
-            children = <Widget>[
-              const Icon(
-                Icons.error_outline_outlined,
-                color: Colors.red,
-              )
-            ];
-          } else {
-            children = <Widget>[
-              const SpinKitPulse(
-                color: Colors.teal,
-                size: 100,
-              )
-            ];
-          }
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.title),
+              ],
             ),
-            body: Center(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: children,
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 }

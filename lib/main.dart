@@ -5,6 +5,7 @@ import 'package:stage/myhomepage.dart';
 import 'package:stage/ajoutPage.dart';
 import 'package:stage/searchByEtat.dart';
 import 'package:stage/searchByType.dart';
+import 'package:stage/splashscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,9 +22,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: const MyHomePage(title: 'Gestion - Accueil'),
+        home: const SplashScreen(title: 'Gestion - Connexion'),
         darkTheme: ThemeData.dark(),
         routes: <String, WidgetBuilder>{
+          '/routeHome': (BuildContext context) =>
+              const AjoutPage(title: "Gestion - Accueil"),
           '/routeAjout': (BuildContext context) =>
               const AjoutPage(title: "Gestion - Ajouter un élément"),
           '/routeListe': (BuildContext context) =>

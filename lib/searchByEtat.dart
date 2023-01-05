@@ -16,7 +16,13 @@ class SearchByEtat extends StatefulWidget {
 class SearchByEtatState extends State<SearchByEtat> {
   String _dropdownvalue = ' ';
   int _idSelec = -1;
-  final List<String> _itemsEtat = [' ', 'Neuf', 'Usagé', 'Ancien', 'Autres'];
+  final List<String> _itemsEtat = [
+    ' ',
+    'Neuf',
+    'Très bon état',
+    'Bon état',
+    'Autres'
+  ];
   Tools _tools = Tools();
   var _listM;
   var _listT;
@@ -36,7 +42,7 @@ class SearchByEtatState extends State<SearchByEtat> {
     _col = Column(
       children: const <Widget>[
         SpinKitDualRing(
-          color: Colors.teal,
+          color: Colors.blueGrey,
           size: 100,
         ),
       ],

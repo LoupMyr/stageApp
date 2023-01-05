@@ -46,7 +46,8 @@ class Tools {
       String dateGarantie,
       String remarques,
       String typeId,
-      String etatId) async {
+      String etatId,
+      String numSerie) async {
     Map<String, dynamic> dateA = {};
     Map<String, dynamic> dateG = {};
     Map<String, dynamic> rem = {};
@@ -74,8 +75,11 @@ class Tools {
       ...rem,
       "type": '/stageAppWeb/public/api/types/$typeId',
       "etat": '/stageAppWeb/public/api/etats/$etatId',
+      "numSerie": numSerie
     };
-    return http.post(
+
+    print(body.toString());
+    return await http.post(
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),
       headers: <String, String>{
@@ -84,6 +88,23 @@ class Tools {
       },
       body: convert.jsonEncode(body),
     );
+  }
+
+  Future<http.Response> authenticationUser(String email, String mdp) async {
+    final Map<String, dynamic> body = {
+      "email": email,
+      "password": mdp,
+    };
+    var response = await http.post(
+      Uri.parse(
+          'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/authentication_token'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: convert.jsonEncode(body),
+    );
+    return response;
   }
 
   //************//

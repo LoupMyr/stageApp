@@ -50,7 +50,7 @@ class SearchByTypeState extends State<SearchByType> {
   void recupMateriels() async {
     _col = Column(
       children: const <Widget>[
-        SpinKitDualRing(color: Colors.teal),
+        SpinKitDualRing(color: Colors.blueGrey),
       ],
     );
     var responseM = await _tools.getMateriels();

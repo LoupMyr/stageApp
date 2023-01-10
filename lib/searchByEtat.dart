@@ -276,7 +276,10 @@ class SearchByEtatState extends State<SearchByEtat> {
                   ),
                 ],
               ),
-              _col,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _col,
+              ),
             ],
           ),
         ),

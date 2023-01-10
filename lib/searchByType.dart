@@ -278,7 +278,10 @@ class SearchByTypeState extends State<SearchByType> {
                   ),
                 ],
               ),
-              _col,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _col,
+              ),
             ],
           ),
         ),

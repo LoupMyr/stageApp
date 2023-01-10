@@ -100,7 +100,7 @@ class ListePageState extends State<ListePage> {
   Future<void> buildDeletePopUp(String id) async {
     return showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Champ vide'),

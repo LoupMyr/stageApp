@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:stage/local.dart';
+
 class Tools {
+  static String role = '';
   //**********//
   //   GET   //
   //*********//
@@ -33,6 +36,14 @@ class Tools {
     print(url);
     var response = await http.get(Uri.parse(url));
     return response;
+  }
+
+  Future<http.Response> getUsers() async {
+    String? token = await Local.storage.read(key: 'token');
+    return await http.get(
+      Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/users'),
+      headers: <String, String>{'Authorization': 'Bearer $token'},
+    );
   }
 
   //***********//
@@ -77,8 +88,6 @@ class Tools {
       "etat": '/stageAppWeb/public/api/etats/$etatId',
       "numSerie": numSerie
     };
-
-    print(body.toString());
     return await http.post(
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),
@@ -98,6 +107,24 @@ class Tools {
     var response = await http.post(
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/authentication_token'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: convert.jsonEncode(body),
+    );
+    return response;
+  }
+
+  Future<http.Response> postUser(String email, String mdp) async {
+    final Map<String, dynamic> body = {
+      "email": email,
+      "roles": ["ROLE_USER"],
+      "password": mdp
+    };
+
+    var response = await http.post(
+      Uri.parse('https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/users'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Content-Type': 'application/json',

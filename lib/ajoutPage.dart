@@ -125,113 +125,73 @@ class _AjoutPageState extends State<AjoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.85,
-            margin: const EdgeInsets.all(15.0),
-            padding: const EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-                border: Border.all(
-                    color: const Color.fromARGB(255, 0, 0, 0), width: 3)),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.18,
-                    child: TextFormField(
-                      decoration: const InputDecoration(labelText: 'Marque'),
-                      validator: (valeur) {
-                        if (valeur == null || valeur.isEmpty) {
-                          return 'Saisie vide';
-                        } else {
-                          setState(() {
-                            _marque = valeur;
-                          });
-                        }
-                      },
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'Marque'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _marque = valeur;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'Modèle'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _modele = valeur;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    decoration:
+                        const InputDecoration(labelText: 'Numéro de série'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _numSerie = valeur;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      child: const Text('Date d\'achat: ',
+                          style: TextStyle(fontSize: 16.5)),
                     ),
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.18,
-                    child: TextFormField(
-                      decoration: const InputDecoration(labelText: 'Modèle'),
-                      validator: (valeur) {
-                        if (valeur == null || valeur.isEmpty) {
-                          return 'Saisie vide';
-                        } else {
-                          setState(() {
-                            _modele = valeur;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.18,
-                    child: TextFormField(
-                      decoration:
-                          const InputDecoration(labelText: 'Numéro de série'),
-                      validator: (valeur) {
-                        if (valeur == null || valeur.isEmpty) {
-                          return 'Saisie vide';
-                        } else {
-                          setState(() {
-                            _numSerie = valeur;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.15,
-                        child: const Text('Date d\'achat: ',
-                            style: TextStyle(fontSize: 16.5)),
-                      ),
-                      IconButton(
-                          hoverColor: Colors.transparent,
-                          onPressed: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2101));
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('dd-MM-yyyy').format(pickedDate);
-                              setState(() {
-                                _dateAchat = formattedDate;
-                              });
-                            }
-                          },
-                          icon: const Icon(Icons.calendar_today)),
-                      const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
-                      Row(
-                        children: <Widget>[
-                          Text(_dateAchat),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.15,
-                        child: const Text('Date de fin de garantie: ',
-                            style: TextStyle(fontSize: 16.5)),
-                      ),
-                      IconButton(
+                    IconButton(
                         hoverColor: Colors.transparent,
                         onPressed: () async {
                           DateTime? pickedDate = await showDatePicker(
@@ -243,113 +203,155 @@ class _AjoutPageState extends State<AjoutPage> {
                             String formattedDate =
                                 DateFormat('dd-MM-yyyy').format(pickedDate);
                             setState(() {
-                              _dateGarantie = formattedDate;
+                              _dateAchat = formattedDate;
                             });
                           }
                         },
-                        icon: const Icon(Icons.calendar_today),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text(_dateGarantie),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.18,
-                    child: TextFormField(
-                      maxLines: 5,
-                      decoration: const InputDecoration(hintText: 'Remarques'),
-                      validator: (valeur) {
-                        if (valeur == null || valeur.isEmpty) {
-                          _remarques = '';
-                        } else {
-                          _remarques = valeur;
+                        icon: const Icon(Icons.calendar_today)),
+                    const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+                    Row(
+                      children: <Widget>[
+                        Text(_dateAchat),
+                      ],
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      child: const Text('Date de fin de garantie: ',
+                          style: TextStyle(fontSize: 16.5)),
+                    ),
+                    IconButton(
+                      hoverColor: Colors.transparent,
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101));
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormat('dd-MM-yyyy').format(pickedDate);
+                          setState(() {
+                            _dateGarantie = formattedDate;
+                          });
                         }
                       },
+                      icon: const Icon(Icons.calendar_today),
                     ),
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      DropdownButton(
-                        menuMaxHeight: 300,
-                        value: _dropdownvalueType,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: _itemsType
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          _idType = _itemsType.indexOf(newValue!);
-                          if (_itemsType.indexOf(newValue) == 0) {
-                            setState(() {
-                              _labelErrType = const Text(
-                                'Veuillez choisir un type',
-                                style: TextStyle(color: Colors.red),
-                              );
-                            });
-                          }
-                          setState(() {
-                            _dropdownvalueType = newValue;
-                          });
-                        },
-                      ),
-                      const Padding(
-                          padding: EdgeInsetsDirectional.only(end: 100)),
-                      DropdownButton(
-                        value: _dropdownvalueEtat,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: _itemsEtat
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          _idEtat = _itemsEtat.indexOf(newValue!);
-                          if (_itemsEtat.indexOf(newValue) == 0) {
-                            setState(() {
-                              _labelErrEtat = const Text(
-                                'Veuillez choisir un état',
-                                style: TextStyle(color: Colors.red),
-                              );
-                            });
-                          }
-                          setState(() {
-                            _dropdownvalueEtat = newValue;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _labelErrType,
-                      const Padding(
-                          padding: EdgeInsetsDirectional.only(end: 100)),
-                      _labelErrEtat
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        sendRequest();
+                    Row(
+                      children: <Widget>[
+                        Text(_dateGarantie),
+                      ],
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    maxLines: 5,
+                    decoration: const InputDecoration(hintText: 'Remarques'),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        _remarques = '';
+                      } else {
+                        _remarques = valeur;
                       }
                     },
-                    child: const Text("Valider"),
                   ),
-                ],
-              ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Type:', style: TextStyle(fontSize: 20)),
+                    Padding(padding: EdgeInsetsDirectional.only(end: 175)),
+                    Text('Etat:', style: TextStyle(fontSize: 20)),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DropdownButton(
+                      menuMaxHeight: 300,
+                      value: _dropdownvalueType,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: _itemsType
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        _idType = _itemsType.indexOf(newValue!);
+                        if (_itemsType.indexOf(newValue) == 0) {
+                          setState(() {
+                            _labelErrType = const Text(
+                              'Veuillez choisir un type',
+                              style: TextStyle(color: Colors.red),
+                            );
+                          });
+                        }
+                        setState(() {
+                          _dropdownvalueType = newValue;
+                        });
+                      },
+                    ),
+                    const Padding(
+                        padding: EdgeInsetsDirectional.only(end: 100)),
+                    DropdownButton(
+                      value: _dropdownvalueEtat,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: _itemsEtat
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        _idEtat = _itemsEtat.indexOf(newValue!);
+                        if (_itemsEtat.indexOf(newValue) == 0) {
+                          setState(() {
+                            _labelErrEtat = const Text(
+                              'Veuillez choisir un état',
+                              style: TextStyle(color: Colors.red),
+                            );
+                          });
+                        }
+                        setState(() {
+                          _dropdownvalueEtat = newValue;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _labelErrType,
+                    const Padding(
+                        padding: EdgeInsetsDirectional.only(end: 100)),
+                    _labelErrEtat
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      sendRequest();
+                    }
+                  },
+                  child: const Text("Valider"),
+                ),
+              ],
             ),
           ),
         ),

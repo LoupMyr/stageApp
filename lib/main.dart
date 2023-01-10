@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stage/connexionPage.dart';
+import 'package:stage/inscriptionPage.dart';
 import 'package:stage/listePage.dart';
+import 'package:stage/listeUsersPage.dart';
 import 'package:stage/materielPage.dart';
 import 'package:stage/myhomepage.dart';
 import 'package:stage/ajoutPage.dart';
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
         darkTheme: ThemeData.dark(),
         routes: <String, WidgetBuilder>{
           '/routeHome': (BuildContext context) =>
-              const AjoutPage(title: "Gestion - Accueil"),
+              const MyHomePage(title: "Gestion - Accueil"),
           '/routeAjout': (BuildContext context) =>
               const AjoutPage(title: "Gestion - Ajouter un élément"),
           '/routeListe': (BuildContext context) =>
@@ -37,6 +40,12 @@ class MyApp extends StatelessWidget {
               const SearchByEtat(title: "Gestion - Recherche par Etat"),
           '/routeByType': (BuildContext context) =>
               const SearchByType(title: "Gestion - Recherche par Type"),
+          '/routeInscription': (BuildContext context) =>
+              const InscriptionPage(title: "Gestion - Inscription"),
+          '/routeListeUsers': (BuildContext context) => const ListeUsersPage(
+              title: "Administration - Gestion utilisateurs"),
+          '/routeConnexion': (BuildContext context) =>
+              const ConnexionPage(title: "Connexion"),
         });
   }
 }

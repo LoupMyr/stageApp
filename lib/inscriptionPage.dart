@@ -1,39 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:stage/local.dart';
 import 'package:stage/tools.dart';
-import 'dart:convert' as convert;
 
-class ConnexionPage extends StatefulWidget {
-  const ConnexionPage({super.key, required this.title});
+class InscriptionPage extends StatefulWidget {
+  const InscriptionPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<ConnexionPage> createState() => ConnexionPageState();
+  State<InscriptionPage> createState() => InscriptionPageState();
 }
 
-class ConnexionPageState extends State<ConnexionPage> {
+class InscriptionPageState extends State<InscriptionPage> {
   final Tools _tools = Tools();
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _mdp = '';
+  String _mdpConfirm = '';
 
-  void connect() async {
-    var response = await _tools.authenticationUser(_email, _mdp);
-    if (response.statusCode == 200) {
-      var token = convert.jsonDecode(response.body);
-      await Local.storage.write(key: 'token', value: token['token']);
-      await Local.storage.write(key: 'email', value: _email);
-      await Local.storage.write(key: 'password', value: _mdp);
-      await Local.storage.write(key: 'role', value: token['data']['roles'][0]);
-      Navigator.pushReplacementNamed(context, '/routeHome');
+  void signUp() async {
+    var response = await _tools.postUser(_email, _mdp);
+    if (response.statusCode == 201) {
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Bienvenue !'),
+        content: Text('Vous êtes inscrit !'),
       ));
-    } else if (response.statusCode == 401) {
+    } else if (response.statusCode == 402) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Identifiants incorrects'),
+        content: Text('Email déjà utilisé'),
       ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -49,17 +42,8 @@ class ConnexionPageState extends State<ConnexionPage> {
         centerTitle: true,
         title: Text(
           widget.title,
-          style: const TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 30),
         ),
-        actions: [
-          IconButton(
-              tooltip: 'Inscription',
-              padding: const EdgeInsets.only(right: 30),
-              iconSize: 30,
-              icon: const Icon(Icons.person_add),
-              onPressed: () =>
-                  Navigator.pushNamed(context, '/routeInscription')),
-        ],
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -109,14 +93,34 @@ class ConnexionPageState extends State<ConnexionPage> {
                         },
                       ),
                     ),
+                    const Padding(padding: EdgeInsets.all(20)),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.18,
+                      child: TextFormField(
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                            labelText: 'Confimer votre mot de passe'),
+                        validator: (valeur) {
+                          if (valeur == null || valeur.isEmpty) {
+                            return 'Saisie vide';
+                          } else if (valeur != _mdp) {
+                            return 'Mots de passe différents';
+                          } else {
+                            setState(() {
+                              _mdpConfirm = valeur;
+                            });
+                          }
+                        },
+                      ),
+                    ),
                     const Padding(padding: EdgeInsets.all(40)),
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          connect();
+                          signUp();
                         }
                       },
-                      child: const Text("Valider"),
+                      child: const Text("S'inscrire"),
                     ),
                   ],
                 ),

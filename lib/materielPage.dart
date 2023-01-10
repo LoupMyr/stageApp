@@ -68,7 +68,7 @@ class MaterielPageState extends State<MaterielPage> {
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 9,
-        child: Text(_type['libelle'], style: _textStyle),
+        child: Text(_materiel['numSerie'], style: _textStyle),
       ),
     );
     try {
@@ -257,6 +257,7 @@ class MaterielPageState extends State<MaterielPage> {
         return Scaffold(
           appBar: AppBar(
             title: Text(widget.title),
+            centerTitle: true,
           ),
           body: SingleChildScrollView(
             child: Center(

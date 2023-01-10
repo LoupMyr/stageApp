@@ -6,6 +6,7 @@ import 'package:stage/listeUsersPage.dart';
 import 'package:stage/materielPage.dart';
 import 'package:stage/myhomepage.dart';
 import 'package:stage/ajoutPage.dart';
+import 'package:stage/qrCodePage.dart';
 import 'package:stage/searchByEtat.dart';
 import 'package:stage/searchByType.dart';
 import 'package:stage/splashscreen.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         title: 'Gestion de stock',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.grey,
+          primarySwatch: Colors.deepOrange,
         ),
         home: const SplashScreen(title: 'Gestion - Connexion'),
         darkTheme: ThemeData.dark(),
@@ -46,6 +47,8 @@ class MyApp extends StatelessWidget {
               title: "Administration - Gestion utilisateurs"),
           '/routeConnexion': (BuildContext context) =>
               const ConnexionPage(title: "Connexion"),
+          '/routeQrcode': (BuildContext context) =>
+              const QrCodePage(title: "Gestion - QR Code"),
         });
   }
 }

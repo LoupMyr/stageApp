@@ -11,38 +11,55 @@ class Tools {
   //*********//
 
   Future<http.Response> getMateriels() async {
-    return await http.get(Uri.parse(
-        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'));
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.get(
+        Uri.parse(
+            'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getTypes() async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
     return await http.get(
-        Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/types'));
+        Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/types'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getType(int id) async {
-    return await http.get(Uri.parse(
-        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/types/${id.toString()}'));
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.get(
+        Uri.parse(
+            'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/types/${id.toString()}'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getEtats() async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
     return await http.get(
-        Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats'));
-  }
-
-  Future<http.Response> getEtatById(int id) async {
-    String url =
-        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats/${id.toString()}';
-    var response = await http.get(Uri.parse(url));
-    return response;
+        Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getUsers() async {
+    await updateToken();
     String? token = await Local.storage.read(key: 'token');
     return await http.get(
-      Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/users'),
-      headers: <String, String>{'Authorization': 'Bearer $token'},
-    );
+        Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/users'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+  }
+
+  Future<http.Response> getEtatById(int id) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    String url =
+        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats/${id.toString()}';
+    var response = await http.get(Uri.parse(url),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+    return response;
   }
 
   //***********//
@@ -58,6 +75,8 @@ class Tools {
       String typeId,
       String etatId,
       String numSerie) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
     Map<String, dynamic> dateA = {};
     Map<String, dynamic> dateG = {};
     Map<String, dynamic> rem = {};
@@ -91,6 +110,7 @@ class Tools {
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),
       headers: <String, String>{
+        "Authorization": "Bearer ${token!}",
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -115,6 +135,24 @@ class Tools {
     return response;
   }
 
+  Future<void> updateToken() async {
+    final Map<String, dynamic> body = {
+      "email": await Local.storage.read(key: 'email'),
+      "password": await Local.storage.read(key: 'password'),
+    };
+    var response = await http.post(
+      Uri.parse(
+          'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/authentication_token'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: convert.jsonEncode(body),
+    );
+    var token = convert.jsonDecode(response.body);
+    await Local.storage.write(key: 'password', value: token['token']);
+  }
+
   Future<http.Response> postUser(String email, String mdp) async {
     final Map<String, dynamic> body = {
       "email": email,
@@ -133,18 +171,22 @@ class Tools {
     return response;
   }
 
-  //************//
-  //   DELETE   //
-  //************//
+//************//
+//   DELETE   //
+//************//
 
   Future<http.Response> deleteMateriel(String id) async {
-    return await http.delete(Uri.parse(
-        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$id'));
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.delete(
+        Uri.parse(
+            'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$id'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
-  //*********//
-  // METHODS //
-  //*********//
+//*********//
+// METHODS //
+//*********//
 
   AssetImage findImg(var type) {
     AssetImage img = const AssetImage('lib/assets/other.png');

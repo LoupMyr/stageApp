@@ -1,3 +1,0 @@
-class ApiQR {
-  void generateQR() {}
-}

@@ -19,11 +19,14 @@ class ListeUsersPageState extends State<ListeUsersPage> {
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
 
-  Future<String> recupMateriels() async {
+  Future<String> recupUsers() async {
     var response = await _tools.getUsers();
+    print(response.statusCode);
     if (response.statusCode == 200) {
       _recupDataBool = true;
       _users = convert.jsonDecode(response.body);
+    } else {
+      print(response.statusCode);
     }
     return '';
   }
@@ -31,10 +34,11 @@ class ListeUsersPageState extends State<ListeUsersPage> {
   Widget createList() {
     List<Widget> tab = [];
     for (var user in _users['hydra:member']) {
+      print(user);
       tab.add(
         SizedBox(
           height: 100,
-          width: MediaQuery.of(context).size.width / 4,
+          width: MediaQuery.of(context).size.width / 3,
           child: Text(user['email'], style: _textStyleHeaders),
         ),
       );
@@ -43,7 +47,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
       tab.add(
         SizedBox(
           height: 100,
-          width: MediaQuery.of(context).size.width / 4,
+          width: MediaQuery.of(context).size.width / 3,
           child: Text(role, style: _textStyleHeaders),
         ),
       );
@@ -54,7 +58,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: recupMateriels(),
+        future: recupUsers(),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           List<Widget> children;
           if (snapshot.hasData) {
@@ -65,12 +69,12 @@ class ListeUsersPageState extends State<ListeUsersPage> {
                   children: <Widget>[
                     SizedBox(
                       height: 100,
-                      width: MediaQuery.of(context).size.width / 4,
+                      width: MediaQuery.of(context).size.width / 3,
                       child: Text('Email', style: _textStyleHeaders),
                     ),
                     SizedBox(
                       height: 100,
-                      width: MediaQuery.of(context).size.width / 4,
+                      width: MediaQuery.of(context).size.width / 3,
                       child: Text('Rôle', style: _textStyleHeaders),
                     ),
                   ],
@@ -78,13 +82,18 @@ class ListeUsersPageState extends State<ListeUsersPage> {
                 createList(),
               ];
             } else {
-              recupMateriels();
+              recupUsers();
               children = <Widget>[];
             }
           } else if (snapshot.hasError) {
             children = <Widget>[];
           } else {
-            children = <Widget>[];
+            children = <Widget>[
+              const SpinKitRipple(
+                color: Colors.teal,
+                size: 100,
+              )
+            ];
           }
           return Scaffold(
             appBar: AppBar(

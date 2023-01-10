@@ -132,7 +132,7 @@ class ListePageState extends State<ListePage> {
 
   void deleteElt(id) async {
     var response = await _tools.deleteMateriel(id);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Matériel supprimé'),
       ));

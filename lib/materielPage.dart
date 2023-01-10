@@ -37,6 +37,10 @@ class MaterielPageState extends State<MaterielPage> {
 
   Widget createSizedBoxs() {
     List<Widget> tab = [];
+    String dateAchat = ' / ';
+    String dateFinGarantie = ' / ';
+    String remarques = ' / ';
+    String numSerie = ' / ';
     tab.add(addGap());
     tab.add(
       SizedBox(
@@ -70,13 +74,36 @@ class MaterielPageState extends State<MaterielPage> {
       ),
     );
     tab.add(addGap());
-    tab.add(
-      SizedBox(
-        height: 100,
-        width: MediaQuery.of(context).size.width / 11,
-        child: Text(_materiel['numSerie'], style: _textStyle),
-      ),
-    );
+    try {
+      tab.add(
+        SizedBox(
+          height: 100,
+          width: MediaQuery.of(context).size.width / 11,
+          child: SingleChildScrollView(
+            child: Text(_materiel['numSerie'],
+                style: const TextStyle(fontSize: 15)),
+          ),
+        ),
+      );
+      numSerie = _materiel['numSerie'];
+    } catch (e) {
+      tab.add(
+        SizedBox(
+          height: 100,
+          width: MediaQuery.of(context).size.width / 11,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    Icon(Icons.question_mark, size: 40),
+                  ],
+                ),
+              ]),
+        ),
+      );
+    }
     tab.add(addGap());
     try {
       tab.add(
@@ -90,6 +117,9 @@ class MaterielPageState extends State<MaterielPage> {
               style: _textStyle),
         ),
       );
+      dateAchat = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(_materiel['dateAchat']))
+          .toString();
     } catch (e) {
       tab.add(
         SizedBox(
@@ -121,6 +151,9 @@ class MaterielPageState extends State<MaterielPage> {
               style: _textStyle),
         ),
       );
+      dateFinGarantie = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(_materiel['dateFinGaranti']))
+          .toString();
     } catch (e) {
       tab.add(
         SizedBox(
@@ -151,6 +184,7 @@ class MaterielPageState extends State<MaterielPage> {
           ),
         ),
       );
+      remarques = _materiel['remarques'];
     } catch (e) {
       tab.add(
         SizedBox(
@@ -171,14 +205,18 @@ class MaterielPageState extends State<MaterielPage> {
     }
     tab.add(addGap());
     String dataStr =
-        'Modele: ${_materiel['modele']}\nMarque: ${_materiel['marque']}';
+        "Type: ${_type['libelle']}\nEtat: ${_etat['libelle']}\nModele: ${_materiel['modele']}\nMarque: ${_materiel['marque']}\nNuméro de série: $numSerie\nDate d'achat: $dateAchat\nDate de fin de garantie: $dateFinGarantie";
+
     tab.add(
       SizedBox(
-        height: 100,
         width: MediaQuery.of(context).size.width / 11,
-        child: QrImage(
-          data: dataStr,
-          size: 100,
+        child: InkWell(
+          onTap: () =>
+              Navigator.pushNamed(context, "/routeQrcode", arguments: dataStr),
+          child: QrImage(
+            data: dataStr,
+            size: 100,
+          ),
         ),
       ),
     );
@@ -196,11 +234,16 @@ class MaterielPageState extends State<MaterielPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Image(
-          image: img,
-          height: MediaQuery.of(context).size.height * 0.3,
-          width: MediaQuery.of(context).size.width * 0.3,
-          color: Colors.black,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(
+              image: img,
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width * 0.3,
+              color: Colors.black,
+            ),
+          ],
         ),
       ],
     );
@@ -226,51 +269,51 @@ class MaterielPageState extends State<MaterielPage> {
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Type', style: _textStyleHeaders),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Etat', style: _textStyleHeaders),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Marque', style: _textStyleHeaders),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Modele', style: _textStyleHeaders),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Numéro de série', style: _textStyleHeaders),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Date \nd\'achat', style: _textStyleHeaders),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Date fin de garantie',
                         style: _textStyleHeaders, overflow: TextOverflow.fade),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,
                     child: Text('Remarques',
                         style: _textStyleHeaders, overflow: TextOverflow.fade),
                   ),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 11,

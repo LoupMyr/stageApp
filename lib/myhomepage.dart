@@ -12,7 +12,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextStyle _textStyle = TextStyle(fontSize: 20);
+  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   List<Widget> _navbar = [];
   Future<String> checkUser() async {
     var role = await Local.storage.read(key: 'role');
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
           appBar: AppBar(
             leading: IconButton(
               tooltip: 'Deconnexion',
-              icon: Icon(Icons.logout_sharp),
+              icon: const Icon(Icons.logout_sharp),
               onPressed: logout,
             ),
             centerTitle: true,
@@ -84,7 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  const Padding(padding: EdgeInsets.all(2)),
+                  SizedBox.fromSize(
+                      size: Size.fromHeight(
+                          MediaQuery.of(context).size.height * 0.05)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -129,7 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                  const Padding(padding: EdgeInsets.all(2)),
+                  SizedBox.fromSize(
+                      size: Size.fromHeight(
+                          MediaQuery.of(context).size.height * 0.05)),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
                     width: MediaQuery.of(context).size.width * 0.2,

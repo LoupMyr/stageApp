@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stage/connexionPage.dart';
-import 'package:stage/inscriptionPage.dart';
+import 'package:stage/user/connexionPage.dart';
+import 'package:stage/user/inscriptionPage.dart';
 import 'package:stage/listePage.dart';
-import 'package:stage/listeUsersPage.dart';
+import 'package:stage/user/listeUsersPage.dart';
 import 'package:stage/materielPage.dart';
 import 'package:stage/myhomepage.dart';
 import 'package:stage/ajoutPage.dart';
-import 'package:stage/profil.dart';
+import 'package:stage/user/profil.dart';
 import 'package:stage/qrCodePage.dart';
 import 'package:stage/searchByEtat.dart';
 import 'package:stage/searchByType.dart';

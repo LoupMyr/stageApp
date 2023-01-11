@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-
 import 'package:stage/local.dart';
 
 class Tools {
@@ -57,6 +56,17 @@ class Tools {
     String? token = await Local.storage.read(key: 'token');
     String url =
         'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/etats/${id.toString()}';
+    var response = await http.get(Uri.parse(url),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+    return response;
+  }
+
+  Future<http.Response> getUser() async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    String? id = await Local.storage.read(key: 'id');
+    String url =
+        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/users/${id.toString()}';
     var response = await http.get(Uri.parse(url),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
     return response;

@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
-import 'package:download_assets/download_assets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:http/http.dart' as http;
 
 class QrCodePage extends StatefulWidget {
   const QrCodePage({super.key, required this.title});
@@ -15,54 +17,55 @@ class QrCodePage extends StatefulWidget {
 }
 
 class QrCodePageState extends State<QrCodePage> {
-  DownloadAssetsController downloadAssetsController =
-      DownloadAssetsController();
-  String message = "Press the download button to start the download";
-  bool downloaded = false;
+  GlobalKey globalKey = new GlobalKey();
   String _dataStr = 'Erreur';
-
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  Future _init() async {
-    await downloadAssetsController.init();
-    downloaded = await downloadAssetsController.assetsDirAlreadyExists();
-  }
+  List<dynamic> _tab = [];
+  var _materiel;
 
   @override
   Widget build(BuildContext context) {
-    _dataStr = ModalRoute.of(context)!.settings.arguments as String;
-
+    _tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    _dataStr = _tab[0];
+    _materiel = _tab[1];
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            QrImage(
-              data: _dataStr,
-              size: 500,
-            ),
-            const Text(
-              "Scannez-moi !",
-              style: TextStyle(
-                  fontSize: 60,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              const Text('Attention !',
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline)),
+              const Text(
+                'Pour télécharger le QR, si vous n\'avez pas de répertoire "qrCodes" dans "Documents", les QR Codes s\'enregistreront dans le répertoire temporaire de l\'ordinateur !',
+                style: TextStyle(
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline),
-            ),
-          ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              RepaintBoundary(
+                key: globalKey,
+                child: QrImage(
+                  data: _dataStr,
+                  size: 500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FloatingActionButton(
-            onPressed: _refresh,
+            onPressed: _captureAndSharePng,
             tooltip: 'Télécharger',
             child: const Icon(Icons.download),
           ),
@@ -71,15 +74,28 @@ class QrCodePageState extends State<QrCodePage> {
     );
   }
 
-  Future _refresh() async {
-    await _downloadFile(
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKw5RDspUDcObjGF6t2fY8WKSJnNhVfzFRoMHL3GsT&s',
-        'QrCode');
-  }
-
-  Future<File> _downloadFile(String url, String fileName) async {
-    var req = await http.Client().get(Uri.parse(url));
-    var file = File('C:/Users/pc-Utilisateur/Documents/$fileName.png');
-    return file.writeAsBytes(req.bodyBytes, flush: true);
+  Future<void> _captureAndSharePng() async {
+    try {
+      RenderRepaintBoundary boundary = globalKey.currentContext!
+          .findRenderObject()! as RenderRepaintBoundary;
+      var image = await boundary.toImage();
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      var path = 'C:/Users/pc-Utilisateur/Documents/qrCodes';
+      try {
+        final file = await File('$path/QRCode-${_materiel['id']}.png').create();
+        await file.writeAsBytes(pngBytes);
+      } catch (e) {
+        var temp = await getTemporaryDirectory();
+        final file =
+            await File('${temp.path}/QRCode-${_materiel['id']}.png').create();
+        await file.writeAsBytes(pngBytes);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('QR Code enregistré avec succès'),
+      ));
+    } catch (e) {
+      log(' ERROR : $e');
+    }
   }
 }

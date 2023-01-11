@@ -26,6 +26,8 @@ class ConnexionPageState extends State<ConnexionPage> {
       await Local.storage.write(key: 'email', value: _email);
       await Local.storage.write(key: 'password', value: _mdp);
       await Local.storage.write(key: 'role', value: token['data']['roles'][0]);
+      await Local.storage
+          .write(key: 'id', value: token['data']['id'].toString());
       Navigator.pushReplacementNamed(context, '/routeHome');
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Bienvenue !'),
@@ -68,7 +70,8 @@ class ConnexionPageState extends State<ConnexionPage> {
             padding: const EdgeInsets.all(100.0),
             decoration: BoxDecoration(
                 border: Border.all(
-                    color: const Color.fromARGB(255, 0, 0, 0), width: 3)),
+                    color: const Color.fromARGB(255, 0, 0, 0), width: 3),
+                borderRadius: BorderRadius.circular(20)),
             child: SingleChildScrollView(
               child: Form(
                 key: _formKey,

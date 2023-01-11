@@ -206,13 +206,13 @@ class MaterielPageState extends State<MaterielPage> {
     tab.add(addGap());
     String dataStr =
         "Type: ${_type['libelle']}\nEtat: ${_etat['libelle']}\nModele: ${_materiel['modele']}\nMarque: ${_materiel['marque']}\nNuméro de série: $numSerie\nDate d'achat: $dateAchat\nDate de fin de garantie: $dateFinGarantie";
-
+    List<dynamic> list = [dataStr, _materiel];
     tab.add(
       SizedBox(
         width: MediaQuery.of(context).size.width / 11,
         child: InkWell(
           onTap: () =>
-              Navigator.pushNamed(context, "/routeQrcode", arguments: dataStr),
+              Navigator.pushNamed(context, "/routeQrcode", arguments: list),
           child: QrImage(
             data: dataStr,
             size: 100,

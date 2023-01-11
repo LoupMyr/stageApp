@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:stage/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -21,38 +23,58 @@ class ListeUsersPageState extends State<ListeUsersPage> {
 
   Future<String> recupUsers() async {
     var response = await _tools.getUsers();
-    print(response.statusCode);
     if (response.statusCode == 200) {
       _recupDataBool = true;
       _users = convert.jsonDecode(response.body);
     } else {
-      print(response.statusCode);
+      log(response.statusCode.toString());
     }
     return '';
   }
 
-  Widget createList() {
-    List<Widget> tab = [];
+  List<Widget> createList() {
+    List<Widget> tab = [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 3,
+            child: Text('Email', style: _textStyleHeaders),
+          ),
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 3,
+            child: Text('Rôle', style: _textStyleHeaders),
+          ),
+        ],
+      ),
+    ];
     for (var user in _users['hydra:member']) {
-      print(user);
-      tab.add(
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width / 3,
-          child: Text(user['email'], style: _textStyleHeaders),
-        ),
-      );
       List<String> temp = user['roles'][0].split('_');
       String role = temp[1].toLowerCase();
       tab.add(
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width / 3,
-          child: Text(role, style: _textStyleHeaders),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 3,
+              child: Text(
+                user['email'],
+                style: _textStyleHeaders,
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 3,
+              child: Text(role, style: _textStyleHeaders),
+            ),
+          ],
         ),
       );
     }
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: tab);
+    return tab;
   }
 
   @override
@@ -63,24 +85,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
           List<Widget> children;
           if (snapshot.hasData) {
             if (_recupDataBool) {
-              children = <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: Text('Email', style: _textStyleHeaders),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: Text('Rôle', style: _textStyleHeaders),
-                    ),
-                  ],
-                ),
-                createList(),
-              ];
+              children = createList();
             } else {
               recupUsers();
               children = <Widget>[];

@@ -6,6 +6,7 @@ import 'package:stage/listeUsersPage.dart';
 import 'package:stage/materielPage.dart';
 import 'package:stage/myhomepage.dart';
 import 'package:stage/ajoutPage.dart';
+import 'package:stage/profil.dart';
 import 'package:stage/qrCodePage.dart';
 import 'package:stage/searchByEtat.dart';
 import 'package:stage/searchByType.dart';
@@ -49,6 +50,8 @@ class MyApp extends StatelessWidget {
               const ConnexionPage(title: "Connexion"),
           '/routeQrcode': (BuildContext context) =>
               const QrCodePage(title: "Gestion - QR Code"),
+          '/routeProfil': (BuildContext context) =>
+              const ProfilPage(title: "Votre profil"),
         });
   }
 }

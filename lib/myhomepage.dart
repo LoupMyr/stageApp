@@ -14,18 +14,25 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   List<Widget> _navbar = [];
+
   Future<String> checkUser() async {
+    _navbar.clear();
     var role = await Local.storage.read(key: 'role');
+    _navbar.add(IconButton(
+      padding: EdgeInsets.only(right: 20),
+      tooltip: 'Profil',
+      onPressed: () => Navigator.pushNamed(context, '/routeProfil'),
+      icon: const Icon(Icons.person_outline),
+      iconSize: 35,
+    ));
     if (role == 'ROLE_ADMIN') {
-      _navbar = [
-        IconButton(
-          padding: EdgeInsets.only(right: 20),
-          tooltip: 'Administration',
-          onPressed: () => Navigator.pushNamed(context, '/routeListeUsers'),
-          icon: const Icon(Icons.person_outline),
-          iconSize: 35,
-        )
-      ];
+      _navbar.add(IconButton(
+        padding: EdgeInsets.only(right: 20),
+        tooltip: 'Administration',
+        onPressed: () => Navigator.pushNamed(context, '/routeListeUsers'),
+        icon: const Icon(Icons.admin_panel_settings),
+        iconSize: 35,
+      ));
     }
     return '';
   }
@@ -45,18 +52,17 @@ class _MyHomePageState extends State<MyHomePage> {
         }
         return Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              tooltip: 'Deconnexion',
-              icon: const Icon(Icons.logout_sharp),
-              onPressed: logout,
-            ),
-            centerTitle: true,
-            title: Text(
-              widget.title,
-              style: TextStyle(fontSize: 30),
-            ),
-            actions: _navbar,
-          ),
+              leading: IconButton(
+                tooltip: 'Deconnexion',
+                icon: const Icon(Icons.logout_sharp),
+                onPressed: logout,
+              ),
+              centerTitle: true,
+              title: Text(
+                widget.title,
+                style: TextStyle(fontSize: 30),
+              ),
+              actions: _navbar),
           body: SingleChildScrollView(
             child: Center(
               child: Column(

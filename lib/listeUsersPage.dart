@@ -1,9 +1,10 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:stage/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
+
+import 'package:stage/widgetNonAdmin.dart';
 
 class ListeUsersPage extends StatefulWidget {
   const ListeUsersPage({super.key, required this.title});
@@ -16,12 +17,15 @@ class ListeUsersPage extends StatefulWidget {
 
 class ListeUsersPageState extends State<ListeUsersPage> {
   var _users;
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   bool _recupDataBool = false;
-  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
 
   Future<String> recupUsers() async {
+    if (await _tools.checkAdmin() == false) {
+      WidgetNonAdmin.buildEmptyPopUp(context);
+      return '';
+    }
     var response = await _tools.getUsers();
     if (response.statusCode == 200) {
       _recupDataBool = true;

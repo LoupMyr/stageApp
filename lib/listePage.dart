@@ -3,6 +3,8 @@ import 'package:stage/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
 
+import 'package:stage/widgetNonAdmin.dart';
+
 class ListePage extends StatefulWidget {
   const ListePage({super.key, required this.title});
 
@@ -15,12 +17,16 @@ class ListePage extends StatefulWidget {
 class ListePageState extends State<ListePage> {
   var _materiels;
   var _types;
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   bool _recupDataBool = false;
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
 
   Future<String> recupMateriels() async {
+    if (await _tools.checkAdmin() == false) {
+      WidgetNonAdmin.buildEmptyPopUp(context);
+      return '';
+    }
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
     await Future.delayed(const Duration(milliseconds: 500));

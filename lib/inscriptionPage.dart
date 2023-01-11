@@ -15,7 +15,6 @@ class InscriptionPageState extends State<InscriptionPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _mdp = '';
-  String _mdpConfirm = '';
 
   void signUp() async {
     var response = await _tools.postUser(_email, _mdp);
@@ -42,7 +41,7 @@ class InscriptionPageState extends State<InscriptionPage> {
         centerTitle: true,
         title: Text(
           widget.title,
-          style: TextStyle(fontSize: 30),
+          style: const TextStyle(fontSize: 30),
         ),
       ),
       body: SingleChildScrollView(
@@ -105,10 +104,6 @@ class InscriptionPageState extends State<InscriptionPage> {
                             return 'Saisie vide';
                           } else if (valeur != _mdp) {
                             return 'Mots de passe différents';
-                          } else {
-                            setState(() {
-                              _mdpConfirm = valeur;
-                            });
                           }
                         },
                       ),

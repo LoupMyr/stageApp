@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stage/local.dart';
-import 'package:stage/tools.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -19,7 +18,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _navbar.clear();
     var role = await Local.storage.read(key: 'role');
     _navbar.add(IconButton(
-      padding: EdgeInsets.only(right: 20),
+      padding: const EdgeInsets.only(right: 20),
       tooltip: 'Profil',
       onPressed: () => Navigator.pushNamed(context, '/routeProfil'),
       icon: const Icon(Icons.person_outline),
@@ -27,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
     if (role == 'ROLE_ADMIN') {
       _navbar.add(IconButton(
-        padding: EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(right: 20),
         tooltip: 'Administration',
         onPressed: () => Navigator.pushNamed(context, '/routeListeUsers'),
         icon: const Icon(Icons.admin_panel_settings),
@@ -60,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
               centerTitle: true,
               title: Text(
                 widget.title,
-                style: TextStyle(fontSize: 30),
+                style: const TextStyle(fontSize: 30),
               ),
               actions: _navbar),
           body: SingleChildScrollView(
@@ -68,6 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.05)),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
                     width: MediaQuery.of(context).size.width * 0.2,
@@ -115,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 textAlign: TextAlign.center,
                                 style: _textStyle)),
                       ),
-                      const Padding(padding: EdgeInsets.all(2)),
+                      const Padding(padding: EdgeInsets.all(10)),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.2,
                         width: MediaQuery.of(context).size.width * 0.2,

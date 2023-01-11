@@ -15,9 +15,8 @@ class ProfilPage extends StatefulWidget {
 
 class ProfilPageState extends State<ProfilPage> {
   var _user;
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   bool _recupDataBool = false;
-  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
 
   Future<String> recupUser() async {
@@ -26,7 +25,6 @@ class ProfilPageState extends State<ProfilPage> {
     if (response.statusCode == 200) {
       _recupDataBool = true;
       _user = convert.jsonDecode(response.body);
-      print(_user);
     } else {
       log(response.statusCode.toString());
     }

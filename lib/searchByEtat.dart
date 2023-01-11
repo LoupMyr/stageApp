@@ -3,6 +3,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:stage/tools.dart';
 import 'dart:convert' as convert;
 
+import 'package:stage/widgetNonAdmin.dart';
+
 class SearchByEtat extends StatefulWidget {
   const SearchByEtat({super.key, required this.title});
 
@@ -22,7 +24,7 @@ class SearchByEtatState extends State<SearchByEtat> {
     'Bon état',
     'Autres'
   ];
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   var _listM;
   var _listT;
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
@@ -38,12 +40,13 @@ class SearchByEtatState extends State<SearchByEtat> {
   );
 
   void recupMateriels() async {
+    if (await _tools.checkAdmin() == false) {
+      WidgetNonAdmin.buildEmptyPopUp(context);
+      return;
+    }
     _col = Column(
       children: const <Widget>[
-        SpinKitDualRing(
-          color: Colors.blueGrey,
-          size: 100,
-        ),
+        SpinKitDualRing(color: Colors.blueGrey),
       ],
     );
     var responseM = await _tools.getMateriels();

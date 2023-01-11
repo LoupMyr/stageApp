@@ -17,16 +17,18 @@ class QrCodePage extends StatefulWidget {
 }
 
 class QrCodePageState extends State<QrCodePage> {
-  GlobalKey globalKey = new GlobalKey();
+  GlobalKey globalKey = GlobalKey();
   String _dataStr = 'Erreur';
   List<dynamic> _tab = [];
   var _materiel;
+  var _type;
 
   @override
   Widget build(BuildContext context) {
     _tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
     _dataStr = _tab[0];
     _materiel = _tab[1];
+    _type = _tab[2];
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -83,12 +85,15 @@ class QrCodePageState extends State<QrCodePage> {
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       var path = 'C:/Users/pc-Utilisateur/Documents/qrCodes';
       try {
-        final file = await File('$path/QRCode-${_materiel['id']}.png').create();
+        final file = await File(
+                '$path/QRCode-${_type['libelle']}-${_materiel['id']}.png')
+            .create();
         await file.writeAsBytes(pngBytes);
       } catch (e) {
         var temp = await getTemporaryDirectory();
-        final file =
-            await File('${temp.path}/QRCode-${_materiel['id']}.png').create();
+        final file = await File(
+                '${temp.path}/QRCode-${_type['libelle']}-${_materiel['id']}.png')
+            .create();
         await file.writeAsBytes(pngBytes);
       }
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -251,4 +251,12 @@ class Tools {
     }
     return img;
   }
+
+  Future<bool> checkAdmin() async {
+    bool estAdmin = false;
+    if (await Local.storage.read(key: 'role') == "ROLE_ADMIN") {
+      estAdmin = true;
+    }
+    return estAdmin;
+  }
 }

@@ -5,6 +5,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stage/tools.dart';
 import 'dart:convert' as convert;
 
+import 'package:stage/widgetNonAdmin.dart';
+
 class MaterielPage extends StatefulWidget {
   const MaterielPage({super.key, required this.title});
 
@@ -15,17 +17,21 @@ class MaterielPage extends StatefulWidget {
 }
 
 class MaterielPageState extends State<MaterielPage> {
-  List<dynamic> _tab = [];
-  final TextStyle _textStyle = TextStyle(fontSize: 20);
+  List<dynamic> __tab = [];
+  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   bool _recupDataBool = false;
   var _materiel;
   var _type;
   var _etat;
 
   Future<String> recupEtat() async {
-    List<String> temp = _tab[0]['etat'].split('/');
+    if (await _tools.checkAdmin() == false) {
+      WidgetNonAdmin.buildEmptyPopUp(context);
+      return '';
+    }
+    List<String> temp = __tab[0]['etat'].split('/');
     int id = int.parse(temp[temp.length - 1]);
     var response = await _tools.getEtatById(id);
     if (response.statusCode == 200) {
@@ -80,8 +86,7 @@ class MaterielPageState extends State<MaterielPage> {
           height: 100,
           width: MediaQuery.of(context).size.width / 11,
           child: SingleChildScrollView(
-            child: Text(_materiel['numSerie'],
-                style: const TextStyle(fontSize: 15)),
+            child: Text(_materiel['numSerie'], style: _textStyle),
           ),
         ),
       );
@@ -191,22 +196,23 @@ class MaterielPageState extends State<MaterielPage> {
           height: 100,
           width: MediaQuery.of(context).size.width / 11,
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(Icons.question_mark, size: 40),
-                  ],
-                ),
-              ]),
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
+                  Icon(Icons.question_mark, size: 40),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
     tab.add(addGap());
     String dataStr =
         "Type: ${_type['libelle']}\nEtat: ${_etat['libelle']}\nModele: ${_materiel['modele']}\nMarque: ${_materiel['marque']}\nNuméro de série: $numSerie\nDate d'achat: $dateAchat\nDate de fin de garantie: $dateFinGarantie";
-    List<dynamic> list = [dataStr, _materiel];
+    List<dynamic> list = [dataStr, _materiel, _type];
     tab.add(
       SizedBox(
         width: MediaQuery.of(context).size.width / 11,
@@ -251,9 +257,9 @@ class MaterielPageState extends State<MaterielPage> {
 
   @override
   Widget build(BuildContext context) {
-    _tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-    _materiel = _tab[0];
-    _type = _tab[1];
+    __tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    _materiel = __tab[0];
+    _type = __tab[1];
     return FutureBuilder(
       future: recupEtat(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {

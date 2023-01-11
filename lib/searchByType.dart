@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
 
 import 'package:stage/tools.dart';
+import 'package:stage/widgetNonAdmin.dart';
 
 class SearchByType extends StatefulWidget {
   const SearchByType({super.key, required this.title});
@@ -32,9 +33,8 @@ class SearchByTypeState extends State<SearchByType> {
     'TBI',
     'Autres'
   ];
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   var _listM;
-  var _listT;
   var _type;
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
@@ -48,6 +48,10 @@ class SearchByTypeState extends State<SearchByType> {
   );
 
   void recupMateriels() async {
+    if (await _tools.checkAdmin() == false) {
+      WidgetNonAdmin.buildEmptyPopUp(context);
+      return;
+    }
     _col = Column(
       children: const <Widget>[
         SpinKitDualRing(color: Colors.blueGrey),
@@ -59,7 +63,6 @@ class SearchByTypeState extends State<SearchByType> {
     await Future.delayed(const Duration(milliseconds: 500));
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
-      _listT = convert.jsonDecode(responseT.body);
       _type = convert.jsonDecode(responseType.body);
       buildList();
     } else {

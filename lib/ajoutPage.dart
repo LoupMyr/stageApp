@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:stage/tools.dart';
 import 'package:intl/intl.dart';
+import 'package:stage/widgetNonAdmin.dart';
 
 class AjoutPage extends StatefulWidget {
   const AjoutPage({super.key, required this.title});
@@ -52,6 +53,11 @@ class _AjoutPageState extends State<AjoutPage> {
   Text _labelErrEtat = const Text('');
 
   void sendRequest() async {
+    if (await _tool.checkAdmin() == false) {
+      WidgetNonAdmin.buildEmptyPopUp(context);
+      return;
+    }
+    print(await _tool.checkAdmin());
     _keep = true;
     if (_dateAchat.isEmpty && _keep) {
       await buildEmptyPopUp('date d\'achat');

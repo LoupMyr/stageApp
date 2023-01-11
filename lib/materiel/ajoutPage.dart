@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:stage/tools.dart';
+import 'package:flutter/services.dart';
+import 'package:stage/class/numInventaireFormatter.dart';
+import 'package:stage/class/tools.dart';
 import 'package:intl/intl.dart';
-import 'package:stage/widgetNonAdmin.dart';
+import 'package:stage/class/widgetNonAdmin.dart';
 
 class AjoutPage extends StatefulWidget {
   const AjoutPage({super.key, required this.title});
@@ -18,6 +20,8 @@ class _AjoutPageState extends State<AjoutPage> {
   String _marque = '';
   String _modele = '';
   String _numSerie = '';
+  String _numInventaire = '';
+  String _lieuInstallation = '';
   String _remarques = '';
   String _dateAchat = '';
   String _dateGarantie = '';
@@ -77,7 +81,9 @@ class _AjoutPageState extends State<AjoutPage> {
           _remarques,
           _idType.toString(),
           _idEtat.toString(),
-          _numSerie);
+          _numSerie,
+          _numInventaire,
+          _lieuInstallation);
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Matériel ajouté'),
@@ -143,6 +149,9 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(150),
+                    ],
                     decoration: const InputDecoration(labelText: 'Marque'),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
@@ -159,6 +168,9 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(150),
+                    ],
                     decoration: const InputDecoration(labelText: 'Modèle'),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
@@ -175,6 +187,9 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(150),
+                    ],
                     decoration:
                         const InputDecoration(labelText: 'Numéro de série'),
                     validator: (valeur) {
@@ -183,6 +198,48 @@ class _AjoutPageState extends State<AjoutPage> {
                       } else {
                         setState(() {
                           _numSerie = valeur;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(12),
+                      NumInventaireInputFormatter(),
+                    ],
+                    decoration: const InputDecoration(
+                        labelText: 'Numéro d\'inventaire '),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _numInventaire = valeur;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.18,
+                  child: TextFormField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(150),
+                    ],
+                    decoration: const InputDecoration(
+                        labelText: 'Lieu d\'installation '),
+                    validator: (valeur) {
+                      if (valeur == null || valeur.isEmpty) {
+                        return 'Saisie vide';
+                      } else {
+                        setState(() {
+                          _lieuInstallation = valeur;
                         });
                       }
                     },

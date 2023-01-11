@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stage/local.dart';
-import 'package:stage/tools.dart';
+import 'package:stage/class/local.dart';
+import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
 
 class ConnexionPage extends StatefulWidget {

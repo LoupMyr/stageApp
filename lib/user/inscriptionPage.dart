@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stage/tools.dart';
+import 'package:stage/class/tools.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key, required this.title});

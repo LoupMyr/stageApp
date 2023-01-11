@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stage/tools.dart';
+import 'package:stage/class/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
 
-import 'package:stage/widgetNonAdmin.dart';
+import 'package:stage/class/widgetNonAdmin.dart';
 
 class ListePage extends StatefulWidget {
   const ListePage({super.key, required this.title});

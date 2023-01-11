@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-import 'package:stage/local.dart';
+import 'package:stage/class/local.dart';
 
 class Tools {
   static String role = '';
@@ -84,7 +84,9 @@ class Tools {
       String remarques,
       String typeId,
       String etatId,
-      String numSerie) async {
+      String numSerie,
+      String numInventaire,
+      String lieuInstallation) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
     Map<String, dynamic> dateA = {};
@@ -114,7 +116,9 @@ class Tools {
       ...rem,
       "type": '/stageAppWeb/public/api/types/$typeId',
       "etat": '/stageAppWeb/public/api/etats/$etatId',
-      "numSerie": numSerie
+      "numSerie": numSerie,
+      "numInventaire": numInventaire,
+      "lieuInstallation": lieuInstallation
     };
     return await http.post(
       Uri.parse(
@@ -160,7 +164,7 @@ class Tools {
       body: convert.jsonEncode(body),
     );
     var token = convert.jsonDecode(response.body);
-    await Local.storage.write(key: 'password', value: token['token']);
+    await Local.storage.write(key: 'token', value: token['token']);
   }
 
   Future<http.Response> postUser(String email, String mdp) async {

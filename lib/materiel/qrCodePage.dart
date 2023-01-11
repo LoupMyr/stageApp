@@ -38,20 +38,6 @@ class QrCodePageState extends State<QrCodePage> {
         child: Center(
           child: Column(
             children: [
-              const Text('Attention !',
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline)),
-              const Text(
-                'Pour télécharger le QR, si vous n\'avez pas de répertoire "qrCodes" dans "Documents", les QR Codes s\'enregistreront dans le répertoire temporaire de l\'ordinateur !',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
               RepaintBoundary(
                 key: globalKey,
                 child: QrImage(

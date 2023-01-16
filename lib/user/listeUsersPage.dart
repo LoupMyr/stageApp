@@ -179,7 +179,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
               const SpinKitThreeInOut(
                 color: Colors.teal,
                 size: 100,
-              )
+              ),
             ];
           }
           return Scaffold(
@@ -189,7 +189,9 @@ class ListeUsersPageState extends State<ListeUsersPage> {
             ),
             body: SingleChildScrollView(
               child: Center(
-                child: Column(children: children),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: children),
               ),
             ),
           );

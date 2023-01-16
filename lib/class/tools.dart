@@ -72,6 +72,14 @@ class Tools {
     return response;
   }
 
+  Future<http.Response> getPhotos() async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.get(
+        Uri.parse('http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/photos'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+  }
+
   //***********//
   //   POST   //
   //**********//
@@ -209,6 +217,15 @@ class Tools {
     return await http.delete(
         Uri.parse(
             'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$id'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+  }
+
+  Future<http.Response> deletePhoto(String id) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.delete(
+        Uri.parse(
+            'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/photos/$id'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 

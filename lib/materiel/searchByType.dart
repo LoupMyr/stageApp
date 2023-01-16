@@ -54,13 +54,12 @@ class SearchByTypeState extends State<SearchByType> {
     }
     _col = Column(
       children: const <Widget>[
-        SpinKitThreeInOut(color: Colors.blueGrey),
+        SpinKitThreeInOut(color: Colors.teal),
       ],
     );
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
     var responseType = await _tools.getType(_idSelec);
-    await Future.delayed(const Duration(milliseconds: 500));
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
       _type = convert.jsonDecode(responseType.body);

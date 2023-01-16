@@ -46,12 +46,11 @@ class SearchByEtatState extends State<SearchByEtat> {
     }
     _col = Column(
       children: const <Widget>[
-        SpinKitThreeInOut(color: Colors.blueGrey),
+        SpinKitThreeInOut(color: Colors.teal),
       ],
     );
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
-    await Future.delayed(const Duration(milliseconds: 500));
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
       _listT = convert.jsonDecode(responseT.body);

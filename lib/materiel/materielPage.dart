@@ -17,7 +17,7 @@ class MaterielPage extends StatefulWidget {
 }
 
 class MaterielPageState extends State<MaterielPage> {
-  List<dynamic> __tab = [];
+  List<dynamic> _tab = [];
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final Tools _tools = Tools();
@@ -25,6 +25,7 @@ class MaterielPageState extends State<MaterielPage> {
   var _materiel;
   var _type;
   var _etat;
+  var _photos;
   String _dateAchat = '';
   String _numSerie = '';
 
@@ -33,11 +34,14 @@ class MaterielPageState extends State<MaterielPage> {
       WidgetNonAdmin.buildEmptyPopUp(context);
       return '';
     }
-    List<String> temp = __tab[0]['etat'].split('/');
+    List<String> temp = _tab[0]['etat'].split('/');
     int id = int.parse(temp[temp.length - 1]);
     var response = await _tools.getEtatById(id);
-    if (response.statusCode == 200) {
+    var responseP = await _tools.getPhotos();
+
+    if (response.statusCode == 200 && responseP.statusCode == 200) {
       _etat = convert.jsonDecode(response.body);
+      _photos = convert.jsonDecode(responseP.body);
       _recupDataBool = true;
     }
     return '';
@@ -50,7 +54,11 @@ class MaterielPageState extends State<MaterielPage> {
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
-        child: Text(_type['libelle'], style: _textStyle),
+        child: Text(
+          _type['libelle'],
+          style: _textStyle,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
     tab.add(addGap());
@@ -58,7 +66,11 @@ class MaterielPageState extends State<MaterielPage> {
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
-        child: Text(_etat['libelle'], style: _textStyle),
+        child: Text(
+          _etat['libelle'],
+          style: _textStyle,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
     tab.add(addGap());
@@ -66,7 +78,11 @@ class MaterielPageState extends State<MaterielPage> {
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
-        child: Text(_materiel['marque'], style: _textStyle),
+        child: Text(
+          _materiel['marque'],
+          style: _textStyle,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
     tab.add(addGap());
@@ -74,7 +90,11 @@ class MaterielPageState extends State<MaterielPage> {
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
-        child: Text(_materiel['modele'], style: _textStyle),
+        child: Text(
+          _materiel['modele'],
+          style: _textStyle,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
     tab.add(addGap());
@@ -114,7 +134,11 @@ class MaterielPageState extends State<MaterielPage> {
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
-        child: Text(_materiel['lieuInstallation'], style: _textStyle),
+        child: Text(
+          _materiel['lieuInstallation'],
+          style: _textStyle,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
 
@@ -126,48 +150,33 @@ class MaterielPageState extends State<MaterielPage> {
     String dateAchat = ' / ';
     String dateFinGarantie = ' / ';
     String remarques = ' / ';
-    String numSerie = ' / ';
-    try {
-      tab.add(
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: SingleChildScrollView(
-            child: Text(_materiel['numSerie'], style: _textStyle),
+
+    tab.add(
+      SizedBox(
+        height: 100,
+        width: MediaQuery.of(context).size.width / 7,
+        child: SingleChildScrollView(
+          child: Text(
+            _materiel['numSerie'],
+            style: _textStyle,
           ),
         ),
-      );
-      _numSerie = _materiel['numSerie'];
-    } catch (e) {
-      tab.add(
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(Icons.question_mark, size: 40),
-                  ],
-                ),
-              ]),
-        ),
-      );
-    }
+      ),
+    );
     tab.add(addGap());
     tab.add(
       SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
         child: SingleChildScrollView(
-          child: Text(_materiel['numInventaire'], style: _textStyle),
+          child: Text(
+            _materiel['numInventaire'],
+            style: _textStyle,
+          ),
         ),
       ),
     );
     tab.add(addGap());
-
     try {
       tab.add(
         SizedBox(
@@ -237,13 +246,18 @@ class MaterielPageState extends State<MaterielPage> {
     List<dynamic> list = [dataStr, _materiel, _type];
     tab.add(
       SizedBox(
-        width: MediaQuery.of(context).size.width / 7,
-        child: InkWell(
-          onTap: () =>
-              Navigator.pushNamed(context, "/routeQrcode", arguments: list),
-          child: QrImage(
-            data: dataStr,
-            size: 100,
+        width: MediaQuery.of(context).size.width * 0.09,
+        child: Container(
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.black, width: 2)),
+          width: MediaQuery.of(context).size.width * 0.1,
+          child: InkWell(
+            onTap: () =>
+                Navigator.pushNamed(context, "/routeQrcode", arguments: list),
+            child: QrImage(
+              data: dataStr,
+              size: 100,
+            ),
           ),
         ),
       ),
@@ -256,12 +270,12 @@ class MaterielPageState extends State<MaterielPage> {
       ),
     );
 
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: tab);
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: tab);
   }
 
   String createDataStr() {
     String dataStr =
-        '${_materiel['marque']} ${_materiel['modele']}\nN° serie: $_numSerie\nN° inventaire: ${_materiel['numInventaire']}\n${_materiel['lieuInstallation']}\nDate facture: $_dateAchat';
+        '${_materiel['marque']} ${_materiel['modele']}\nN° serie: ${_materiel['numSerie']}\nN° inventaire: ${_materiel['numInventaire']}\n${_materiel['lieuInstallation']}\nDate facture: $_dateAchat';
     return dataStr;
   }
 
@@ -270,31 +284,32 @@ class MaterielPageState extends State<MaterielPage> {
   }
 
   Widget createImg() {
-    NetworkImage img =
-        const NetworkImage('https://i.postimg.cc/43p8VcHk/QRCode-TBI-8.png');
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    List<Widget> tabImg = [];
+    if (_materiel['photos'].isNotEmpty) {
+      for (var elt in _photos['hydra:member']) {
+        if (elt['materiel'] == _materiel['@id']) {
+          String imgUrl = elt['url'];
+          tabImg.add(
             Image(
-              image: img,
+              image: NetworkImage(imgUrl),
               height: MediaQuery.of(context).size.height * 0.3,
               width: MediaQuery.of(context).size.width * 0.3,
-              color: Colors.black,
             ),
-          ],
-        ),
-      ],
+          );
+        }
+      }
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: tabImg,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    __tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-    _materiel = __tab[0];
-    _type = __tab[1];
+    _tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    _materiel = _tab[0];
+    _type = _tab[1];
     return FutureBuilder(
       future: recupEtat(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -308,39 +323,47 @@ class MaterielPageState extends State<MaterielPage> {
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('Type', style: _textStyleHeaders),
+                    child: Text('Type',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('Etat', style: _textStyleHeaders),
+                    child: Text('Etat',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('Marque', style: _textStyleHeaders),
+                    child: Text('Marque',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('Modele', style: _textStyleHeaders),
+                    child: Text('Modele',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('Remarques', style: _textStyleHeaders),
+                    child: Text('Remarques',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child:
-                        Text('Lieu d\'installation', style: _textStyleHeaders),
+                    child: Text(
+                      'Lieu d\'installation',
+                      style: _textStyleHeaders,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
@@ -352,34 +375,40 @@ class MaterielPageState extends State<MaterielPage> {
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('Numéro de série', style: _textStyleHeaders),
+                    child: Text('Numéro de série',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child:
-                        Text('Numéro d\'inventaire', style: _textStyleHeaders),
+                    child: Text('Numéro d\'inventaire',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
                     child: Text('Date d\'achat',
-                        style: _textStyleHeaders, overflow: TextOverflow.fade),
+                        style: _textStyleHeaders,
+                        overflow: TextOverflow.fade,
+                        textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
                     child: Text('Date fin de garantie',
-                        style: _textStyleHeaders, overflow: TextOverflow.fade),
+                        style: _textStyleHeaders,
+                        overflow: TextOverflow.fade,
+                        textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 7,
-                    child: Text('QR Code', style: _textStyleHeaders),
+                    child: Text('QR Code',
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
                   SizedBox(
@@ -410,9 +439,9 @@ class MaterielPageState extends State<MaterielPage> {
               color: Colors.red,
               size: 125,
             ),
-            const Text(
+            Text(
               'Erreur critique.',
-              style: TextStyle(fontSize: 30),
+              style: const TextStyle(fontSize: 30),
               textAlign: TextAlign.center,
             )
           ];
@@ -427,7 +456,7 @@ class MaterielPageState extends State<MaterielPage> {
                     padding: EdgeInsets.only(
                         right: MediaQuery.of(context).size.width / 2.2)),
                 const SpinKitThreeInOut(
-                  color: Colors.blueGrey,
+                  color: Colors.teal,
                   size: 100,
                 ),
               ],

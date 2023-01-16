@@ -29,7 +29,6 @@ class ListePageState extends State<ListePage> {
     }
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
-    await Future.delayed(const Duration(milliseconds: 500));
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _materiels = convert.jsonDecode(responseM.body);
       _types = convert.jsonDecode(responseT.body);
@@ -136,7 +135,22 @@ class ListePageState extends State<ListePage> {
         });
   }
 
-  void deleteElt(id) async {
+  void deleteElt(String id) async {
+    for (var elt in _materiels['hydra:member']) {
+      if (elt['id'].toString() == id) {
+        if (elt['photos'].isNotEmpty) {
+          List<int> tabIdPhoto = [];
+          for (int i = 0; i < elt['photos'].length; i++) {
+            List<String> temp = elt['photos'][i].split('/');
+            int id = int.parse(temp[temp.length - 1]);
+            tabIdPhoto.add(id);
+          }
+          for (int i = 0; i < tabIdPhoto.length; i++) {
+            await _tools.deletePhoto(tabIdPhoto[i].toString());
+          }
+        }
+      }
+    }
     var response = await _tools.deleteMateriel(id);
     if (response.statusCode == 204) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -202,7 +216,7 @@ class ListePageState extends State<ListePage> {
               recupMateriels();
               children = <Widget>[
                 const SpinKitThreeInOut(
-                  color: Colors.blueGrey,
+                  color: Colors.teal,
                   size: 100,
                 )
               ];
@@ -226,7 +240,7 @@ class ListePageState extends State<ListePage> {
                 height: MediaQuery.of(context).size.height / 3,
               ),
               const SpinKitThreeInOut(
-                color: Colors.blueGrey,
+                color: Colors.teal,
                 size: 100,
               ),
             ];

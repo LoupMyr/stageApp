@@ -81,6 +81,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
+                        initialValue: 'test@test.com',
                         decoration: const InputDecoration(labelText: 'Email'),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
@@ -97,6 +98,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
+                        initialValue: 'test',
                         obscureText: true,
                         decoration:
                             const InputDecoration(labelText: 'Mot de passe'),

@@ -120,6 +120,8 @@ class Tools {
       "numInventaire": numInventaire,
       "lieuInstallation": lieuInstallation
     };
+
+    print(body.toString());
     return await http.post(
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),
@@ -185,6 +187,18 @@ class Tools {
     return response;
   }
 
+  Future<http.Response> postPhoto(String url, String uri) async {
+    final Map<String, dynamic> body = {"url": url, "password": uri};
+    return await http.post(
+      Uri.parse('https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/photos'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: convert.jsonEncode(body),
+    );
+  }
+
 //************//
 //   DELETE   //
 //************//
@@ -196,6 +210,41 @@ class Tools {
         Uri.parse(
             'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$id'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
+  }
+
+//*******//
+// PATCH //
+//*******//
+
+  Future<http.Response> patchUserEmail(String id, String email) async {
+    var json = convert.jsonEncode(<String, dynamic>{"email": email});
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.patch(
+        Uri.parse(
+            'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/users/$id'),
+        headers: <String, String>{
+          'Accept': 'application/ld+json',
+          'Content-Type': 'application/merge-patch+json',
+          "Authorization": "Bearer ${token!}"
+        },
+        body: json);
+  }
+
+  Future<http.Response> patchMaterielPhoto(
+      List<String> listUriPhotos, String idMateriel) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    var json = convert.jsonEncode(<String, dynamic>{"photos": listUriPhotos});
+    return await http.patch(
+        Uri.parse(
+            'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$idMateriel'),
+        headers: <String, String>{
+          'Accept': 'application/ld+json',
+          'Content-Type': 'application/merge-patch+json',
+          "Authorization": "Bearer ${token!}"
+        },
+        body: json);
   }
 
 //*********//

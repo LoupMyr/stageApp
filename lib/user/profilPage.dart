@@ -128,7 +128,7 @@ class ProfilPageState extends State<ProfilPage> {
             children = <Widget>[];
           } else {
             children = <Widget>[
-              const SpinKitRipple(
+              const SpinKitThreeInOut(
                 color: Colors.teal,
                 size: 100,
               )

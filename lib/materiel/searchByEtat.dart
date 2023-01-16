@@ -46,7 +46,7 @@ class SearchByEtatState extends State<SearchByEtat> {
     }
     _col = Column(
       children: const <Widget>[
-        SpinKitDualRing(color: Colors.blueGrey),
+        SpinKitThreeInOut(color: Colors.blueGrey),
       ],
     );
     var responseM = await _tools.getMateriels();

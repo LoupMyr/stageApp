@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stage/class/numInventaireFormatter.dart';
 import 'package:stage/class/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:stage/class/widgetNonAdmin.dart';
+import 'dart:convert' as convert;
 
 class AjoutPage extends StatefulWidget {
   const AjoutPage({super.key, required this.title});
@@ -55,13 +57,18 @@ class _AjoutPageState extends State<AjoutPage> {
   int _idEtat = -1;
   Text _labelErrType = const Text('');
   Text _labelErrEtat = const Text('');
+  List<String> _listUrl = [];
+  final fieldText = TextEditingController();
+
+  void clearText() {
+    fieldText.clear();
+  }
 
   void sendRequest() async {
     if (await _tool.checkAdmin() == false) {
       WidgetNonAdmin.buildEmptyPopUp(context);
       return;
     }
-    print(await _tool.checkAdmin());
     _keep = true;
     if (_dateAchat.isEmpty && _keep) {
       await buildEmptyPopUp('date d\'achat');
@@ -71,6 +78,10 @@ class _AjoutPageState extends State<AjoutPage> {
     }
     if (_remarques.isEmpty && _keep) {
       await buildEmptyPopUp('remarques');
+    }
+
+    if (_listUrl.isEmpty && _keep) {
+      await buildEmptyPopUp('photos');
     }
     if (_keep) {
       var response = await _tool.postMateriel(
@@ -85,6 +96,27 @@ class _AjoutPageState extends State<AjoutPage> {
           _numInventaire,
           _lieuInstallation);
       if (response.statusCode == 201) {
+        var materiel = convert.jsonDecode(response.body);
+        print('materiel' + response.statusCode.toString());
+
+        String uriMateriel =
+            '/stageAppWeb/public/api/materiels/${materiel['id']}';
+        List<String> tabUriPhotos = List.empty(growable: true);
+        if (_listUrl.isNotEmpty) {
+          for (int i = 0; i < _listUrl.length; i++) {
+            var post = await _tool.postPhoto(_listUrl[i], uriMateriel);
+            print('post' + post.statusCode.toString());
+
+            if (post.statusCode == 201) {
+              var postTemp = convert.jsonDecode(post.body);
+              tabUriPhotos
+                  .add('/stageAppWeb/public/api/photos/${postTemp['id']}');
+            }
+          }
+          var reponse = await _tool.patchMaterielPhoto(
+              tabUriPhotos, materiel['id'].toString());
+          print('patch' + reponse.statusCode.toString());
+        }
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Matériel ajouté'),
         ));
@@ -405,6 +437,89 @@ class _AjoutPageState extends State<AjoutPage> {
                     _labelErrEtat
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    Text(
+                        'L\'upload d\'images passe par URL, vous pouvez utiliser le site "postimages" pour téléverser une image en URL.'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.18,
+                      child: TextFormField(
+                        controller: fieldText,
+                        decoration:
+                            const InputDecoration(labelText: 'URL image: '),
+                        onFieldSubmitted: (valeur) {
+                          if (valeur == null || valeur.isEmpty) {
+                            return;
+                          } else {
+                            setState(() {
+                              _listUrl.add(valeur);
+                              clearText();
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(left: 30)),
+                    Column(
+                      children: <Widget>[
+                        ...List.generate(_listUrl.length, (index) {
+                          return Card(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    width: 2),
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.check_circle_rounded,
+                                            color: Colors.green),
+                                        const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5)),
+                                        Text(
+                                          _listUrl[index],
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.green),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5)),
+                                        IconButton(
+                                          icon:
+                                              const Icon(Icons.delete_outline),
+                                          onPressed: () {
+                                            _listUrl.removeAt(index);
+                                            setState(() {
+                                              _listUrl;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
+                ),
                 const Padding(padding: EdgeInsets.all(10)),
                 ElevatedButton(
                   onPressed: () {
@@ -414,6 +529,7 @@ class _AjoutPageState extends State<AjoutPage> {
                   },
                   child: const Text("Valider"),
                 ),
+                const Padding(padding: EdgeInsets.symmetric(vertical: 30)),
               ],
             ),
           ),

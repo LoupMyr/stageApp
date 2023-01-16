@@ -54,7 +54,7 @@ class SearchByTypeState extends State<SearchByType> {
     }
     _col = Column(
       children: const <Widget>[
-        SpinKitDualRing(color: Colors.blueGrey),
+        SpinKitThreeInOut(color: Colors.blueGrey),
       ],
     );
     var responseM = await _tools.getMateriels();

@@ -16,7 +16,10 @@ class ListeUsersPage extends StatefulWidget {
 }
 
 class ListeUsersPageState extends State<ListeUsersPage> {
+  final _formEditEmail = GlobalKey<FormState>();
   var _users;
+  String _email = '';
+  String _role = '';
   final Tools _tools = Tools();
   bool _recupDataBool = false;
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
@@ -64,21 +67,96 @@ class ListeUsersPageState extends State<ListeUsersPage> {
             SizedBox(
               height: 100,
               width: MediaQuery.of(context).size.width / 3,
-              child: Text(
-                user['email'],
-                style: _textStyleHeaders,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    user['email'],
+                    style: _textStyleHeaders,
+                  ),
+                  const Padding(padding: EdgeInsets.only(right: 20)),
+                  IconButton(
+                      onPressed: () =>
+                          editEmailMenu(user['id'].toString(), user['email']),
+                      icon: const Icon(Icons.edit)),
+                ],
               ),
             ),
             SizedBox(
               height: 100,
               width: MediaQuery.of(context).size.width / 3,
-              child: Text(role, style: _textStyleHeaders),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    role,
+                    style: _textStyleHeaders,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       );
     }
     return tab;
+  }
+
+  Future<String?> editEmailMenu(String id, String email) {
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Modifier email: '),
+        content: Form(
+          key: _formEditEmail,
+          child: Column(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextFormField(
+                  initialValue: email,
+                  decoration: const InputDecoration(labelText: "Email"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Saisie vide';
+                    } else {
+                      _email = value.toString();
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formEditEmail.currentState!.validate()) {
+                      editEmail(id);
+                    }
+                  },
+                  child: const Text("Valider"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> editEmail(String id) async {
+    var response = await _tools.patchUserEmail(id, _email);
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Email modifié'),
+      ));
+      setState(() {
+        recupUsers();
+      });
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Erreur: ${response.statusCode}'),
+      ));
+    }
   }
 
   @override
@@ -98,7 +176,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
             children = <Widget>[];
           } else {
             children = <Widget>[
-              const SpinKitRipple(
+              const SpinKitThreeInOut(
                 color: Colors.teal,
                 size: 100,
               )

@@ -270,8 +270,8 @@ class MaterielPageState extends State<MaterielPage> {
   }
 
   Widget createImg() {
-    AssetImage img = _tools.findImg(_type['libelle']);
-
+    NetworkImage img =
+        const NetworkImage('https://i.postimg.cc/43p8VcHk/QRCode-TBI-8.png');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -397,7 +397,7 @@ class MaterielPageState extends State<MaterielPage> {
           } else {
             recupEtat();
             children = [
-              const SpinKitRipple(
+              const SpinKitThreeInOut(
                 color: Colors.teal,
                 size: 100,
               )
@@ -426,7 +426,7 @@ class MaterielPageState extends State<MaterielPage> {
                 Padding(
                     padding: EdgeInsets.only(
                         right: MediaQuery.of(context).size.width / 2.2)),
-                const SpinKitRing(
+                const SpinKitThreeInOut(
                   color: Colors.blueGrey,
                   size: 100,
                 ),

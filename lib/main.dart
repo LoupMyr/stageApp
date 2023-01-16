@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         title: 'Gestion de stock',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
+          primaryColor: Colors.teal,
         ),
         home: const SplashScreen(title: 'Gestion - Connexion'),
         darkTheme: ThemeData.dark(),

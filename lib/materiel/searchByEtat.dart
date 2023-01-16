@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
 
-import 'package:stage/class/widgetNonAdmin.dart';
+import 'package:stage/class/widgets.dart';
 
 class SearchByEtat extends StatefulWidget {
   const SearchByEtat({super.key, required this.title});
@@ -41,7 +41,7 @@ class SearchByEtatState extends State<SearchByEtat> {
 
   void recupMateriels() async {
     if (await _tools.checkAdmin() == false) {
-      WidgetNonAdmin.buildEmptyPopUp(context);
+      Widgets.buildEmptyPopUp(context);
       return;
     }
     _col = Column(
@@ -75,7 +75,7 @@ class SearchByEtatState extends State<SearchByEtat> {
     }
   }
 
-  void buildList() async {
+  void buildList() {
     List<Widget> tab = [];
     if (_idSelec == 0) {
       tab.add(
@@ -163,7 +163,7 @@ class SearchByEtatState extends State<SearchByEtat> {
   Future<void> buildDeletePopUp(String id) async {
     return showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Champ vide'),
@@ -193,9 +193,24 @@ class SearchByEtatState extends State<SearchByEtat> {
         });
   }
 
-  void deleteElt(id) async {
+  Future<void> deleteElt(String id) async {
+    for (var elt in _listM['hydra:member']) {
+      if (elt['id'].toString() == id) {
+        if (elt['photos'].isNotEmpty) {
+          List<int> tabIdPhoto = [];
+          for (int i = 0; i < elt['photos'].length; i++) {
+            List<String> temp = elt['photos'][i].split('/');
+            int id = int.parse(temp[temp.length - 1]);
+            tabIdPhoto.add(id);
+          }
+          for (int i = 0; i < tabIdPhoto.length; i++) {
+            await _tools.deletePhoto(tabIdPhoto[i].toString());
+          }
+        }
+      }
+    }
     var response = await _tools.deleteMateriel(id);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Matériel supprimé'),
       ));
@@ -205,7 +220,7 @@ class SearchByEtatState extends State<SearchByEtat> {
       ));
     }
     setState(() {
-      buildList();
+      recupMateriels();
     });
   }
 

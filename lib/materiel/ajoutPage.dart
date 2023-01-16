@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:stage/class/numInventaireFormatter.dart';
 import 'package:stage/class/tools.dart';
 import 'package:intl/intl.dart';
-import 'package:stage/class/widgetNonAdmin.dart';
+import 'package:stage/class/widgets.dart';
 import 'dart:convert' as convert;
 
 class AjoutPage extends StatefulWidget {
@@ -65,7 +65,7 @@ class _AjoutPageState extends State<AjoutPage> {
 
   void sendRequest() async {
     if (await _tool.checkAdmin() == false) {
-      WidgetNonAdmin.buildEmptyPopUp(context);
+      Widgets.buildEmptyPopUp(context);
       return;
     }
     _keep = true;

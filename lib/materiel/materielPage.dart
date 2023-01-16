@@ -5,7 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
 
-import 'package:stage/class/widgetNonAdmin.dart';
+import 'package:stage/class/widgets.dart';
 
 class MaterielPage extends StatefulWidget {
   const MaterielPage({super.key, required this.title});
@@ -31,7 +31,7 @@ class MaterielPageState extends State<MaterielPage> {
 
   Future<String> recupEtat() async {
     if (await _tools.checkAdmin() == false) {
-      WidgetNonAdmin.buildEmptyPopUp(context);
+      Widgets.buildEmptyPopUp(context);
       return '';
     }
     List<String> temp = _tab[0]['etat'].split('/');

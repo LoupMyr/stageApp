@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:stage/class/tools.dart';
 
-class WidgetNonAdmin {
+class Widgets {
   static Future<void> buildEmptyPopUp(BuildContext context) async {
     return showDialog(
         context: context,

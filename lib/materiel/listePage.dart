@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stage/class/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
-
-import 'package:stage/class/widgetNonAdmin.dart';
+import 'package:stage/class/widgets.dart';
 
 class ListePage extends StatefulWidget {
   const ListePage({super.key, required this.title});
@@ -24,7 +23,7 @@ class ListePageState extends State<ListePage> {
 
   Future<String> recupMateriels() async {
     if (await _tools.checkAdmin() == false) {
-      WidgetNonAdmin.buildEmptyPopUp(context);
+      Widgets.buildEmptyPopUp(context);
       return '';
     }
     var responseM = await _tools.getMateriels();

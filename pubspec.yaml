@@ -79,6 +79,8 @@ flutter:
     - lib/assets/souris.png
     - lib/assets/switch.png
     - lib/assets/wifi.png
+    - lib/assets/achicourt.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

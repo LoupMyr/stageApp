@@ -4,7 +4,7 @@ import 'package:stage/class/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
 
-import 'package:stage/class/widgetNonAdmin.dart';
+import 'package:stage/class/widgets.dart';
 
 class ListeUsersPage extends StatefulWidget {
   const ListeUsersPage({super.key, required this.title});
@@ -26,7 +26,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
 
   Future<String> recupUsers() async {
     if (await _tools.checkAdmin() == false) {
-      WidgetNonAdmin.buildEmptyPopUp(context);
+      Widgets.buildEmptyPopUp(context);
       return '';
     }
     var response = await _tools.getUsers();

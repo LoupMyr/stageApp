@@ -96,7 +96,6 @@ class _AjoutPageState extends State<AjoutPage> {
           _lieuInstallation);
       if (response.statusCode == 201) {
         var materiel = convert.jsonDecode(response.body);
-        print('materiel' + response.statusCode.toString());
 
         String uriMateriel =
             '/stageAppWeb/public/api/materiels/${materiel['id']}';
@@ -104,7 +103,6 @@ class _AjoutPageState extends State<AjoutPage> {
         if (_listUrl.isNotEmpty) {
           for (int i = 0; i < _listUrl.length; i++) {
             var post = await _tool.postPhoto(_listUrl[i], uriMateriel);
-            print('post' + post.statusCode.toString());
 
             if (post.statusCode == 201) {
               var postTemp = convert.jsonDecode(post.body);
@@ -114,7 +112,6 @@ class _AjoutPageState extends State<AjoutPage> {
           }
           var reponse = await _tool.patchMaterielPhoto(
               tabUriPhotos, materiel['id'].toString());
-          print('patch' + reponse.statusCode.toString());
         }
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Matériel ajouté'),
@@ -167,6 +164,23 @@ class _AjoutPageState extends State<AjoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 150,
+        leading: Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Image(
+                image: AssetImage('lib/assets/achicourt.png'),
+              ),
+            ),
+            IconButton(
+              padding: const EdgeInsets.only(right: 20),
+              tooltip: 'Retour',
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+            ),
+          ],
+        ),
         title: Text(widget.title),
         centerTitle: true,
       ),

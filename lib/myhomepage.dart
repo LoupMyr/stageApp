@@ -21,18 +21,16 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: const EdgeInsets.only(right: 20),
       tooltip: 'Profil',
       onPressed: () => Navigator.pushNamed(context, '/routeProfil'),
-      icon: const Icon(Icons.person_outline, color: Colors.black),
+      icon: const Icon(Icons.person_outline),
       iconSize: 35,
     ));
+
     if (role == 'ROLE_ADMIN') {
       _navbar.add(IconButton(
         padding: const EdgeInsets.only(right: 20),
         tooltip: 'Administration',
         onPressed: () => Navigator.pushNamed(context, '/routeListeUsers'),
-        icon: const Icon(
-          Icons.admin_panel_settings,
-          color: Colors.black,
-        ),
+        icon: const Icon(Icons.admin_panel_settings),
         iconSize: 35,
       ));
     }
@@ -53,129 +51,71 @@ class _MyHomePageState extends State<MyHomePage> {
           _navbar = [];
         }
         return Scaffold(
-          body: CustomScrollView(slivers: <Widget>[
-            SliverAppBar(
-              pinned: true,
-              snap: false,
-              floating: false,
-              expandedHeight: 300.0,
-              leading: IconButton(
-                tooltip: 'Deconnexion',
-                icon: const Icon(Icons.logout_sharp, color: Colors.black),
-                onPressed: logout,
-              ),
-              actions: _navbar,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  widget.title,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      decoration: TextDecoration.underline),
+          appBar: AppBar(
+            leadingWidth: 150,
+            leading: Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Image(
+                    image: AssetImage('lib/assets/achicourt.png'),
+                  ),
                 ),
-                background: Column(
-                  children: <Widget>[
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    Image(
-                      image: const AssetImage(
-                        'lib/assets/achicourt.png',
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.32,
-                      height: MediaQuery.of(context).size.height * 0.32,
-                    ),
-                  ],
+                IconButton(
+                  padding: const EdgeInsets.only(right: 20),
+                  tooltip: 'Deconnexion',
+                  onPressed: logout,
+                  icon: const Icon(Icons.logout_outlined),
+                  iconSize: 35,
                 ),
-              ),
+              ],
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.05)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                          onPressed: () =>
-                              Navigator.pushNamed(context, '/routeListe'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: const BorderSide(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            'Consulter la liste compléte',
-                            textAlign: TextAlign.center,
-                            style: _textStyle,
+            actions: _navbar,
+            title: Text(widget.title),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.05)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: ElevatedButton(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/routeListe'),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: const BorderSide(color: Colors.black),
                           ),
                         ),
                       ),
-                      SizedBox.fromSize(
-                          size: Size.fromHeight(
-                              MediaQuery.of(context).size.height * 0.05)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: ElevatedButton(
-                                onPressed: () => Navigator.pushNamed(
-                                    context, '/routeByType'),
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side:
-                                          const BorderSide(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                                child: Text('Rechercher un type',
-                                    textAlign: TextAlign.center,
-                                    style: _textStyle)),
-                          ),
-                          const Padding(padding: EdgeInsets.all(10)),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: ElevatedButton(
-                                onPressed: () => Navigator.pushNamed(
-                                    context, '/routeByEtat'),
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side:
-                                          const BorderSide(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                                child: Text('Rechercher un état',
-                                    textAlign: TextAlign.center,
-                                    style: _textStyle)),
-                          ),
-                        ],
+                      child: Text(
+                        'Consulter la liste compléte',
+                        textAlign: TextAlign.center,
+                        style: _textStyle,
                       ),
-                      SizedBox.fromSize(
-                          size: Size.fromHeight(
-                              MediaQuery.of(context).size.height * 0.05)),
+                    ),
+                  ),
+                  SizedBox.fromSize(
+                      size: Size.fromHeight(
+                          MediaQuery.of(context).size.height * 0.05)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
                         width: MediaQuery.of(context).size.width * 0.2,
                         child: ElevatedButton(
                             onPressed: () =>
-                                Navigator.pushNamed(context, '/routeAjout'),
+                                Navigator.pushNamed(context, '/routeByType'),
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
@@ -185,19 +125,80 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
-                            child: Text('Ajouter un élément',
+                            child: Text('Rechercher un type',
                                 textAlign: TextAlign.center,
                                 style: _textStyle)),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.05)),
+                      const Padding(padding: EdgeInsets.all(10)),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: ElevatedButton(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/routeByDate'),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: const BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            child: Text('Rechercher une année',
+                                textAlign: TextAlign.center,
+                                style: _textStyle)),
+                      ),
+                      const Padding(padding: EdgeInsets.all(10)),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: ElevatedButton(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/routeByEtat'),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: const BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            child: Text('Rechercher un état',
+                                textAlign: TextAlign.center,
+                                style: _textStyle)),
+                      ),
                     ],
                   ),
-                );
-              }, childCount: 1),
+                  SizedBox.fromSize(
+                      size: Size.fromHeight(
+                          MediaQuery.of(context).size.height * 0.05)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: ElevatedButton(
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/routeAjout'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: const BorderSide(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        child: Text('Ajouter un élément',
+                            textAlign: TextAlign.center, style: _textStyle)),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.05)),
+                ],
+              ),
             ),
-          ]),
+          ),
         );
       },
     );

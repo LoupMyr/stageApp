@@ -136,6 +136,23 @@ class ProfilPageState extends State<ProfilPage> {
           }
           return Scaffold(
             appBar: AppBar(
+              leadingWidth: 150,
+              leading: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Image(
+                      image: AssetImage('lib/assets/achicourt.png'),
+                    ),
+                  ),
+                  IconButton(
+                    padding: const EdgeInsets.only(right: 20),
+                    tooltip: 'Retour',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                ],
+              ),
               centerTitle: true,
               title: Text(widget.title),
             ),

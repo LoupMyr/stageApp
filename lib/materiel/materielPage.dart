@@ -465,6 +465,23 @@ class MaterielPageState extends State<MaterielPage> {
         }
         return Scaffold(
           appBar: AppBar(
+            leadingWidth: 150,
+            leading: Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Image(
+                    image: AssetImage('lib/assets/achicourt.png'),
+                  ),
+                ),
+                IconButton(
+                  padding: const EdgeInsets.only(right: 20),
+                  tooltip: 'Retour',
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.arrow_back),
+                ),
+              ],
+            ),
             title: Text(widget.title),
             centerTitle: true,
           ),

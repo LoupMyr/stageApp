@@ -31,6 +31,23 @@ class QrCodePageState extends State<QrCodePage> {
     _type = _tab[2];
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 150,
+        leading: Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Image(
+                image: AssetImage('lib/assets/achicourt.png'),
+              ),
+            ),
+            IconButton(
+              padding: const EdgeInsets.only(right: 20),
+              tooltip: 'Retour',
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+            ),
+          ],
+        ),
         title: Text(widget.title),
         centerTitle: true,
       ),
@@ -69,10 +86,10 @@ class QrCodePageState extends State<QrCodePage> {
       var image = await boundary.toImage();
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      var path = 'C:/Users/pc-Utilisateur/Documents/qrCodes';
+      Directory directoryDoc = await getApplicationDocumentsDirectory();
       try {
         final file = await File(
-                '$path/QRCode-${_type['libelle']}-${_materiel['id']}.png')
+                '${directoryDoc.path}/qrCodes/QRCode-${_type['libelle']}-${_materiel['id']}.png')
             .create();
         await file.writeAsBytes(pngBytes);
       } catch (e) {

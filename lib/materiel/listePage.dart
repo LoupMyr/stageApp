@@ -248,6 +248,22 @@ class ListePageState extends State<ListePage> {
             appBar: AppBar(
               centerTitle: true,
               title: Text(widget.title),
+              leadingWidth: 200,
+              leading: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Image(
+                      image: AssetImage('lib/assets/achicourt.png'),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Retour',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                ],
+              ),
             ),
             body: SingleChildScrollView(
               child: Center(

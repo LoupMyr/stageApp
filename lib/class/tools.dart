@@ -129,7 +129,6 @@ class Tools {
       "lieuInstallation": lieuInstallation
     };
 
-    print(body.toString());
     return await http.post(
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),

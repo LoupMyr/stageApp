@@ -10,6 +10,7 @@ import 'package:stage/user/profilPage.dart';
 import 'package:stage/materiel/qrCodePage.dart';
 import 'package:stage/materiel/searchByEtat.dart';
 import 'package:stage/materiel/searchByType.dart';
+import 'package:stage/materiel/searchByDate.dart';
 import 'package:stage/splashscreen.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.teal,
         ),
-        home: const SplashScreen(title: 'Gestion - Connexion'),
+        home: const SplashScreen(title: 'Inventaire parc informatique'),
         darkTheme: ThemeData.dark(),
         routes: <String, WidgetBuilder>{
           '/routeHome': (BuildContext context) =>
@@ -42,6 +43,8 @@ class MyApp extends StatelessWidget {
               const SearchByEtat(title: "Gestion - Recherche par Etat"),
           '/routeByType': (BuildContext context) =>
               const SearchByType(title: "Gestion - Recherche par Type"),
+          '/routeByDate': (BuildContext context) =>
+              const SearchByDate(title: "Gestion - Recherche par Année"),
           '/routeInscription': (BuildContext context) =>
               const InscriptionPage(title: "Gestion - Inscription"),
           '/routeListeUsers': (BuildContext context) => const ListeUsersPage(

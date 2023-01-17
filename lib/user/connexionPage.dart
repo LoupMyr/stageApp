@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stage/class/local.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConnexionPage extends StatefulWidget {
   const ConnexionPage({super.key, required this.title});
@@ -17,6 +18,15 @@ class ConnexionPageState extends State<ConnexionPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _mdp = '';
+  bool _isChecked = false;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    _loadUserEmailPassword();
+    super.initState();
+  }
 
   void connect() async {
     var response = await _tools.authenticationUser(_email, _mdp);
@@ -43,10 +53,53 @@ class ConnexionPageState extends State<ConnexionPage> {
     }
   }
 
+  void _loadUserEmailPassword() async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      var _email = _prefs.getString("email") ?? "";
+      var _password = _prefs.getString("password") ?? "";
+      var _remeberMe = _prefs.getBool("remember_me") ?? false;
+      if (_remeberMe) {
+        setState(() {
+          _isChecked = true;
+        });
+        _emailController.text = _email ?? "";
+        _passwordController.text = _password ?? "";
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _handleRemeberme(bool value) {
+    _isChecked = value;
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        prefs.setBool("remember_me", value);
+        prefs.setString('email', _emailController.text);
+        prefs.setString('password', _passwordController.text);
+      },
+    );
+    setState(() {
+      _isChecked = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 150,
+        leading: Row(
+          children: const [
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Image(
+                image: AssetImage('lib/assets/achicourt.png'),
+              ),
+            ),
+          ],
+        ),
         centerTitle: true,
         title: Text(
           widget.title,
@@ -81,7 +134,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
-                        initialValue: 'test@test.com',
+                        controller: _emailController,
                         decoration: const InputDecoration(labelText: 'Email'),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
@@ -98,7 +151,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
-                        initialValue: 'test',
+                        controller: _passwordController,
                         obscureText: true,
                         decoration:
                             const InputDecoration(labelText: 'Mot de passe'),
@@ -111,6 +164,32 @@ class ConnexionPageState extends State<ConnexionPage> {
                             });
                           }
                         },
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.all(20)),
+                    SizedBox(
+                      height: 24.0,
+                      width: 50.0,
+                      child: Theme(
+                        data: ThemeData(
+                          unselectedWidgetColor: Colors.blue,
+                        ),
+                        child: Checkbox(
+                          activeColor: Colors.blue,
+                          value: _isChecked,
+                          onChanged: (bool? value) {
+                            _handleRemeberme(value!);
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    const Text(
+                      "Se souvenir de moi",
+                      style: TextStyle(
+                        color: Color(0xff646464),
+                        fontSize: 12,
+                        fontFamily: 'Rubic',
                       ),
                     ),
                     const Padding(padding: EdgeInsets.all(40)),

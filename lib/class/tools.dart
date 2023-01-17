@@ -328,4 +328,23 @@ class Tools {
     }
     return estAdmin;
   }
+
+  List<List<dynamic>> sortByType(var _types, List<dynamic> _listMateriels) {
+    List<List<dynamic>> tabSorted = List.generate(
+        _types['hydra:member'].length, (index) => List.empty(growable: true));
+    for (var type in _types['hydra:member']) {
+      for (var materiel in _listMateriels) {
+        List<String> temp = materiel['type'].split('/');
+        int idType = int.parse(temp[temp.length - 1]);
+        if (idType == type['id']) {
+          for (int i = 0; i < tabSorted.length; i++) {
+            if (idType - 1 == i) {
+              tabSorted[i].add(materiel);
+            }
+          }
+        }
+      }
+    }
+    return tabSorted;
+  }
 }

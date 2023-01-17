@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
 import 'package:pdf/widgets.dart' as pw;
@@ -27,8 +28,9 @@ class SearchByDateState extends State<SearchByDate> {
   Column _col = Column(
     children: const <Widget>[Text('Aucune année selectionné.')],
   );
-  List<Widget> _tab = [];
-  var _tabPdf = [];
+  final List<dynamic> _listMateriels = List.empty(growable: true);
+  final List<Widget> _tab = List.empty(growable: true);
+  List<List<dynamic>> _tabSorted = List.empty(growable: true);
 
   selectYear() {
     showDialog(
@@ -96,6 +98,8 @@ class SearchByDateState extends State<SearchByDate> {
   }
 
   void createList() {
+    _listMateriels.clear();
+    _tab.clear();
     for (var elt in _materiels['hydra:member']) {
       if (elt['dateAchat'].isNotEmpty && elt['dateAchat'] != null) {
         List<String> temp = elt['dateAchat'].split('-');
@@ -107,6 +111,7 @@ class SearchByDateState extends State<SearchByDate> {
               type = t;
             }
           }
+          _listMateriels.add(elt);
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
           _tab.add(
@@ -157,37 +162,6 @@ class SearchByDateState extends State<SearchByDate> {
               ),
             ),
           );
-          _tabPdf = [
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.center,
-              children: <pw.Widget>[
-                pw.SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: pw.Center(
-                    child: pw.Text(type['libelle'],
-                        style: pw.TextStyle(fontSize: 20)),
-                  ),
-                ),
-                pw.SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: pw.Center(
-                    child: pw.Text(elt['marque'],
-                        style: pw.TextStyle(fontSize: 20)),
-                  ),
-                ),
-                pw.SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: pw.Center(
-                    child: pw.Text(elt['modele'],
-                        style: pw.TextStyle(fontSize: 20)),
-                  ),
-                ),
-              ],
-            ),
-          ];
         }
       }
     }
@@ -243,7 +217,7 @@ class SearchByDateState extends State<SearchByDate> {
     for (var elt in _materiels['hydra:member']) {
       if (elt['id'].toString() == id) {
         if (elt['photos'].isNotEmpty) {
-          List<int> tabIdPhoto = [];
+          List<int> tabIdPhoto = List.empty(growable: true);
           for (int i = 0; i < elt['photos'].length; i++) {
             List<String> temp = elt['photos'][i].split('/');
             int id = int.parse(temp[temp.length - 1]);
@@ -277,79 +251,130 @@ class SearchByDateState extends State<SearchByDate> {
     await file.writeAsBytes(await pdf.save());
   }
 
-  dynamic createPdf() {
+  pw.Document createPdf() {
+    _tabSorted = _tools.sortByType(_types, _listMateriels);
     final pdf = pw.Document();
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Column(
-            children: _tabPdf,
+    for (int i = 0; i < _tabSorted.length; i++) {
+      if (_tabSorted[i].isNotEmpty) {
+        List<pw.Widget> body = createBody(i);
+        pdf.addPage(
+          pw.Page(
+            build: (pw.Context context) => pw.Center(
+              child: pw.Column(
+                children: body,
+              ),
+            ),
           ),
-        ),
-      ),
-    );
-
+        );
+      }
+    }
     return pdf;
+  }
+
+  List<pw.Widget> createBody(int i) {
+    List<dynamic> tab = _tabSorted[i];
+    String nomType = _types['hydra:member'][i]['libelle'];
+    List<pw.Widget> body = List.empty(growable: true);
+    body.add(pw.Text(nomType,
+        style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold)));
+    body.add(pw.Padding(padding: const pw.EdgeInsets.only(bottom: 30)));
+    for (var elt in tab) {
+      body.add(pw.Divider(thickness: 3));
+      body.add(
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.center,
+          children: [
+            pw.SizedBox(
+              child: pw.Text(elt['modele']),
+            ),
+          ],
+        ),
+      );
+      body.add(
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.center,
+          children: [
+            pw.SizedBox(
+              child: pw.Text(elt['marque']),
+            ),
+          ],
+        ),
+      );
+      body.add(pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.SizedBox(
+            child: pw.Text(
+              DateFormat('yyyy-MM-dd')
+                  .format(DateTime.parse(elt['dateAchat']))
+                  .toString(),
+            ),
+          ),
+        ],
+      ));
+    }
+    return body;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 150,
-        leading: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Image(
-                image: AssetImage('lib/assets/achicourt.png'),
-              ),
-            ),
-            IconButton(
-              padding: const EdgeInsets.only(right: 20),
-              tooltip: 'Retour',
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        title: Text(widget.title),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-              Text(
-                'Selectionner une date:',
-                style: _ts,
-              ),
-              IconButton(
-                hoverColor: Colors.transparent,
-                onPressed: selectYear,
-                icon: const Icon(
-                  Icons.calendar_today,
-                  size: 25,
+        appBar: AppBar(
+          leadingWidth: 150,
+          leading: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Image(
+                  image: AssetImage('lib/assets/achicourt.png'),
                 ),
               ),
-              _isSelected
-                  ? Text(
-                      'Date selectionné: ${_annee.toString()}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    )
-                  : const Text(''),
-              const Padding(padding: EdgeInsets.all(10)),
-              const Divider(thickness: 2),
-              _col,
+              IconButton(
+                padding: const EdgeInsets.only(right: 20),
+                tooltip: 'Retour',
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back),
+              ),
             ],
           ),
+          centerTitle: true,
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: donwloadPdf,
-        child: const Icon(Icons.download),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+                Text(
+                  'Selectionner une date:',
+                  style: _ts,
+                ),
+                IconButton(
+                  hoverColor: Colors.transparent,
+                  onPressed: selectYear,
+                  icon: const Icon(
+                    Icons.calendar_today,
+                    size: 25,
+                  ),
+                ),
+                _isSelected
+                    ? Text(
+                        'Date selectionné: ${_annee.toString()}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : const Text(''),
+                const Padding(padding: EdgeInsets.all(10)),
+                const Divider(thickness: 2),
+                _col,
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: _isSelected
+            ? FloatingActionButton(
+                onPressed: donwloadPdf,
+                child: const Icon(Icons.download),
+              )
+            : null);
   }
 }

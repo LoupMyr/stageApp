@@ -268,53 +268,53 @@ class Tools {
 //*********//
 
   AssetImage findImg(var type) {
-    AssetImage img = const AssetImage('lib/assets/other.png');
+    AssetImage img = const AssetImage('assets/other.png');
     switch (type) {
       case 'Unité centrale':
-        img = const AssetImage('lib/assets/pc.png');
+        img = const AssetImage('assets/pc.png');
         break;
       case 'Ecran':
-        img = const AssetImage('lib/assets/ecran.png');
+        img = const AssetImage('assets/ecran.png');
 
         break;
       case 'Clavier':
-        img = const AssetImage('lib/assets/clavier.png');
+        img = const AssetImage('assets/clavier.png');
 
         break;
       case 'Souris':
-        img = const AssetImage('lib/assets/souris.png');
+        img = const AssetImage('assets/souris.png');
 
         break;
       case 'Imprimante':
-        img = const AssetImage('lib/assets/imprimante.png');
+        img = const AssetImage('assets/imprimante.png');
 
         break;
       case 'Copieur':
-        img = const AssetImage('lib/assets/copieur.png');
+        img = const AssetImage('assets/copieur.png');
 
         break;
       case 'NAS':
-        img = const AssetImage('lib/assets/nas.png');
+        img = const AssetImage('assets/nas.png');
 
         break;
       case 'Serveur':
-        img = const AssetImage('lib/assets/serveur.png');
+        img = const AssetImage('assets/serveur.png');
 
         break;
       case 'Switch':
-        img = const AssetImage('lib/assets/switch.png');
+        img = const AssetImage('assets/switch.png');
 
         break;
       case 'Point accès wifi':
-        img = const AssetImage('lib/assets/wifi.png');
+        img = const AssetImage('assets/wifi.png');
 
         break;
       case 'ENI':
-        img = const AssetImage('lib/assets/board.png');
+        img = const AssetImage('assets/board.png');
 
         break;
       case 'TBI':
-        img = const AssetImage('lib/assets/board.png');
+        img = const AssetImage('assets/board.png');
 
         break;
     }
@@ -349,7 +349,7 @@ class Tools {
   }
 
   Future<void> deleteElt(String id, var listMateriels,
-      GlobalKey<ScaffoldState> _scaffoldKey) async {
+      GlobalKey<ScaffoldState> scaffoldKey) async {
     for (var elt in listMateriels['hydra:member']) {
       if (elt['id'].toString() == id) {
         if (elt['photos'].isNotEmpty) {
@@ -367,12 +367,12 @@ class Tools {
     }
     var response = await this.deleteMateriel(id);
     if (response.statusCode == 204) {
-      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+      ScaffoldMessenger.of(scaffoldKey.currentContext!)
           .showSnackBar(const SnackBar(
         content: Text(Strings.deleteEltSuccessful),
       ));
     } else {
-      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+      ScaffoldMessenger.of(scaffoldKey.currentContext!)
           .showSnackBar(const SnackBar(
         content: Text(Strings.errorHappened),
       ));

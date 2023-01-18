@@ -96,7 +96,7 @@ class ConnexionPageState extends State<ConnexionPage> {
             Padding(
               padding: EdgeInsets.only(left: 10),
               child: Image(
-                image: AssetImage('lib/assets/achicourt.png'),
+                image: AssetImage('assets/achicourt.png'),
               ),
             ),
           ],

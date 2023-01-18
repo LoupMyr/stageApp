@@ -66,8 +66,9 @@ class Widgets {
         });
   }
 
-  static List<Widget> createHeaders(
-      BuildContext context, TextStyle _textStyleHeaders) {
+  static List<Widget> createHeaders(BuildContext context) {
+    TextStyle textStyleHeaders =
+        const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
     List<Widget> tab = [
       SizedBox(
         height: 100,
@@ -80,7 +81,7 @@ class Widgets {
         SizedBox(
           height: 100,
           width: MediaQuery.of(context).size.width / 5,
-          child: Text(Strings.tabHeaders[i], style: _textStyleHeaders),
+          child: Text(Strings.tabHeaders[i], style: textStyleHeaders),
         ),
       );
     }
@@ -90,46 +91,83 @@ class Widgets {
 
   static Widget createRow(var elt, var type, TextStyle ts,
       List<dynamic> tableau, AssetImage img, BuildContext context) {
-    return InkWell(
-      onTap: () =>
-          Navigator.pushNamed(context, "/routeMateriel", arguments: tableau),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Divider(
-            thickness: 10,
-          ),
-          SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width / 7,
-            child: Center(
-                child: Image(
-              image: img,
-              color: Colors.black,
-            )),
-          ),
-          SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width / 5,
-            child: Center(
-              child: Text(type['libelle'], style: ts),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.black, width: 2.5),
+        ),
+      ),
+      child: InkWell(
+        onTap: () =>
+            Navigator.pushNamed(context, "/routeMateriel", arguments: tableau),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: Center(
+                  child: Image(
+                image: img,
+                color: Colors.black,
+              )),
+            ),
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: Center(
+                child: Text(
+                  type['libelle'],
+                  style: ts,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: Center(
+                child:
+                    Text(elt['marque'], style: ts, textAlign: TextAlign.center),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: Center(
+                child:
+                    Text(elt['modele'], style: ts, textAlign: TextAlign.center),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static AppBar createAppBar(String title, BuildContext context) {
+    return AppBar(
+      leadingWidth: 150,
+      leading: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Image(
+              image: AssetImage('assets/achicourt.png'),
             ),
           ),
-          SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width / 5,
-            child: Center(
-              child: Text(elt['marque'], style: ts),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width / 5,
-            child: Center(
-              child: Text(elt['modele'], style: ts),
-            ),
+          IconButton(
+            padding: const EdgeInsets.only(right: 20),
+            tooltip: Strings.backToolTip,
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back),
           ),
         ],
+      ),
+      centerTitle: true,
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 30),
       ),
     );
   }

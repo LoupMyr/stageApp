@@ -117,14 +117,15 @@ class SearchByDateState extends State<SearchByDate> {
           _listMateriels.add(elt);
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
-          _tab.add(Widgets.createRow(elt, type, _ts, tableau, img, context));
+          _tab.add(Widgets.createRow(
+              elt, type, _textStyleHeaders, tableau, img, context));
           _tab.add(
             SizedBox(
               height: 100,
               width: MediaQuery.of(context).size.width / 5,
               child: IconButton(
                 icon: const Icon(Icons.delete),
-                onPressed: () => /*deleteElt(elt['id'].toString())*/ null,
+                onPressed: () => deleteElt(elt['id'].toString()),
               ),
             ),
           );
@@ -243,27 +244,7 @@ class SearchByDateState extends State<SearchByDate> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        leadingWidth: 150,
-        leading: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Image(
-                image: AssetImage('lib/assets/achicourt.png'),
-              ),
-            ),
-            IconButton(
-              padding: const EdgeInsets.only(right: 20),
-              tooltip: Strings.backToolTip,
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        title: Text(widget.title),
-      ),
+      appBar: Widgets.createAppBar(widget.title, context),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -290,8 +271,8 @@ class SearchByDateState extends State<SearchByDate> {
               const Padding(padding: EdgeInsets.all(10)),
               const Divider(thickness: 2),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: Widgets.createHeaders(context, _textStyleHeaders),
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: Widgets.createHeaders(context),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

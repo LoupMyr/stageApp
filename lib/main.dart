@@ -28,31 +28,31 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.teal,
         ),
-        home: const SplashScreen(title: 'Inventaire parc informatique'),
+        home: const SplashScreen(title: 'Connexion'),
         darkTheme: ThemeData.dark(),
         routes: <String, WidgetBuilder>{
           '/routeHome': (BuildContext context) =>
-              const MyHomePage(title: "Gestion - Accueil"),
+              const MyHomePage(title: "Inventaire du parc informatique"),
           '/routeAjout': (BuildContext context) =>
-              const AjoutPage(title: "Gestion - Ajouter un élément"),
+              const AjoutPage(title: "Ajouter un élément"),
           '/routeListe': (BuildContext context) =>
-              const ListePage(title: "Gestion - Liste du stock"),
+              const ListePage(title: "Liste du stock"),
           '/routeMateriel': (BuildContext context) =>
-              const MaterielPage(title: "Gestion - Detail"),
+              const MaterielPage(title: "Detail"),
           '/routeByEtat': (BuildContext context) =>
-              const SearchByEtat(title: "Gestion - Recherche par Etat"),
+              const SearchByEtat(title: "Recherche par Etat"),
           '/routeByType': (BuildContext context) =>
-              const SearchByType(title: "Gestion - Recherche par Type"),
+              const SearchByType(title: "Recherche par Type"),
           '/routeByDate': (BuildContext context) =>
-              const SearchByDate(title: "Gestion - Recherche par Année"),
+              const SearchByDate(title: "Recherche par Année"),
           '/routeInscription': (BuildContext context) =>
-              const InscriptionPage(title: "Gestion - Inscription"),
+              const InscriptionPage(title: "Inscription"),
           '/routeListeUsers': (BuildContext context) => const ListeUsersPage(
               title: "Administration - Gestion utilisateurs"),
           '/routeConnexion': (BuildContext context) =>
               const ConnexionPage(title: "Connexion"),
           '/routeQrcode': (BuildContext context) =>
-              const QrCodePage(title: "Gestion - QR Code"),
+              const QrCodePage(title: "QR Code"),
           '/routeProfil': (BuildContext context) =>
               const ProfilPage(title: "Votre profil"),
         });

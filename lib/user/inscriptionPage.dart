@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
+import 'package:stage/class/widgets.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key, required this.title});
@@ -38,30 +39,7 @@ class InscriptionPageState extends State<InscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 150,
-        leading: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Image(
-                image: AssetImage('lib/assets/achicourt.png'),
-              ),
-            ),
-            IconButton(
-              padding: const EdgeInsets.only(right: 20),
-              tooltip: Strings.backToolTip,
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        title: Text(
-          widget.title,
-          style: const TextStyle(fontSize: 30),
-        ),
-      ),
+      appBar: Widgets.createAppBar(widget.title, context),
       body: SingleChildScrollView(
         child: Center(
           child: Container(

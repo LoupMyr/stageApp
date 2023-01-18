@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stage/class/strings.dart';
+import 'package:stage/class/widgets.dart';
 
 class QrCodePage extends StatefulWidget {
   const QrCodePage({super.key, required this.title});
@@ -31,27 +32,7 @@ class QrCodePageState extends State<QrCodePage> {
     _materiel = _tab[1];
     _type = _tab[2];
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 150,
-        leading: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Image(
-                image: AssetImage('lib/assets/achicourt.png'),
-              ),
-            ),
-            IconButton(
-              padding: const EdgeInsets.only(right: 20),
-              tooltip: Strings.backToolTip,
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-            ),
-          ],
-        ),
-        title: Text(widget.title),
-        centerTitle: true,
-      ),
+      appBar: Widgets.createAppBar(widget.title, context),
       body: SingleChildScrollView(
         child: Center(
           child: Column(

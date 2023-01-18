@@ -49,51 +49,15 @@ class ListePageState extends State<ListePage> {
       }
       List<dynamic> tableau = [elt, type];
       AssetImage img = _tools.findImg(type['libelle']);
+      tab.add(Widgets.createRow(
+          elt, type, _textStyleHeaders, tableau, img, context));
       tab.add(
-        InkWell(
-          onTap: () => Navigator.pushNamed(context, "/routeMateriel",
-              arguments: tableau),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 100,
-                width: MediaQuery.of(context).size.width / 7,
-                child: Center(
-                    child: Image(
-                  image: img,
-                  color: Colors.black,
-                )),
-              ),
-              SizedBox(
-                height: 100,
-                width: MediaQuery.of(context).size.width / 5,
-                child: Center(
-                  child: Text(type['libelle'], style: _textStyle),
-                ),
-              ),
-              SizedBox(
-                height: 100,
-                width: MediaQuery.of(context).size.width / 5,
-                child: Center(
-                  child: Text(elt['marque'], style: _textStyle),
-                ),
-              ),
-              SizedBox(
-                height: 100,
-                width: MediaQuery.of(context).size.width / 5,
-                child: Center(
-                  child: Text(elt['modele'], style: _textStyle),
-                ),
-              ),
-              SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => buildDeletePopUp(elt['id'].toString()),
-                  )),
-            ],
+        SizedBox(
+          height: 100,
+          width: MediaQuery.of(context).size.width / 5,
+          child: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () => deleteElt(elt['id'].toString()),
           ),
         ),
       );
@@ -179,7 +143,7 @@ class ListePageState extends State<ListePage> {
                 const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: Widgets.createHeaders(context, _textStyleHeaders),
+                  children: Widgets.createHeaders(context),
                 ),
                 Row(
                   children: <Widget>[
@@ -222,26 +186,7 @@ class ListePageState extends State<ListePage> {
           }
           return Scaffold(
             key: _scaffoldKey,
-            appBar: AppBar(
-              centerTitle: true,
-              title: Text(widget.title),
-              leadingWidth: 200,
-              leading: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Image(
-                      image: AssetImage('lib/assets/achicourt.png'),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: Strings.backToolTip,
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back),
-                  ),
-                ],
-              ),
-            ),
+            appBar: Widgets.createAppBar(widget.title, context),
             body: SingleChildScrollView(
               child: Center(
                 child: Column(children: children),

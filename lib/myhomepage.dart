@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Image(
-                    image: AssetImage('lib/assets/achicourt.png'),
+                    image: AssetImage('assets/achicourt.png'),
                   ),
                 ),
                 IconButton(
@@ -72,7 +72,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             actions: _navbar,
-            title: Text(widget.title),
+            title: Text(
+              widget.title,
+              style: TextStyle(fontSize: 30),
+            ),
             centerTitle: true,
           ),
           body: SingleChildScrollView(

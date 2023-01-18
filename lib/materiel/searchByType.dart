@@ -90,51 +90,15 @@ class SearchByTypeState extends State<SearchByType> {
       if (idType == _idSelec) {
         AssetImage img = _tools.findImg(_type['libelle']);
         List<dynamic> tableau = [elt, _type];
+        tab.add(Widgets.createRow(
+            elt, _type, _textStyleHeaders, tableau, img, context));
         tab.add(
-          InkWell(
-            onTap: () => Navigator.pushNamed(context, "/routeMateriel",
-                arguments: tableau),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 7,
-                  child: Center(
-                      child: Image(
-                    image: img,
-                    color: Colors.black,
-                  )),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Center(
-                    child: Text(_type['libelle'], style: _textStyle),
-                  ),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Center(
-                    child: Text(elt['marque'], style: _textStyle),
-                  ),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: Center(
-                    child: Text(elt['modele'], style: _textStyle),
-                  ),
-                ),
-                SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => deleteElt(elt['id'].toString()),
-                    )),
-              ],
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 5,
+            child: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () => deleteElt(elt['id'].toString()),
             ),
           ),
         );
@@ -166,27 +130,7 @@ class SearchByTypeState extends State<SearchByType> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        leadingWidth: 150,
-        leading: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Image(
-                image: AssetImage('lib/assets/achicourt.png'),
-              ),
-            ),
-            IconButton(
-              padding: const EdgeInsets.only(right: 20),
-              tooltip: Strings.backToolTip,
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        title: Text(widget.title),
-      ),
+      appBar: Widgets.createAppBar(widget.title, context),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -220,12 +164,14 @@ class SearchByTypeState extends State<SearchByType> {
               ),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: Widgets.createHeaders(context, _textStyleHeaders),
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: Widgets.createHeaders(context),
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: _col,
+                child: Center(
+                  child: _col,
+                ),
               ),
             ],
           ),

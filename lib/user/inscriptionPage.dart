@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 
 class InscriptionPage extends StatefulWidget {
@@ -21,15 +22,15 @@ class InscriptionPageState extends State<InscriptionPage> {
     if (response.statusCode == 201) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Vous êtes inscrit !'),
+        content: Text(Strings.registerSuccessfullStr),
       ));
     } else if (response.statusCode == 402) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Email déjà utilisé'),
+        content: Text(Strings.emailInUsedStr),
       ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Erreur ${response.statusCode.toString()}'),
+        content: Text('${Strings.errorStr}${response.statusCode.toString()}'),
       ));
     }
   }
@@ -49,7 +50,7 @@ class InscriptionPageState extends State<InscriptionPage> {
             ),
             IconButton(
               padding: const EdgeInsets.only(right: 20),
-              tooltip: 'Retour',
+              tooltip: Strings.backToolTip,
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
             ),
@@ -79,10 +80,11 @@ class InscriptionPageState extends State<InscriptionPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
-                        decoration: const InputDecoration(labelText: 'Email'),
+                        decoration: const InputDecoration(
+                            labelText: Strings.emailLabel),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
-                            return 'Saisie vide';
+                            return Strings.emptyInputStr;
                           } else {
                             setState(() {
                               _email = valeur;
@@ -96,11 +98,11 @@ class InscriptionPageState extends State<InscriptionPage> {
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(labelText: 'Mot de passe'),
+                        decoration: const InputDecoration(
+                            labelText: Strings.passwordLabel),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
-                            return 'Saisie vide';
+                            return Strings.emptyInputStr;
                           } else {
                             setState(() {
                               _mdp = valeur;
@@ -115,12 +117,12 @@ class InscriptionPageState extends State<InscriptionPage> {
                       child: TextFormField(
                         obscureText: true,
                         decoration: const InputDecoration(
-                            labelText: 'Confimer votre mot de passe'),
+                            labelText: Strings.confirmPasswordLabel),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
-                            return 'Saisie vide';
+                            return Strings.emptyInputStr;
                           } else if (valeur != _mdp) {
-                            return 'Mots de passe différents';
+                            return Strings.differentPasswords;
                           }
                         },
                       ),
@@ -132,7 +134,7 @@ class InscriptionPageState extends State<InscriptionPage> {
                           signUp();
                         }
                       },
-                      child: const Text("S'inscrire"),
+                      child: const Text(Strings.registerButtonStr),
                     ),
                   ],
                 ),

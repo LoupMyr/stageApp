@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
@@ -107,24 +108,24 @@ class ListePageState extends State<ListePage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Champ vide'),
+            title: const Text(Strings.deleteEltTitle),
             content: SingleChildScrollView(
               child: ListBody(
                 children: const <Widget>[
-                  Text('Etes vous sûr de vouloir supprimer cet élément'),
+                  Text(Strings.deleteStr),
                 ],
               ),
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Oui'),
+                child: const Text(Strings.yesButtonStr),
                 onPressed: () {
                   deleteElt(id);
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: const Text('Annuler'),
+                child: const Text(Strings.cancelButtonStr),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -153,11 +154,11 @@ class ListePageState extends State<ListePage> {
     var response = await _tools.deleteMateriel(id);
     if (response.statusCode == 204) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Matériel supprimé'),
+        content: Text(Strings.deleteEltSuccessful),
       ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Une erreur est survenue'),
+        content: Text(Strings.errorHappened),
       ));
     }
     setState(() {
@@ -186,22 +187,25 @@ class ListePageState extends State<ListePage> {
                     SizedBox(
                       height: 100,
                       width: MediaQuery.of(context).size.width / 5,
-                      child: Text('Type', style: _textStyleHeaders),
+                      child: Text(Strings.typeHeader, style: _textStyleHeaders),
                     ),
                     SizedBox(
                       height: 100,
                       width: MediaQuery.of(context).size.width / 5,
-                      child: Text('Marque', style: _textStyleHeaders),
+                      child:
+                          Text(Strings.marqueHeader, style: _textStyleHeaders),
                     ),
                     SizedBox(
                       height: 100,
                       width: MediaQuery.of(context).size.width / 5,
-                      child: Text('Modele', style: _textStyleHeaders),
+                      child:
+                          Text(Strings.modeleHeader, style: _textStyleHeaders),
                     ),
                     SizedBox(
                       height: 100,
                       width: MediaQuery.of(context).size.width / 5,
-                      child: Text('Options', style: _textStyleHeaders),
+                      child:
+                          Text(Strings.optionHeader, style: _textStyleHeaders),
                     ),
                   ],
                 ),
@@ -228,7 +232,7 @@ class ListePageState extends State<ListePage> {
                 size: 125,
               ),
               const Text(
-                'Erreur critique.',
+                Strings.criticalErrorStr,
                 style: TextStyle(fontSize: 30),
                 textAlign: TextAlign.center,
               )
@@ -258,7 +262,7 @@ class ListePageState extends State<ListePage> {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Retour',
+                    tooltip: Strings.backToolTip,
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back),
                   ),

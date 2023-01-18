@@ -4,7 +4,6 @@ import 'dart:convert' as convert;
 import 'package:stage/class/local.dart';
 
 class Tools {
-  static String role = '';
   //**********//
   //   GET   //
   //*********//

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:stage/class/strings.dart';
 
 class QrCodePage extends StatefulWidget {
   const QrCodePage({super.key, required this.title});
@@ -18,7 +19,7 @@ class QrCodePage extends StatefulWidget {
 
 class QrCodePageState extends State<QrCodePage> {
   GlobalKey globalKey = GlobalKey();
-  String _dataStr = 'Erreur';
+  String _dataStr = Strings.errorStr;
   List<dynamic> _tab = [];
   var _materiel;
   var _type;
@@ -42,7 +43,7 @@ class QrCodePageState extends State<QrCodePage> {
             ),
             IconButton(
               padding: const EdgeInsets.only(right: 20),
-              tooltip: 'Retour',
+              tooltip: Strings.backToolTip,
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
             ),
@@ -71,7 +72,7 @@ class QrCodePageState extends State<QrCodePage> {
         children: <Widget>[
           FloatingActionButton(
             onPressed: _captureAndSharePng,
-            tooltip: 'Télécharger',
+            tooltip: Strings.downloadToolTip,
             child: const Icon(Icons.download),
           ),
         ],
@@ -100,10 +101,10 @@ class QrCodePageState extends State<QrCodePage> {
         await file.writeAsBytes(pngBytes);
       }
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('QR Code enregistré avec succès'),
+        content: Text(Strings.qrDownloadSuccessfulStr),
       ));
     } catch (e) {
-      log(' ERROR : $e');
+      log(Strings.errorStr + e.toString());
     }
   }
 }

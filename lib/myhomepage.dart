@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stage/class/local.dart';
+import 'package:stage/class/strings.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 IconButton(
                   padding: const EdgeInsets.only(right: 20),
-                  tooltip: 'Deconnexion',
+                  tooltip: Strings.logoutToolTip,
                   onPressed: logout,
                   icon: const Icon(Icons.logout_outlined),
                   iconSize: 35,
@@ -98,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       child: Text(
-                        'Consulter la liste compléte',
+                        Strings.listButtonStr,
                         textAlign: TextAlign.center,
                         style: _textStyle,
                       ),
@@ -125,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
-                            child: Text('Rechercher un type',
+                            child: Text(Strings.searchTypeButtonStr,
                                 textAlign: TextAlign.center,
                                 style: _textStyle)),
                       ),
@@ -145,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
-                            child: Text('Rechercher une année',
+                            child: Text(Strings.searchYearButtonStr,
                                 textAlign: TextAlign.center,
                                 style: _textStyle)),
                       ),
@@ -165,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
-                            child: Text('Rechercher un état',
+                            child: Text(Strings.searchEtatButtonStr,
                                 textAlign: TextAlign.center,
                                 style: _textStyle)),
                       ),
@@ -189,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ),
-                        child: Text('Ajouter un élément',
+                        child: Text(Strings.addEltButtonStr,
                             textAlign: TextAlign.center, style: _textStyle)),
                   ),
                   Padding(

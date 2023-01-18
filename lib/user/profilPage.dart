@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
@@ -87,14 +88,14 @@ class ProfilPageState extends State<ProfilPage> {
                   child: Column(
                     children: <Widget>[
                       const Text(
-                        'Voici vos infomatations:',
+                        Strings.displayInfos,
                         style: TextStyle(
                             fontSize: 23, decoration: TextDecoration.underline),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 40)),
                       Row(
                         children: <Widget>[
-                          const Text('Email: ',
+                          const Text(Strings.emailLabel,
                               style: TextStyle(
                                   fontSize: 20,
                                   decoration: TextDecoration.underline)),
@@ -106,7 +107,7 @@ class ProfilPageState extends State<ProfilPage> {
                       ),
                       Row(
                         children: <Widget>[
-                          const Text('Role: ',
+                          const Text(Strings.roleLabel,
                               style: TextStyle(
                                   fontSize: 20,
                                   decoration: TextDecoration.underline)),
@@ -147,7 +148,7 @@ class ProfilPageState extends State<ProfilPage> {
                   ),
                   IconButton(
                     padding: const EdgeInsets.only(right: 20),
-                    tooltip: 'Retour',
+                    tooltip: Strings.backToolTip,
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back),
                   ),

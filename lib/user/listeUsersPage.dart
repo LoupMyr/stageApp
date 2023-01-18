@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert' as convert;
-
 import 'package:stage/class/widgets.dart';
 
 class ListeUsersPage extends StatefulWidget {
@@ -47,12 +47,12 @@ class ListeUsersPageState extends State<ListeUsersPage> {
           SizedBox(
             height: 100,
             width: MediaQuery.of(context).size.width / 3,
-            child: Text('Email', style: _textStyleHeaders),
+            child: Text(Strings.emailLabel, style: _textStyleHeaders),
           ),
           SizedBox(
             height: 100,
             width: MediaQuery.of(context).size.width / 3,
-            child: Text('Rôle', style: _textStyleHeaders),
+            child: Text(Strings.roleLabel, style: _textStyleHeaders),
           ),
         ],
       ),
@@ -105,7 +105,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('Modifier email: '),
+        title: const Text(Strings.editEmailTitle),
         content: Form(
           key: _formEditEmail,
           child: Column(
@@ -114,10 +114,11 @@ class ListeUsersPageState extends State<ListeUsersPage> {
                 width: MediaQuery.of(context).size.width * 0.4,
                 child: TextFormField(
                   initialValue: email,
-                  decoration: const InputDecoration(labelText: "Email"),
+                  decoration:
+                      const InputDecoration(labelText: Strings.emailLabel),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Saisie vide';
+                      return Strings.emptyInputStr;
                     } else {
                       _email = value.toString();
                     }
@@ -132,7 +133,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
                       editEmail(id);
                     }
                   },
-                  child: const Text("Valider"),
+                  child: const Text(Strings.validButtonStr),
                 ),
               ),
             ],
@@ -146,7 +147,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
     var response = await _tools.patchUserEmail(id, _email);
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Email modifié'),
+        content: Text(Strings.editEmailSuccessful),
       ));
       setState(() {
         recupUsers();
@@ -154,7 +155,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Erreur: ${response.statusCode}'),
+        content: Text('${Strings.errorStr} ${response.statusCode}'),
       ));
     }
   }
@@ -195,7 +196,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
                   ),
                   IconButton(
                     padding: const EdgeInsets.only(right: 20),
-                    tooltip: 'Retour',
+                    tooltip: Strings.backToolTip,
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back),
                   ),

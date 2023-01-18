@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stage/class/local.dart';
+import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,15 +41,15 @@ class ConnexionPageState extends State<ConnexionPage> {
           .write(key: 'id', value: token['data']['id'].toString());
       Navigator.pushReplacementNamed(context, '/routeHome');
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Bienvenue !'),
+        content: Text(Strings.welcomeStr),
       ));
     } else if (response.statusCode == 401) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Identifiants incorrects'),
+        content: Text(Strings.invalidCredentialsStr),
       ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Erreur ${response.statusCode.toString()}'),
+        content: Text('${Strings.errorStr} ${response.statusCode.toString()}'),
       ));
     }
   }
@@ -107,7 +108,7 @@ class ConnexionPageState extends State<ConnexionPage> {
         ),
         actions: [
           IconButton(
-              tooltip: 'Inscription',
+              tooltip: Strings.registerToolTip,
               padding: const EdgeInsets.only(right: 30),
               iconSize: 30,
               icon: const Icon(Icons.person_add),
@@ -135,10 +136,11 @@ class ConnexionPageState extends State<ConnexionPage> {
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
                         controller: _emailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
+                        decoration: const InputDecoration(
+                            labelText: Strings.emailLabel),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
-                            return 'Saisie vide';
+                            return Strings.emptyInputStr;
                           } else {
                             setState(() {
                               _email = valeur;
@@ -153,11 +155,11 @@ class ConnexionPageState extends State<ConnexionPage> {
                       child: TextFormField(
                         controller: _passwordController,
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(labelText: 'Mot de passe'),
+                        decoration: const InputDecoration(
+                            labelText: Strings.passwordLabel),
                         validator: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
-                            return 'Saisie vide';
+                            return Strings.emptyInputStr;
                           } else {
                             setState(() {
                               _mdp = valeur;
@@ -185,7 +187,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     ),
                     const SizedBox(width: 10.0),
                     const Text(
-                      "Se souvenir de moi",
+                      Strings.rememberMeStr,
                       style: TextStyle(
                         color: Color(0xff646464),
                         fontSize: 12,
@@ -199,7 +201,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                           connect();
                         }
                       },
-                      child: const Text("Valider"),
+                      child: const Text(Strings.connectButtonStr),
                     ),
                   ],
                 ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stage/class/numInventaireFormatter.dart';
+import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:stage/class/widgets.dart';
@@ -114,11 +115,11 @@ class _AjoutPageState extends State<AjoutPage> {
               tabUriPhotos, materiel['id'].toString());
         }
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Matériel ajouté'),
+          content: Text(Strings.materialAdded),
         ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Une erreur est survenue'),
+          content: Text(Strings.errorHappened),
         ));
         log(response.statusCode.toString());
       }
@@ -131,25 +132,24 @@ class _AjoutPageState extends State<AjoutPage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Champ vide'),
+            title: const Text(Strings.emptyField),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Le champ "$nom" est vide.'),
-                  const Text(
-                      'Etes vous sûr de vouloir enregistrer tout de même ?'),
+                  Text(Strings.fieldEmpty1 + nom + Strings.fieldEmpty2),
+                  const Text(Strings.keepSaving),
                 ],
               ),
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Oui'),
+                child: const Text(Strings.yesButtonStr),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: const Text('Annuler'),
+                child: const Text(Strings.cancelButtonStr),
                 onPressed: () {
                   _keep = false;
                   Navigator.of(context).pop();
@@ -175,7 +175,7 @@ class _AjoutPageState extends State<AjoutPage> {
             ),
             IconButton(
               padding: const EdgeInsets.only(right: 20),
-              tooltip: 'Retour',
+              tooltip: Strings.backToolTip,
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
             ),
@@ -197,7 +197,8 @@ class _AjoutPageState extends State<AjoutPage> {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(150),
                     ],
-                    decoration: const InputDecoration(labelText: 'Marque'),
+                    decoration:
+                        const InputDecoration(labelText: Strings.marqueLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
                         return 'Saisie vide';
@@ -216,7 +217,8 @@ class _AjoutPageState extends State<AjoutPage> {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(150),
                     ],
-                    decoration: const InputDecoration(labelText: 'Modèle'),
+                    decoration:
+                        const InputDecoration(labelText: Strings.modeleLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
                         return 'Saisie vide';
@@ -236,7 +238,7 @@ class _AjoutPageState extends State<AjoutPage> {
                       LengthLimitingTextInputFormatter(150),
                     ],
                     decoration:
-                        const InputDecoration(labelText: 'Numéro de série'),
+                        const InputDecoration(labelText: Strings.numSerieLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
                         return 'Saisie vide';
@@ -258,7 +260,7 @@ class _AjoutPageState extends State<AjoutPage> {
                       NumInventaireInputFormatter(),
                     ],
                     decoration: const InputDecoration(
-                        labelText: 'Numéro d\'inventaire '),
+                        labelText: Strings.numInventaireLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
                         return 'Saisie vide';
@@ -278,7 +280,7 @@ class _AjoutPageState extends State<AjoutPage> {
                       LengthLimitingTextInputFormatter(150),
                     ],
                     decoration: const InputDecoration(
-                        labelText: 'Lieu d\'installation '),
+                        labelText: Strings.lieuInstallationLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
                         return 'Saisie vide';
@@ -296,7 +298,7 @@ class _AjoutPageState extends State<AjoutPage> {
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.15,
-                      child: const Text('Date d\'achat: ',
+                      child: const Text(Strings.dateAchatLabel,
                           style: TextStyle(fontSize: 16.5)),
                     ),
                     IconButton(
@@ -330,7 +332,7 @@ class _AjoutPageState extends State<AjoutPage> {
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.15,
-                      child: const Text('Date de fin de garantie: ',
+                      child: const Text(Strings.dateGarantieLabel,
                           style: TextStyle(fontSize: 16.5)),
                     ),
                     IconButton(
@@ -363,7 +365,8 @@ class _AjoutPageState extends State<AjoutPage> {
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
                     maxLines: 5,
-                    decoration: const InputDecoration(hintText: 'Remarques'),
+                    decoration:
+                        const InputDecoration(hintText: Strings.remarquesLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
                         _remarques = '';
@@ -377,9 +380,9 @@ class _AjoutPageState extends State<AjoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Text('Type:', style: TextStyle(fontSize: 20)),
+                    Text(Strings.typeLabel, style: TextStyle(fontSize: 20)),
                     Padding(padding: EdgeInsetsDirectional.only(end: 175)),
-                    Text('Etat:', style: TextStyle(fontSize: 20)),
+                    Text(Strings.etatLabel, style: TextStyle(fontSize: 20)),
                   ],
                 ),
                 const Padding(padding: EdgeInsets.all(10)),
@@ -402,7 +405,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         if (_itemsType.indexOf(newValue) == 0) {
                           setState(() {
                             _labelErrType = const Text(
-                              'Veuillez choisir un type',
+                              Strings.errorTypeLabel,
                               style: TextStyle(color: Colors.red),
                             );
                           });
@@ -429,7 +432,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         if (_itemsEtat.indexOf(newValue) == 0) {
                           setState(() {
                             _labelErrEtat = const Text(
-                              'Veuillez choisir un état',
+                              Strings.errorEtatLabel,
                               style: TextStyle(color: Colors.red),
                             );
                           });
@@ -453,8 +456,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const <Widget>[
-                    Text(
-                        'L\'upload d\'images passe par URL, vous pouvez utiliser le site "postimages" pour téléverser une image en URL.'),
+                    Text(Strings.uploadImgStr),
                   ],
                 ),
                 Row(
@@ -464,8 +466,8 @@ class _AjoutPageState extends State<AjoutPage> {
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
                         controller: fieldText,
-                        decoration:
-                            const InputDecoration(labelText: 'URL image: '),
+                        decoration: const InputDecoration(
+                            labelText: Strings.uploadImgLabel),
                         onFieldSubmitted: (valeur) {
                           if (valeur == null || valeur.isEmpty) {
                             return;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:stage/class/strings.dart';
 import 'dart:convert' as convert;
 
 import 'package:stage/class/tools.dart';
@@ -41,7 +42,7 @@ class SearchByTypeState extends State<SearchByType> {
   Widget _col = Column(
     children: const <Widget>[
       Text(
-        'Aucune selection',
+        Strings.noSelectionStr,
         style: TextStyle(fontSize: 25),
       ),
     ],
@@ -74,7 +75,7 @@ class SearchByTypeState extends State<SearchByType> {
               size: 125,
             ),
             Text(
-              'Erreur critique.\nCode d\'erreur: ${responseM.statusCode.toString()}',
+              '${Strings.criticalErrorStr} - ${responseM.statusCode.toString()}',
               style: const TextStyle(fontSize: 30),
               textAlign: TextAlign.center,
             )
@@ -89,7 +90,7 @@ class SearchByTypeState extends State<SearchByType> {
     if (_idSelec == 0) {
       tab.add(
         const Text(
-          'Aucune selection',
+          Strings.noSelectionStr,
           style: TextStyle(fontSize: 25),
         ),
       );
@@ -152,7 +153,9 @@ class SearchByTypeState extends State<SearchByType> {
     }
     if (tab.isEmpty) {
       tab.add(Text(
-        'Il n\'y a pas de ${_dropdownvalue.toLowerCase()} dans le stock',
+        Strings.emptyEltByType1 +
+            _dropdownvalue.toLowerCase() +
+            Strings.emptyEltByType2,
         style: const TextStyle(fontSize: 25),
       ));
     }
@@ -166,27 +169,27 @@ class SearchByTypeState extends State<SearchByType> {
   Future<void> buildDeletePopUp(String id) async {
     return showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Champ vide'),
+            title: const Text(Strings.deleteEltTitle),
             content: SingleChildScrollView(
               child: ListBody(
                 children: const <Widget>[
-                  Text('Etes vous sûr de vouloir supprimer cet élément'),
+                  Text(Strings.deleteStr),
                 ],
               ),
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Oui'),
+                child: const Text(Strings.yesButtonStr),
                 onPressed: () {
                   deleteElt(id);
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: const Text('Annuler'),
+                child: const Text(Strings.cancelButtonStr),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -215,11 +218,11 @@ class SearchByTypeState extends State<SearchByType> {
     var response = await _tools.deleteMateriel(id);
     if (response.statusCode == 204) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Matériel supprimé'),
+        content: Text(Strings.deleteEltSuccessful),
       ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Une erreur est survenue'),
+        content: Text(Strings.errorHappened),
       ));
     }
     setState(() {
@@ -242,7 +245,7 @@ class SearchByTypeState extends State<SearchByType> {
             ),
             IconButton(
               padding: const EdgeInsets.only(right: 20),
-              tooltip: 'Retour',
+              tooltip: Strings.backToolTip,
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
             ),
@@ -259,7 +262,7 @@ class SearchByTypeState extends State<SearchByType> {
             children: <Widget>[
               const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
               const Text(
-                'Recherchez un type parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.',
+                Strings.typeTitle,
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -293,22 +296,22 @@ class SearchByTypeState extends State<SearchByType> {
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 5,
-                    child: Text('Type', style: _textStyleHeaders),
+                    child: Text(Strings.typeHeader, style: _textStyleHeaders),
                   ),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 5,
-                    child: Text('Marque', style: _textStyleHeaders),
+                    child: Text(Strings.marqueHeader, style: _textStyleHeaders),
                   ),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 5,
-                    child: Text('Modele', style: _textStyleHeaders),
+                    child: Text(Strings.modeleHeader, style: _textStyleHeaders),
                   ),
                   SizedBox(
                     height: 100,
                     width: MediaQuery.of(context).size.width / 5,
-                    child: Text('Options', style: _textStyleHeaders),
+                    child: Text(Strings.optionHeader, style: _textStyleHeaders),
                   ),
                 ],
               ),

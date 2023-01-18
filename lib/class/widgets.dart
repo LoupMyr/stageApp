@@ -65,4 +65,72 @@ class Widgets {
           );
         });
   }
+
+  static List<Widget> createHeaders(
+      BuildContext context, TextStyle _textStyleHeaders) {
+    List<Widget> tab = [
+      SizedBox(
+        height: 100,
+        width: MediaQuery.of(context).size.width / 5,
+        child: null,
+      ),
+    ];
+    for (int i = 0; i < 3; i++) {
+      tab.add(
+        SizedBox(
+          height: 100,
+          width: MediaQuery.of(context).size.width / 5,
+          child: Text(Strings.tabHeaders[i], style: _textStyleHeaders),
+        ),
+      );
+    }
+
+    return tab;
+  }
+
+  static Widget createRow(var elt, var type, TextStyle ts,
+      List<dynamic> tableau, AssetImage img, BuildContext context) {
+    return InkWell(
+      onTap: () =>
+          Navigator.pushNamed(context, "/routeMateriel", arguments: tableau),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Divider(
+            thickness: 10,
+          ),
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 7,
+            child: Center(
+                child: Image(
+              image: img,
+              color: Colors.black,
+            )),
+          ),
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 5,
+            child: Center(
+              child: Text(type['libelle'], style: ts),
+            ),
+          ),
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 5,
+            child: Center(
+              child: Text(elt['marque'], style: ts),
+            ),
+          ),
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 5,
+            child: Center(
+              child: Text(elt['modele'], style: ts),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

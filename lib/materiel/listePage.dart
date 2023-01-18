@@ -21,6 +21,7 @@ class ListePageState extends State<ListePage> {
   bool _recupDataBool = false;
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<String> recupMateriels() async {
     if (await _tools.checkAdmin() == false) {
@@ -178,36 +179,7 @@ class ListePageState extends State<ListePage> {
                 const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 5,
-                      child: null,
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 5,
-                      child: Text(Strings.typeHeader, style: _textStyleHeaders),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 5,
-                      child:
-                          Text(Strings.marqueHeader, style: _textStyleHeaders),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 5,
-                      child:
-                          Text(Strings.modeleHeader, style: _textStyleHeaders),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 5,
-                      child:
-                          Text(Strings.optionHeader, style: _textStyleHeaders),
-                    ),
-                  ],
+                  children: Widgets.createHeaders(context, _textStyleHeaders),
                 ),
                 Row(
                   children: <Widget>[
@@ -249,6 +221,7 @@ class ListePageState extends State<ListePage> {
             ];
           }
           return Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
               centerTitle: true,
               title: Text(widget.title),

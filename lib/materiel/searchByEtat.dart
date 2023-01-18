@@ -18,13 +18,6 @@ class SearchByEtat extends StatefulWidget {
 class SearchByEtatState extends State<SearchByEtat> {
   String _dropdownvalue = ' ';
   int _idSelec = -1;
-  final List<String> _itemsEtat = [
-    ' ',
-    'Neuf',
-    'Très bon état',
-    'Bon état',
-    'Autres'
-  ];
   final Tools _tools = Tools();
   var _listM;
   var _listT;
@@ -47,10 +40,14 @@ class SearchByEtatState extends State<SearchByEtat> {
       return;
     }
     _col = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: const <Widget>[
         SpinKitThreeInOut(color: Colors.teal),
       ],
     );
+    setState(() {
+      _col;
+    });
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
@@ -60,6 +57,7 @@ class SearchByEtatState extends State<SearchByEtat> {
     } else {
       setState(() {
         _col = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Icon(
               Icons.error_outline,
@@ -210,14 +208,15 @@ class SearchByEtatState extends State<SearchByEtat> {
               DropdownButton(
                 value: _dropdownvalue,
                 icon: const Icon(Icons.keyboard_arrow_down),
-                items: _itemsEtat.map<DropdownMenuItem<String>>((String value) {
+                items: Strings.itemsEtat
+                    .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
-                  _idSelec = _itemsEtat.indexOf(newValue!);
+                  _idSelec = Strings.itemsEtat.indexOf(newValue!);
                   setState(() {
                     _dropdownvalue = newValue;
                     recupMateriels();
@@ -227,33 +226,7 @@ class SearchByEtatState extends State<SearchByEtat> {
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: null,
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.typeHeader, style: _textStyleHeaders),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.marqueHeader, style: _textStyleHeaders),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.modeleHeader, style: _textStyleHeaders),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.optionHeader, style: _textStyleHeaders),
-                  ),
-                ],
+                children: Widgets.createHeaders(context, _textStyleHeaders),
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

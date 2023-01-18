@@ -81,4 +81,29 @@ class Strings {
   static const String emptyEltByType2 = " dans le stock";
   static const String typeTitle =
       "Recherchez un type parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.";
+  static const String pdfDownloadSuccessful = "PDF récapitulatif téléchagé.";
+  static const List<String> tabHeaders = ['Type', 'Marque', 'Modele'];
+  static const List<String> itemsType = [
+    ' ',
+    'Unité centrale',
+    'Ecran',
+    'Clavier',
+    'Souris',
+    'Imprimante',
+    'Copieur',
+    'NAS',
+    'Serveur',
+    'Switch',
+    'Point accès wifi',
+    'ENI',
+    'TBI',
+    'Autres'
+  ];
+  static const List<String> itemsEtat = [
+    ' ',
+    'Neuf',
+    'Très bon état',
+    'Bon état',
+    'Autres'
+  ];
 }

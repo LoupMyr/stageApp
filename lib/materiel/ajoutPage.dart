@@ -27,29 +27,6 @@ class _AjoutPageState extends State<AjoutPage> {
   String _remarques = '';
   String _dateAchat = '';
   String _dateGarantie = '';
-  final List<String> _itemsType = [
-    ' ',
-    'Unité centrale',
-    'Ecran',
-    'Clavier',
-    'Souris',
-    'Imprimante',
-    'Copieur',
-    'NAS',
-    'Serveur',
-    'Switch',
-    'Point accès wifi',
-    'ENI',
-    'TBI',
-    'Autres'
-  ];
-  final List<String> _itemsEtat = [
-    ' ',
-    'Neuf',
-    'Très bon état',
-    'Bon état',
-    'Autres'
-  ];
   String _dropdownvalueType = ' ';
   String _dropdownvalueEtat = ' ';
   bool _keep = true;
@@ -58,10 +35,29 @@ class _AjoutPageState extends State<AjoutPage> {
   Text _labelErrType = const Text('');
   Text _labelErrEtat = const Text('');
   List<String> _listUrl = [];
-  final fieldText = TextEditingController();
+  final fieldImages = TextEditingController();
+  final fieldMarque = TextEditingController();
+  final fieldModele = TextEditingController();
+  final fieldNumSerie = TextEditingController();
+  final fieldNumInventaire = TextEditingController();
+  final fieldLieuInstallation = TextEditingController();
+  final fieldRemarques = TextEditingController();
 
-  void clearText() {
-    fieldText.clear();
+  void clearUrl() {
+    fieldImages.clear();
+  }
+
+  void clearTexts() {
+    fieldMarque.clear();
+    fieldModele.clear();
+    fieldNumSerie.clear();
+    fieldNumInventaire.clear();
+    fieldLieuInstallation.clear();
+    fieldRemarques.clear();
+    _dropdownvalueType = ' ';
+    _dropdownvalueEtat = ' ';
+    int _idType = 0;
+    int _idEtat = 0;
   }
 
   void sendRequest() async {
@@ -194,6 +190,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    controller: fieldMarque,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(150),
                     ],
@@ -201,7 +198,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         const InputDecoration(labelText: Strings.marqueLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
-                        return 'Saisie vide';
+                        return Strings.emptyInputStr;
                       } else {
                         setState(() {
                           _marque = valeur;
@@ -214,6 +211,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    controller: fieldModele,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(150),
                     ],
@@ -221,7 +219,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         const InputDecoration(labelText: Strings.modeleLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
-                        return 'Saisie vide';
+                        return Strings.emptyInputStr;
                       } else {
                         setState(() {
                           _modele = valeur;
@@ -234,6 +232,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    controller: fieldNumSerie,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(150),
                     ],
@@ -241,7 +240,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         const InputDecoration(labelText: Strings.numSerieLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
-                        return 'Saisie vide';
+                        return Strings.emptyInputStr;
                       } else {
                         setState(() {
                           _numSerie = valeur;
@@ -254,6 +253,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    controller: fieldNumInventaire,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(12),
@@ -263,7 +263,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         labelText: Strings.numInventaireLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
-                        return 'Saisie vide';
+                        return Strings.emptyInputStr;
                       } else {
                         setState(() {
                           _numInventaire = valeur;
@@ -276,6 +276,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    controller: fieldLieuInstallation,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(150),
                     ],
@@ -283,7 +284,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         labelText: Strings.lieuInstallationLabel),
                     validator: (valeur) {
                       if (valeur == null || valeur.isEmpty) {
-                        return 'Saisie vide';
+                        return Strings.emptyInputStr;
                       } else {
                         setState(() {
                           _lieuInstallation = valeur;
@@ -364,6 +365,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
                   child: TextFormField(
+                    controller: fieldRemarques,
                     maxLines: 5,
                     decoration:
                         const InputDecoration(hintText: Strings.remarquesLabel),
@@ -393,7 +395,7 @@ class _AjoutPageState extends State<AjoutPage> {
                       menuMaxHeight: 300,
                       value: _dropdownvalueType,
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      items: _itemsType
+                      items: Strings.itemsType
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -401,8 +403,8 @@ class _AjoutPageState extends State<AjoutPage> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        _idType = _itemsType.indexOf(newValue!);
-                        if (_itemsType.indexOf(newValue) == 0) {
+                        _idType = Strings.itemsType.indexOf(newValue!);
+                        if (Strings.itemsType.indexOf(newValue) == 0) {
                           setState(() {
                             _labelErrType = const Text(
                               Strings.errorTypeLabel,
@@ -420,7 +422,7 @@ class _AjoutPageState extends State<AjoutPage> {
                     DropdownButton(
                       value: _dropdownvalueEtat,
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      items: _itemsEtat
+                      items: Strings.itemsEtat
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -428,8 +430,8 @@ class _AjoutPageState extends State<AjoutPage> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        _idEtat = _itemsEtat.indexOf(newValue!);
-                        if (_itemsEtat.indexOf(newValue) == 0) {
+                        _idEtat = Strings.itemsEtat.indexOf(newValue!);
+                        if (Strings.itemsEtat.indexOf(newValue) == 0) {
                           setState(() {
                             _labelErrEtat = const Text(
                               Strings.errorEtatLabel,
@@ -465,7 +467,7 @@ class _AjoutPageState extends State<AjoutPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.18,
                       child: TextFormField(
-                        controller: fieldText,
+                        controller: fieldImages,
                         decoration: const InputDecoration(
                             labelText: Strings.uploadImgLabel),
                         onFieldSubmitted: (valeur) {
@@ -474,7 +476,7 @@ class _AjoutPageState extends State<AjoutPage> {
                           } else {
                             setState(() {
                               _listUrl.add(valeur);
-                              clearText();
+                              clearUrl();
                             });
                           }
                         },
@@ -539,7 +541,8 @@ class _AjoutPageState extends State<AjoutPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      sendRequest();
+                      //sendRequest();
+                      clearTexts();
                     }
                   },
                   child: const Text("Valider"),

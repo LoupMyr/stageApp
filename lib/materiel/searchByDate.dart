@@ -24,11 +24,10 @@ class SearchByDateState extends State<SearchByDate> {
   bool _isSelected = false;
   final Tools _tools = Tools();
   final TextStyle _ts = const TextStyle(fontSize: 20);
+  final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   var _materiels;
   var _types;
-  Column _col = Column(
-    children: const <Widget>[Text(Strings.yearEmptyStr)],
-  );
+  Column _col = Column(children: const <Widget>[]);
   final List<dynamic> _listMateriels = List.empty(growable: true);
   final List<Widget> _tab = List.empty(growable: true);
   List<List<dynamic>> _tabSorted = List.empty(growable: true);
@@ -69,6 +68,7 @@ class SearchByDateState extends State<SearchByDate> {
       return;
     }
     _col = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: const <Widget>[
         SpinKitThreeInOut(color: Colors.teal),
       ],
@@ -82,6 +82,7 @@ class SearchByDateState extends State<SearchByDate> {
     } else {
       setState(() {
         _col = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Icon(
               Icons.error_outline,
@@ -116,51 +117,14 @@ class SearchByDateState extends State<SearchByDate> {
           _listMateriels.add(elt);
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
+          _tab.add(Widgets.createRow(elt, type, _ts, tableau, img, context));
           _tab.add(
-            InkWell(
-              onTap: () => Navigator.pushNamed(context, "/routeMateriel",
-                  arguments: tableau),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Center(
-                        child: Image(
-                      image: img,
-                      color: Colors.black,
-                    )),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Center(
-                      child: Text(type['libelle'], style: _ts),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Center(
-                      child: Text(elt['marque'], style: _ts),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Center(
-                      child: Text(elt['modele'], style: _ts),
-                    ),
-                  ),
-                  SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 5,
-                      child: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => deleteElt(elt['id'].toString()),
-                      )),
-                ],
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => /*deleteElt(elt['id'].toString())*/ null,
               ),
             ),
           );
@@ -194,6 +158,9 @@ class SearchByDateState extends State<SearchByDate> {
     Directory pathDoc = await getApplicationDocumentsDirectory();
     final file = File('${pathDoc.path}/recap-stock-${_annee.toString()}.pdf');
     await file.writeAsBytes(await pdf.save());
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text(Strings.pdfDownloadSuccessful),
+    ));
   }
 
   pw.Document createPdf() {
@@ -319,10 +286,19 @@ class SearchByDateState extends State<SearchByDate> {
                       Strings.yearSelectedStr + _annee.toString(),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     )
-                  : const Text(''),
+                  : const Text(Strings.yearEmptyStr),
               const Padding(padding: EdgeInsets.all(10)),
               const Divider(thickness: 2),
-              _col,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: Widgets.createHeaders(context, _textStyleHeaders),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _col,
+                ],
+              ),
             ],
           ),
         ),

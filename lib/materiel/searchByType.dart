@@ -18,22 +18,6 @@ class SearchByType extends StatefulWidget {
 class SearchByTypeState extends State<SearchByType> {
   String _dropdownvalue = ' ';
   int _idSelec = -1;
-  final List<String> _itemsType = [
-    ' ',
-    'Unité centrale',
-    'Ecran',
-    'Clavier',
-    'Souris',
-    'Imprimante',
-    'Copieur',
-    'NAS',
-    'Serveur',
-    'Switch',
-    'Point accès wifi',
-    'ENI',
-    'TBI',
-    'Autres'
-  ];
   final Tools _tools = Tools();
   var _listM;
   var _type;
@@ -55,10 +39,14 @@ class SearchByTypeState extends State<SearchByType> {
       return;
     }
     _col = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: const <Widget>[
         SpinKitThreeInOut(color: Colors.teal),
       ],
     );
+    setState(() {
+      _col;
+    });
     var responseM = await _tools.getMateriels();
     var responseT = await _tools.getTypes();
     var responseType = await _tools.getType(_idSelec);
@@ -215,14 +203,15 @@ class SearchByTypeState extends State<SearchByType> {
               DropdownButton(
                 value: _dropdownvalue,
                 icon: const Icon(Icons.keyboard_arrow_down),
-                items: _itemsType.map<DropdownMenuItem<String>>((String value) {
+                items: Strings.itemsType
+                    .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
-                  _idSelec = _itemsType.indexOf(newValue!);
+                  _idSelec = Strings.itemsType.indexOf(newValue!);
                   setState(() {
                     _dropdownvalue = newValue;
                     recupMateriels();
@@ -232,33 +221,7 @@ class SearchByTypeState extends State<SearchByType> {
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: null,
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.typeHeader, style: _textStyleHeaders),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.marqueHeader, style: _textStyleHeaders),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.modeleHeader, style: _textStyleHeaders),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Text(Strings.optionHeader, style: _textStyleHeaders),
-                  ),
-                ],
+                children: Widgets.createHeaders(context, _textStyleHeaders),
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

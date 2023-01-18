@@ -24,7 +24,7 @@ class ListePageState extends State<ListePage> {
 
   Future<String> recupMateriels() async {
     if (await _tools.checkAdmin() == false) {
-      Widgets.buildEmptyPopUp(context);
+      Widgets.buildNonAdmin(context);
       return '';
     }
     var responseM = await _tools.getMateriels();

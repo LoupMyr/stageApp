@@ -33,7 +33,7 @@ class MaterielPageState extends State<MaterielPage> {
 
   Future<String> recupEtat() async {
     if (await _tools.checkAdmin() == false) {
-      Widgets.buildEmptyPopUp(context);
+      Widgets.buildNonAdmin(context);
       return '';
     }
     List<String> temp = _tab[0]['etat'].split('/');

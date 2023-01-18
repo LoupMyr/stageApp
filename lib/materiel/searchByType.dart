@@ -39,6 +39,7 @@ class SearchByTypeState extends State<SearchByType> {
   var _type;
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget _col = Column(
     children: const <Widget>[
       Text(
@@ -50,7 +51,7 @@ class SearchByTypeState extends State<SearchByType> {
 
   void recupMateriels() async {
     if (await _tools.checkAdmin() == false) {
-      Widgets.buildEmptyPopUp(context);
+      Widgets.buildNonAdmin(context);
       return;
     }
     _col = Column(
@@ -143,7 +144,7 @@ class SearchByTypeState extends State<SearchByType> {
                     width: MediaQuery.of(context).size.width / 5,
                     child: IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () => buildDeletePopUp(elt['id'].toString()),
+                      onPressed: () => deleteElt(elt['id'].toString()),
                     )),
               ],
             ),
@@ -166,65 +167,8 @@ class SearchByTypeState extends State<SearchByType> {
     });
   }
 
-  Future<void> buildDeletePopUp(String id) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(Strings.deleteEltTitle),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: const <Widget>[
-                  Text(Strings.deleteStr),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text(Strings.yesButtonStr),
-                onPressed: () {
-                  deleteElt(id);
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text(Strings.cancelButtonStr),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void deleteElt(String id) async {
-    for (var elt in _listM['hydra:member']) {
-      if (elt['id'].toString() == id) {
-        if (elt['photos'].isNotEmpty) {
-          List<int> tabIdPhoto = [];
-          for (int i = 0; i < elt['photos'].length; i++) {
-            List<String> temp = elt['photos'][i].split('/');
-            int id = int.parse(temp[temp.length - 1]);
-            tabIdPhoto.add(id);
-          }
-          for (int i = 0; i < tabIdPhoto.length; i++) {
-            await _tools.deletePhoto(tabIdPhoto[i].toString());
-          }
-        }
-      }
-    }
-    var response = await _tools.deleteMateriel(id);
-    if (response.statusCode == 204) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.deleteEltSuccessful),
-      ));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.errorHappened),
-      ));
-    }
+  Future<void> deleteElt(String id) async {
+    await Widgets.buildDeletePopUp(id, _listM, _scaffoldKey);
     setState(() {
       recupMateriels();
     });
@@ -233,6 +177,7 @@ class SearchByTypeState extends State<SearchByType> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         leadingWidth: 150,
         leading: Row(

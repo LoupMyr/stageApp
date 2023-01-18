@@ -26,7 +26,7 @@ class ListeUsersPageState extends State<ListeUsersPage> {
 
   Future<String> recupUsers() async {
     if (await _tools.checkAdmin() == false) {
-      Widgets.buildEmptyPopUp(context);
+      Widgets.buildNonAdmin(context);
       return '';
     }
     var response = await _tools.getUsers();

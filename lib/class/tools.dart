@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:stage/class/local.dart';
+import 'package:stage/class/strings.dart';
 
 class Tools {
   //**********//
@@ -345,5 +346,36 @@ class Tools {
       }
     }
     return tabSorted;
+  }
+
+  Future<void> deleteElt(String id, var listMateriels,
+      GlobalKey<ScaffoldState> _scaffoldKey) async {
+    for (var elt in listMateriels['hydra:member']) {
+      if (elt['id'].toString() == id) {
+        if (elt['photos'].isNotEmpty) {
+          List<int> tabIdPhoto = [];
+          for (int i = 0; i < elt['photos'].length; i++) {
+            List<String> temp = elt['photos'][i].split('/');
+            int id = int.parse(temp[temp.length - 1]);
+            tabIdPhoto.add(id);
+          }
+          for (int i = 0; i < tabIdPhoto.length; i++) {
+            await this.deletePhoto(tabIdPhoto[i].toString());
+          }
+        }
+      }
+    }
+    var response = await this.deleteMateriel(id);
+    if (response.statusCode == 204) {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+          .showSnackBar(const SnackBar(
+        content: Text(Strings.deleteEltSuccessful),
+      ));
+    } else {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+          .showSnackBar(const SnackBar(
+        content: Text(Strings.errorHappened),
+      ));
+    }
   }
 }

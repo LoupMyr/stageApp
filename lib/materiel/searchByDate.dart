@@ -32,6 +32,7 @@ class SearchByDateState extends State<SearchByDate> {
   final List<dynamic> _listMateriels = List.empty(growable: true);
   final List<Widget> _tab = List.empty(growable: true);
   List<List<dynamic>> _tabSorted = List.empty(growable: true);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   selectYear() {
     showDialog(
@@ -64,7 +65,7 @@ class SearchByDateState extends State<SearchByDate> {
 
   Future<void> recupMateriels() async {
     if (await _tools.checkAdmin() == false) {
-      Widgets.buildEmptyPopUp(context);
+      Widgets.buildNonAdmin(context);
       return;
     }
     _col = Column(
@@ -157,7 +158,7 @@ class SearchByDateState extends State<SearchByDate> {
                       width: MediaQuery.of(context).size.width / 5,
                       child: IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => buildDeletePopUp(elt['id'].toString()),
+                        onPressed: () => deleteElt(elt['id'].toString()),
                       )),
                 ],
               ),
@@ -181,65 +182,8 @@ class SearchByDateState extends State<SearchByDate> {
     });
   }
 
-  Future<void> buildDeletePopUp(String id) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(Strings.deleteEltTitle),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: const <Widget>[
-                  Text(Strings.deleteStr),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text(Strings.yesButtonStr),
-                onPressed: () {
-                  deleteElt(id);
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text(Strings.cancelButtonStr),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
   Future<void> deleteElt(String id) async {
-    for (var elt in _materiels['hydra:member']) {
-      if (elt['id'].toString() == id) {
-        if (elt['photos'].isNotEmpty) {
-          List<int> tabIdPhoto = List.empty(growable: true);
-          for (int i = 0; i < elt['photos'].length; i++) {
-            List<String> temp = elt['photos'][i].split('/');
-            int id = int.parse(temp[temp.length - 1]);
-            tabIdPhoto.add(id);
-          }
-          for (int i = 0; i < tabIdPhoto.length; i++) {
-            await _tools.deletePhoto(tabIdPhoto[i].toString());
-          }
-        }
-      }
-    }
-    var response = await _tools.deleteMateriel(id);
-    if (response.statusCode == 204) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.deleteEltSuccessful),
-      ));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.errorHappened),
-      ));
-    }
+    await Widgets.buildDeletePopUp(id, _materiels, _scaffoldKey);
     setState(() {
       recupMateriels();
     });
@@ -317,65 +261,76 @@ class SearchByDateState extends State<SearchByDate> {
     return body;
   }
 
+  dynamic downloadButton() {
+    if (_isSelected) {
+      return FloatingActionButton(
+        onPressed: donwloadPdf,
+        child: const Icon(Icons.download),
+      );
+    } else {
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leadingWidth: 150,
-          leading: Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Image(
-                  image: AssetImage('lib/assets/achicourt.png'),
-                ),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        leadingWidth: 150,
+        leading: Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Image(
+                image: AssetImage('lib/assets/achicourt.png'),
+              ),
+            ),
+            IconButton(
+              padding: const EdgeInsets.only(right: 20),
+              tooltip: Strings.backToolTip,
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        title: Text(widget.title),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+              Text(
+                Strings.selectYearTitle,
+                style: _ts,
               ),
               IconButton(
-                padding: const EdgeInsets.only(right: 20),
-                tooltip: Strings.backToolTip,
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back),
+                hoverColor: Colors.transparent,
+                onPressed: selectYear,
+                icon: const Icon(
+                  Icons.calendar_today,
+                  size: 25,
+                ),
               ),
+              _isSelected
+                  ? Text(
+                      Strings.yearSelectedStr + _annee.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : const Text(''),
+              const Padding(padding: EdgeInsets.all(10)),
+              const Divider(thickness: 2),
+              _col,
             ],
           ),
-          centerTitle: true,
-          title: Text(widget.title),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-                Text(
-                  Strings.selectYearTitle,
-                  style: _ts,
-                ),
-                IconButton(
-                  hoverColor: Colors.transparent,
-                  onPressed: selectYear,
-                  icon: const Icon(
-                    Icons.calendar_today,
-                    size: 25,
-                  ),
-                ),
-                _isSelected
-                    ? Text(
-                        Strings.yearSelectedStr + _annee.toString(),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      )
-                    : const Text(''),
-                const Padding(padding: EdgeInsets.all(10)),
-                const Divider(thickness: 2),
-                _col,
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: _isSelected
-            ? FloatingActionButton(
-                onPressed: donwloadPdf,
-                child: const Icon(Icons.download),
-              )
-            : null);
+      ),
+      floatingActionButton: _isSelected
+          ? FloatingActionButton(
+              onPressed: donwloadPdf, child: const Icon(Icons.download))
+          : null,
+    );
   }
 }

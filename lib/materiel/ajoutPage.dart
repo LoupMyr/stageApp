@@ -66,7 +66,7 @@ class _AjoutPageState extends State<AjoutPage> {
 
   void sendRequest() async {
     if (await _tool.checkAdmin() == false) {
-      Widgets.buildEmptyPopUp(context);
+      Widgets.buildNonAdmin(context);
       return;
     }
     _keep = true;

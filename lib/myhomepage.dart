@@ -207,8 +207,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: MediaQuery.of(context).size.width * 0.2,
                     child: ElevatedButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/routeAjout'),
+                        onPressed: () => Navigator.pushNamed(
+                            context, '/routeAjout', arguments: []),
                         style: ButtonStyle(
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(

@@ -283,6 +283,70 @@ class Tools {
         body: json);
   }
 
+  Future<http.Response> patchMateriel(
+      String idMateriel,
+      String marque,
+      String modele,
+      String dateAchat,
+      String dateGarantie,
+      String remarques,
+      String typeId,
+      String etatId,
+      String numSerie,
+      String numInventaire,
+      String lieuId,
+      String detailsAutres) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    Map<String, dynamic> dateA = {};
+    Map<String, dynamic> dateG = {};
+    Map<String, dynamic> rem = {};
+    Map<String, dynamic> details = {};
+    if (dateAchat.isNotEmpty) {
+      dateA = {
+        "dateAchat": dateAchat,
+      };
+    }
+    if (dateGarantie.isNotEmpty) {
+      dateG = {
+        "dateFinGaranti": dateGarantie,
+      };
+    }
+    if (remarques.isNotEmpty) {
+      rem = {
+        "remarques": remarques,
+      };
+    }
+    if (detailsAutres.isNotEmpty) {
+      details = {
+        "detailTypeAutres": detailsAutres,
+      };
+    }
+
+    final Map<String, dynamic> body = {
+      "marque": marque,
+      "modele": modele,
+      ...dateA,
+      ...dateG,
+      ...rem,
+      "type": '/stageAppWeb/public/api/types/$typeId',
+      "etat": '/stageAppWeb/public/api/etats/$etatId',
+      "numSerie": numSerie,
+      "numInventaire": numInventaire,
+      "lieuInstallation": '/stageAppWeb/public/api/lieus/$lieuId',
+      ...details,
+    };
+    return await http.patch(
+        Uri.parse(
+            'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels/$idMateriel'),
+        headers: <String, String>{
+          'Accept': 'application/ld+json',
+          'Content-Type': 'application/merge-patch+json',
+          "Authorization": "Bearer ${token!}"
+        },
+        body: body);
+  }
+
 //*********//
 // METHODS //
 //*********//
@@ -397,5 +461,10 @@ class Tools {
         content: Text(Strings.errorHappened),
       ));
     }
+  }
+
+  int splitUri(String str) {
+    List<String> temp = str.split('/');
+    return int.parse(temp[temp.length - 1]);
   }
 }

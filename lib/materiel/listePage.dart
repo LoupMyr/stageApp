@@ -52,13 +52,25 @@ class ListePageState extends State<ListePage> {
       tab.add(Widgets.createRow(
           elt, type, _textStyleHeaders, tableau, img, context));
       tab.add(
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width / 5,
-          child: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () => deleteElt(elt['id'].toString()),
-          ),
+        Row(
+          children: <Widget>[
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => deleteElt(elt['id'].toString()),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: MediaQuery.of(context).size.width / 5,
+              child: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => Navigator.pushNamed(context, '/routeAjout',
+                      arguments: tableau)),
+            ),
+          ],
         ),
       );
     }

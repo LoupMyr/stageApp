@@ -9,8 +9,8 @@ import 'package:stage/class/widgets.dart';
 import 'dart:convert' as convert;
 
 class AjoutPage extends StatefulWidget {
-  const AjoutPage({super.key, required this.title});
-  final String title;
+  AjoutPage({super.key, required this.title});
+  String title;
 
   @override
   State<AjoutPage> createState() => _AjoutPageState();
@@ -46,6 +46,8 @@ class _AjoutPageState extends State<AjoutPage> {
   final fieldLieuInstallation = TextEditingController();
   final fieldRemarques = TextEditingController();
   final fieldDetailsAutres = TextEditingController();
+  bool _estEdit = false;
+  String _idMateriel = '-1';
 
   void clearUrl() {
     fieldImages.clear();
@@ -62,6 +64,8 @@ class _AjoutPageState extends State<AjoutPage> {
     _dropdownvalueType = ' ';
     _dropdownvalueEtat = ' ';
     _dropdownvalueLieu = ' ';
+    _dateAchat = '';
+    _dateGarantie = '';
     _idLieu = 0;
     _idType = 0;
     _idEtat = 0;
@@ -131,6 +135,54 @@ class _AjoutPageState extends State<AjoutPage> {
     }
   }
 
+  void sendPatchRequest(String idMateriel) async {
+    if (await _tool.checkAdmin() == false) {
+      Widgets.buildNonAdmin(context);
+      return;
+    }
+    var response = await _tool.patchMateriel(
+        idMateriel,
+        _marque,
+        _modele,
+        _dateAchat,
+        _dateGarantie,
+        _remarques,
+        _idType.toString(),
+        _idEtat.toString(),
+        _numSerie,
+        _numInventaire,
+        _idLieu.toString(),
+        _detailsAutre);
+    if (response.statusCode == 201) {
+      var materiel = convert.jsonDecode(response.body);
+      clearTexts();
+      if (_listUrl.isNotEmpty) {
+        String uriMateriel =
+            '/stageAppWeb/public/api/materiels/${materiel['id']}';
+        List<String> tabUriPhotos = List.empty(growable: true);
+        for (int i = 0; i < _listUrl.length; i++) {
+          var post = await _tool.postPhoto(_listUrl[i], uriMateriel);
+
+          if (post.statusCode == 201) {
+            var postTemp = convert.jsonDecode(post.body);
+            tabUriPhotos
+                .add('/stageAppWeb/public/api/photos/${postTemp['id']}');
+          }
+        }
+        var reponse = await _tool.patchMaterielPhoto(
+            tabUriPhotos, materiel['id'].toString());
+      }
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(Strings.materialAdded),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(Strings.errorHappened),
+      ));
+      log(response.statusCode.toString());
+    }
+  }
+
   Future<void> buildEmptyPopUp(String nom) async {
     return showDialog(
         context: context,
@@ -165,8 +217,68 @@ class _AjoutPageState extends State<AjoutPage> {
         });
   }
 
+  SizedBox createFieldDetails() {
+    SizedBox sizedbox = SizedBox();
+    if (_idLieu == Strings.itemsLieu.length - 1) {
+      sizedbox = SizedBox(
+        width: MediaQuery.of(context).size.width * 0.18,
+        child: TextFormField(
+          controller: fieldDetailsAutres,
+          decoration:
+              const InputDecoration(labelText: Strings.detailsLieuAutresLabel),
+          validator: (valeur) {
+            if (valeur == null || valeur.isEmpty) {
+              return Strings.emptyInputStr;
+            } else {
+              setState(() {
+                _detailsAutre = valeur;
+              });
+            }
+          },
+        ),
+      );
+    }
+    return sizedbox;
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> tabArg =
+        ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    if (tabArg.isNotEmpty) {
+      _estEdit = true;
+      widget.title = 'Modification';
+      fieldMarque.text = tabArg[0]['marque'];
+      fieldModele.text = tabArg[0]['modele'];
+      fieldNumInventaire.text = tabArg[0]['numInventaire'];
+      fieldNumSerie.text = tabArg[0]['numSerie'];
+      _idEtat = _tool.splitUri(tabArg[0]['etat']);
+      _idType = _tool.splitUri(tabArg[0]['type']);
+      _idLieu = _tool.splitUri(tabArg[0]['lieuInstallation']);
+      _dropdownvalueType = Strings.itemsType[_idType];
+      _dropdownvalueEtat = Strings.itemsEtat[_idEtat];
+      _dropdownvalueLieu = Strings.itemsLieu[_idLieu];
+      createFieldDetails();
+      try {
+        fieldDetailsAutres.text = tabArg[0]['detailTypeAutres'];
+      } catch (e) {}
+      try {
+        fieldRemarques.text = tabArg[0]['remarques'];
+      } catch (e) {}
+      try {
+        _dateAchat = DateFormat('dd-MM-yyyy')
+            .format(DateTime.parse(tabArg[0]['dateAchat']))
+            .toString();
+      } catch (e) {}
+      try {
+        setState(() {
+          _dateGarantie = DateFormat('dd-MM-yyyy')
+              .format(DateTime.parse(tabArg[0]['dateFinGaranti']))
+              .toString();
+        });
+      } catch (e) {}
+      _idMateriel = tabArg[0]['id'].toString();
+    }
     return Scaffold(
       appBar: Widgets.createAppBar(widget.title, context),
       body: SingleChildScrollView(
@@ -458,25 +570,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _idLieu == Strings.itemsLieu.length - 1
-                        ? SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            child: TextFormField(
-                              controller: fieldDetailsAutres,
-                              decoration: const InputDecoration(
-                                  labelText: Strings.detailsLieuAutresLabel),
-                              validator: (valeur) {
-                                if (valeur == null || valeur.isEmpty) {
-                                  return Strings.emptyInputStr;
-                                } else {
-                                  setState(() {
-                                    _detailsAutre = valeur;
-                                  });
-                                }
-                              },
-                            ),
-                          )
-                        : const SizedBox(),
+                    createFieldDetails(),
                   ],
                 ),
                 Column(
@@ -574,7 +668,11 @@ class _AjoutPageState extends State<AjoutPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      sendRequest();
+                      if (_estEdit) {
+                        sendPatchRequest(_idMateriel);
+                      } else {
+                        sendRequest();
+                      }
                     }
                   },
                   child: const Text("Valider"),

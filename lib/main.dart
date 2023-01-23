@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           '/routeHome': (BuildContext context) =>
               const MyHomePage(title: "Inventaire du parc informatique"),
           '/routeAjout': (BuildContext context) =>
-              const AjoutPage(title: "Ajouter un élément"),
+              AjoutPage(title: "Ajouter un élément"),
           '/routeListe': (BuildContext context) =>
               const ListePage(title: "Liste du stock"),
           '/routeMateriel': (BuildContext context) =>

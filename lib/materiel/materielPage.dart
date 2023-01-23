@@ -17,7 +17,7 @@ class MaterielPage extends StatefulWidget {
 }
 
 class MaterielPageState extends State<MaterielPage> {
-  List<dynamic> _tab = [];
+  List<dynamic> _tab = List.empty(growable: true);
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final Border _border =
@@ -27,30 +27,37 @@ class MaterielPageState extends State<MaterielPage> {
   var _materiel;
   var _type;
   var _etat;
+  var _lieu;
   var _photos;
   String _dateAchat = '';
-  String _numSerie = '';
 
   Future<String> recupEtat() async {
     if (await _tools.checkAdmin() == false) {
       Widgets.buildNonAdmin(context);
       return '';
     }
-    List<String> temp = _tab[0]['etat'].split('/');
-    int id = int.parse(temp[temp.length - 1]);
-    var response = await _tools.getEtatById(id);
-    var responseP = await _tools.getPhotos();
 
-    if (response.statusCode == 200 && responseP.statusCode == 200) {
-      _etat = convert.jsonDecode(response.body);
+    List<String> temp = _tab[0]['etat'].split('/');
+    int idEtat = int.parse(temp[temp.length - 1]);
+    temp = _tab[0]['lieuInstallation'].split('/');
+    int idLieu = int.parse(temp[temp.length - 1]);
+
+    var responseEtat = await _tools.getEtatById(idEtat);
+    var responseP = await _tools.getPhotos();
+    var responseLieu = await _tools.getLieuById(idLieu);
+    if (responseEtat.statusCode == 200 &&
+        responseP.statusCode == 200 &&
+        responseLieu.statusCode == 200) {
+      _etat = convert.jsonDecode(responseEtat.body);
       _photos = convert.jsonDecode(responseP.body);
+      _lieu = convert.jsonDecode(responseLieu.body);
       _recupDataBool = true;
     }
     return '';
   }
 
   Widget createFirstArray() {
-    List<Widget> tab = [];
+    List<Widget> tab = List.empty(growable: true);
     tab.add(
       SizedBox(
         height: 100,
@@ -102,50 +109,13 @@ class MaterielPageState extends State<MaterielPage> {
       ),
     );
     tab.add(addGap());
-    try {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: SingleChildScrollView(
-            child: Text(
-              _materiel['remarques'],
-              style: const TextStyle(fontSize: 15),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
-    } catch (e) {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  Icon(Icons.question_mark, size: 40),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    tab.add(addGap());
-    tab.add(addGap());
     tab.add(
       Container(
         decoration: BoxDecoration(border: _border),
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
         child: Text(
-          _materiel['lieuInstallation'],
+          _lieu['libelle'],
           style: _textStyle,
           textAlign: TextAlign.center,
         ),
@@ -156,7 +126,7 @@ class MaterielPageState extends State<MaterielPage> {
   }
 
   Widget createSecondArray() {
-    List<Widget> tab = [];
+    List<Widget> tab = List.empty(growable: true);
     String dateAchat = ' / ';
     String dateFinGarantie = ' / ';
     String remarques = ' / ';
@@ -282,21 +252,44 @@ class MaterielPageState extends State<MaterielPage> {
         ),
       ),
     );
-    tab.add(
-      Container(
-        decoration: BoxDecoration(border: _border),
-        height: 100,
-        width: MediaQuery.of(context).size.width / 5,
-        child: Column(
+    try {
+      tab.add(
+        Container(
+          decoration: BoxDecoration(border: _border),
+          height: 100,
+          width: MediaQuery.of(context).size.width / 7,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                _materiel['remarques'],
+                style: const TextStyle(fontSize: 15),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      tab.add(
+        Container(
+          decoration: BoxDecoration(border: _border),
+          height: 100,
+          width: MediaQuery.of(context).size.width / 7,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [],
+                children: const <Widget>[
+                  Icon(Icons.question_mark, size: 40),
+                ],
               ),
-            ]),
-      ),
-    );
+            ],
+          ),
+        ),
+      );
+    }
 
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: tab);
   }
@@ -312,7 +305,7 @@ class MaterielPageState extends State<MaterielPage> {
   }
 
   Widget createImg() {
-    List<Widget> tabImg = [];
+    List<Widget> tabImg = List.empty(growable: true);
     if (_materiel['photos'].isNotEmpty) {
       for (var elt in _photos['hydra:member']) {
         if (elt['materiel'] == _materiel['@id']) {
@@ -376,13 +369,6 @@ class MaterielPageState extends State<MaterielPage> {
                         style: _textStyleHeaders, textAlign: TextAlign.center),
                   ),
                   addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.remarquesHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
                   addGap(),
                   SizedBox(
                     height: 100,
@@ -440,12 +426,14 @@ class MaterielPageState extends State<MaterielPage> {
                   ),
                   addGap(),
                   SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width / 7,
-                      child: null),
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 7,
+                    child: Text(Strings.remarquesHeader,
+                        style: _textStyleHeaders, textAlign: TextAlign.center),
+                  ),
                 ],
               ),
-              const Padding(padding: EdgeInsets.symmetric(vertical: 30)),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               createSecondArray(),
               addGap(),
               addGap(),

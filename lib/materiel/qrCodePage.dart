@@ -21,7 +21,7 @@ class QrCodePage extends StatefulWidget {
 class QrCodePageState extends State<QrCodePage> {
   GlobalKey globalKey = GlobalKey();
   String _dataStr = Strings.errorStr;
-  List<dynamic> _tab = [];
+  List<dynamic> _tab = List.empty(growable: true);
   var _materiel;
   var _type;
 
@@ -71,7 +71,7 @@ class QrCodePageState extends State<QrCodePage> {
       Directory directoryDoc = await getApplicationDocumentsDirectory();
       try {
         final file = await File(
-                '${directoryDoc.path}/qrCodes/QRCode-${_type['libelle']}-${_materiel['id']}.png')
+                '${directoryDoc.path}/gestionStock/qrCodes/QRCode-${_type['libelle']}-${_materiel['id']}.png')
             .create();
         await file.writeAsBytes(pngBytes);
       } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stage/materiel/searchByLieuPage.dart';
 import 'package:stage/user/connexionPage.dart';
 import 'package:stage/user/inscriptionPage.dart';
 import 'package:stage/materiel/listePage.dart';
@@ -8,9 +9,9 @@ import 'package:stage/myhomepage.dart';
 import 'package:stage/materiel/ajoutPage.dart';
 import 'package:stage/user/profilPage.dart';
 import 'package:stage/materiel/qrCodePage.dart';
-import 'package:stage/materiel/searchByEtat.dart';
-import 'package:stage/materiel/searchByType.dart';
-import 'package:stage/materiel/searchByDate.dart';
+import 'package:stage/materiel/searchByEtatPage.dart';
+import 'package:stage/materiel/searchByTypePage.dart';
+import 'package:stage/materiel/searchByDatePage.dart';
 import 'package:stage/splashscreen.dart';
 
 void main() {
@@ -40,15 +41,17 @@ class MyApp extends StatelessWidget {
           '/routeMateriel': (BuildContext context) =>
               const MaterielPage(title: "Detail"),
           '/routeByEtat': (BuildContext context) =>
-              const SearchByEtat(title: "Recherche par Etat"),
+              const SearchByEtatPage(title: "Recherche par Etat"),
           '/routeByType': (BuildContext context) =>
-              const SearchByType(title: "Recherche par Type"),
+              const SearchByTypePage(title: "Recherche par Type"),
           '/routeByDate': (BuildContext context) =>
-              const SearchByDate(title: "Recherche par Année"),
+              const SearchByDatePage(title: "Recherche par Année"),
+          '/routeByLieu': (BuildContext context) =>
+              const SearchByLieuPage(title: "Recherche par Lieu"),
           '/routeInscription': (BuildContext context) =>
               const InscriptionPage(title: "Inscription"),
-          '/routeListeUsers': (BuildContext context) => const ListeUsersPage(
-              title: "Administration - Gestion utilisateurs"),
+          '/routeListeUsers': (BuildContext context) =>
+              const ListeUsersPage(title: "Gestion utilisateurs"),
           '/routeConnexion': (BuildContext context) =>
               const ConnexionPage(title: "Connexion"),
           '/routeQrcode': (BuildContext context) =>

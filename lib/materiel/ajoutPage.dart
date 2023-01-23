@@ -34,7 +34,7 @@ class _AjoutPageState extends State<AjoutPage> {
   int _idEtat = -1;
   Text _labelErrType = const Text('');
   Text _labelErrEtat = const Text('');
-  List<String> _listUrl = [];
+  List<String> _listUrl = List.empty(growable: true);
   final fieldImages = TextEditingController();
   final fieldMarque = TextEditingController();
   final fieldModele = TextEditingController();
@@ -521,7 +521,7 @@ class _AjoutPageState extends State<AjoutPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      //sendRequest();
+                      sendRequest();
                       clearTexts();
                     }
                   },

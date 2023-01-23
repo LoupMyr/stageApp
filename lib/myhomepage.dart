@@ -13,7 +13,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
-  List<Widget> _navbar = [];
+  List<Widget> _navbar = List.empty(growable: true);
 
   Future<String> checkUser() async {
     _navbar.clear();
@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
       future: checkUser(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasError) {
-          _navbar = [];
+          _navbar = List.empty(growable: true);
         }
         return Scaffold(
           appBar: AppBar(
@@ -139,26 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         width: MediaQuery.of(context).size.width * 0.2,
                         child: ElevatedButton(
                             onPressed: () =>
-                                Navigator.pushNamed(context, '/routeByDate'),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            child: Text(Strings.searchYearButtonStr,
-                                textAlign: TextAlign.center,
-                                style: _textStyle)),
-                      ),
-                      const Padding(padding: EdgeInsets.all(10)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                            onPressed: () =>
                                 Navigator.pushNamed(context, '/routeByEtat'),
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<
@@ -170,6 +150,51 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             child: Text(Strings.searchEtatButtonStr,
+                                textAlign: TextAlign.center,
+                                style: _textStyle)),
+                      ),
+                    ],
+                  ),
+                  const Padding(padding: EdgeInsets.all(10)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: ElevatedButton(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/routeByLieu'),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: const BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            child: Text(Strings.searchPlaceButtonStr,
+                                textAlign: TextAlign.center,
+                                style: _textStyle)),
+                      ),
+                      const Padding(padding: EdgeInsets.all(10)),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: ElevatedButton(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/routeByDate'),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: const BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            child: Text(Strings.searchYearButtonStr,
                                 textAlign: TextAlign.center,
                                 style: _textStyle)),
                       ),

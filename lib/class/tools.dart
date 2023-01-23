@@ -61,6 +61,16 @@ class Tools {
     return response;
   }
 
+  Future<http.Response> getLieuById(int id) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    String url =
+        'http://s3-4428.nuage-peda.fr/stageAppWeb/public/api/lieus/${id.toString()}';
+    var response = await http.get(Uri.parse(url),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+    return response;
+  }
+
   Future<http.Response> getUser() async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
@@ -353,7 +363,7 @@ class Tools {
     for (var elt in listMateriels['hydra:member']) {
       if (elt['id'].toString() == id) {
         if (elt['photos'].isNotEmpty) {
-          List<int> tabIdPhoto = [];
+          List<int> tabIdPhoto = List.empty(growable: true);
           for (int i = 0; i < elt['photos'].length; i++) {
             List<String> temp = elt['photos'][i].split('/');
             int id = int.parse(temp[temp.length - 1]);

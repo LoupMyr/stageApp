@@ -6,16 +6,16 @@ import 'dart:convert' as convert;
 import 'package:stage/class/tools.dart';
 import 'package:stage/class/widgets.dart';
 
-class SearchByType extends StatefulWidget {
-  const SearchByType({super.key, required this.title});
+class SearchByTypePage extends StatefulWidget {
+  const SearchByTypePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<SearchByType> createState() => SearchByTypeState();
+  State<SearchByTypePage> createState() => SearchByTypePageState();
 }
 
-class SearchByTypeState extends State<SearchByType> {
+class SearchByTypePageState extends State<SearchByTypePage> {
   String _dropdownvalue = ' ';
   int _idSelec = -1;
   final Tools _tools = Tools();
@@ -75,7 +75,7 @@ class SearchByTypeState extends State<SearchByType> {
   }
 
   void buildList() async {
-    List<Widget> tab = [];
+    List<Widget> tab = List.empty(growable: true);
     if (_idSelec == 0) {
       tab.add(
         const Text(
@@ -163,10 +163,10 @@ class SearchByTypeState extends State<SearchByType> {
                 },
               ),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: Widgets.createHeaders(context),
-              ),
+              // Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: Widgets.createHeaders(context),
+              //     ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Center(

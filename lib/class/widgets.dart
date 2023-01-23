@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 
@@ -76,7 +77,7 @@ class Widgets {
         child: null,
       ),
     ];
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
       tab.add(
         SizedBox(
           height: 100,
@@ -91,6 +92,26 @@ class Widgets {
 
   static Widget createRow(var elt, var type, TextStyle ts,
       List<dynamic> tableau, AssetImage img, BuildContext context) {
+    SizedBox sizedbox = const SizedBox();
+    try {
+      sizedbox = SizedBox(
+        height: 100,
+        width: MediaQuery.of(context).size.width / 9,
+        child: Center(
+          child: Text(
+              DateFormat('yyyy')
+                  .format(DateTime.parse(elt['dateAchat']))
+                  .toString(),
+              style: ts),
+        ),
+      );
+    } catch (e) {
+      sizedbox = SizedBox(
+        height: 100,
+        width: MediaQuery.of(context).size.width / 9,
+        child: const Center(child: Icon(Icons.question_mark, size: 40)),
+      );
+    }
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -105,7 +126,7 @@ class Widgets {
           children: <Widget>[
             SizedBox(
               height: 100,
-              width: MediaQuery.of(context).size.width / 5,
+              width: MediaQuery.of(context).size.width / 9,
               child: Center(
                   child: Image(
                 image: img,
@@ -114,7 +135,7 @@ class Widgets {
             ),
             SizedBox(
               height: 100,
-              width: MediaQuery.of(context).size.width / 5,
+              width: MediaQuery.of(context).size.width / 9,
               child: Center(
                 child: Text(
                   type['libelle'],
@@ -125,7 +146,7 @@ class Widgets {
             ),
             SizedBox(
               height: 100,
-              width: MediaQuery.of(context).size.width / 5,
+              width: MediaQuery.of(context).size.width / 6,
               child: Center(
                 child:
                     Text(elt['marque'], style: ts, textAlign: TextAlign.center),
@@ -133,12 +154,13 @@ class Widgets {
             ),
             SizedBox(
               height: 100,
-              width: MediaQuery.of(context).size.width / 5,
+              width: MediaQuery.of(context).size.width / 6,
               child: Center(
                 child:
                     Text(elt['modele'], style: ts, textAlign: TextAlign.center),
               ),
             ),
+            sizedbox,
           ],
         ),
       ),

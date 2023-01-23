@@ -39,7 +39,7 @@ class ListePageState extends State<ListePage> {
   }
 
   Widget buildTab() {
-    List<Widget> tab = [];
+    List<Widget> tab = List.empty(growable: true);
     for (var elt in _materiels['hydra:member']) {
       var type;
       for (var i in _types['hydra:member']) {
@@ -104,7 +104,7 @@ class ListePageState extends State<ListePage> {
     for (var elt in _materiels['hydra:member']) {
       if (elt['id'].toString() == id) {
         if (elt['photos'].isNotEmpty) {
-          List<int> tabIdPhoto = [];
+          List<int> tabIdPhoto = List.empty(growable: true);
           for (int i = 0; i < elt['photos'].length; i++) {
             List<String> temp = elt['photos'][i].split('/');
             int id = int.parse(temp[temp.length - 1]);
@@ -141,11 +141,12 @@ class ListePageState extends State<ListePage> {
             if (_recupDataBool) {
               children = <Widget>[
                 const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: Widgets.createHeaders(context),
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: Widgets.createHeaders(context),
-                ),
-                Row(
                   children: <Widget>[
                     buildTab(),
                   ],

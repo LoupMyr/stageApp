@@ -1,9 +1,10 @@
 class Strings {
   static const String logoutToolTip = "Deconnexion";
-  static const String listButtonStr = "Consulter la liste compléte";
+  static const String listButtonStr = "Consulter la liste complète";
   static const String searchTypeButtonStr = "Rechercher un type";
   static const String searchEtatButtonStr = "Rechercher un état";
   static const String searchYearButtonStr = "Rechercher une année";
+  static const String searchPlaceButtonStr = "Rechercher un lieu";
   static const String addEltButtonStr = "Ajouter un élément";
   static const String registerToolTip = "Inscription";
   static const String emailLabel = "Email";
@@ -60,7 +61,7 @@ class Strings {
   static const String etatHeader = "Etat";
   static const String remarquesHeader = "Remarques";
   static const String dateAchatHeader = "Date d'achat";
-  static const String dateGarantieHeader = "Date de garantie";
+  static const String dateGarantieHeader = "Date de fin de garantie";
   static const String lieuInstallationHeader = "Lieu d'installation";
   static const String numSerieHeader = "Numéro de série";
   static const String numInventaireHeader = "Numéro d'inventaire";
@@ -75,14 +76,18 @@ class Strings {
   static const String yearSelectedStr = "Année selectionnée: ";
   static const String noSelectionStr = "Aucune selection";
   static const String emptyEltByEtat = "Aucun matériel du stock n'est ";
+  static const String emptyEltByLieu =
+      "Aucun matériel du stock n'est stocké dans: ";
   static const String etatTitle =
-      "Recherchez un état parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.";
+      "Recherchez un état parmi ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.";
   static const String emptyEltByType1 = "Il n'y a pas de ";
   static const String emptyEltByType2 = " dans le stock";
   static const String typeTitle =
-      "Recherchez un type parmis ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.";
+      "Recherchez un type parmi ceux présenté ici pour retrouver \ntous les matériels correspondant à celui-ci.";
+  static const String lieuTitle =
+      "Recherchez un lieu parmi ceux présenté ici pour retrouver \ntous les matériels entreposé dans ce dernier.";
   static const String pdfDownloadSuccessful = "PDF récapitulatif téléchagé.";
-  static const List<String> tabHeaders = ['Type', 'Marque', 'Modele'];
+  static const List<String> tabHeaders = ['Type', 'Marque', 'Modele', 'Année'];
   static const List<String> itemsType = [
     ' ',
     'Unité centrale',
@@ -97,6 +102,8 @@ class Strings {
     'Point accès wifi',
     'ENI',
     'TBI',
+    'Téléphone mobile',
+    'Tablette',
     'Autres'
   ];
   static const List<String> itemsEtat = [
@@ -104,6 +111,13 @@ class Strings {
     'Neuf',
     'Très bon état',
     'Bon état',
+    'Hors-Service'
+  ];
+  static const List<String> itemsLieu = [
+    ' ',
+    'Médiathèque',
+    "Mairie d'Achicourt",
+    'Rdm',
     'Autres'
   ];
 }

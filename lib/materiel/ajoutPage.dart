@@ -23,18 +23,21 @@ class _AjoutPageState extends State<AjoutPage> {
   String _modele = '';
   String _numSerie = '';
   String _numInventaire = '';
-  String _lieuInstallation = '';
   String _remarques = '';
   String _dateAchat = '';
   String _dateGarantie = '';
+  String _detailsAutre = '';
   String _dropdownvalueType = ' ';
   String _dropdownvalueEtat = ' ';
+  String _dropdownvalueLieu = ' ';
   bool _keep = true;
   int _idType = -1;
   int _idEtat = -1;
+  int _idLieu = -1;
   Text _labelErrType = const Text('');
+  Text _labelErrLieu = const Text('');
   Text _labelErrEtat = const Text('');
-  List<String> _listUrl = List.empty(growable: true);
+  final List<String> _listUrl = List.empty(growable: true);
   final fieldImages = TextEditingController();
   final fieldMarque = TextEditingController();
   final fieldModele = TextEditingController();
@@ -42,6 +45,7 @@ class _AjoutPageState extends State<AjoutPage> {
   final fieldNumInventaire = TextEditingController();
   final fieldLieuInstallation = TextEditingController();
   final fieldRemarques = TextEditingController();
+  final fieldDetailsAutres = TextEditingController();
 
   void clearUrl() {
     fieldImages.clear();
@@ -54,10 +58,14 @@ class _AjoutPageState extends State<AjoutPage> {
     fieldNumInventaire.clear();
     fieldLieuInstallation.clear();
     fieldRemarques.clear();
+    fieldDetailsAutres.clear();
     _dropdownvalueType = ' ';
     _dropdownvalueEtat = ' ';
-    int _idType = 0;
-    int _idEtat = 0;
+    _dropdownvalueLieu = ' ';
+    _idLieu = 0;
+    _idType = 0;
+    _idEtat = 0;
+    clearUrl();
   }
 
   void sendRequest() async {
@@ -90,14 +98,15 @@ class _AjoutPageState extends State<AjoutPage> {
           _idEtat.toString(),
           _numSerie,
           _numInventaire,
-          _lieuInstallation);
+          _idLieu.toString(),
+          _detailsAutre);
       if (response.statusCode == 201) {
         var materiel = convert.jsonDecode(response.body);
-
-        String uriMateriel =
-            '/stageAppWeb/public/api/materiels/${materiel['id']}';
-        List<String> tabUriPhotos = List.empty(growable: true);
+        clearTexts();
         if (_listUrl.isNotEmpty) {
+          String uriMateriel =
+              '/stageAppWeb/public/api/materiels/${materiel['id']}';
+          List<String> tabUriPhotos = List.empty(growable: true);
           for (int i = 0; i < _listUrl.length; i++) {
             var post = await _tool.postPhoto(_listUrl[i], uriMateriel);
 
@@ -253,27 +262,6 @@ class _AjoutPageState extends State<AjoutPage> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.all(10)),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.18,
-                  child: TextFormField(
-                    controller: fieldLieuInstallation,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(150),
-                    ],
-                    decoration: const InputDecoration(
-                        labelText: Strings.lieuInstallationLabel),
-                    validator: (valeur) {
-                      if (valeur == null || valeur.isEmpty) {
-                        return Strings.emptyInputStr;
-                      } else {
-                        setState(() {
-                          _lieuInstallation = valeur;
-                        });
-                      }
-                    },
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.all(10)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -365,6 +353,8 @@ class _AjoutPageState extends State<AjoutPage> {
                     Text(Strings.typeLabel, style: TextStyle(fontSize: 20)),
                     Padding(padding: EdgeInsetsDirectional.only(end: 175)),
                     Text(Strings.etatLabel, style: TextStyle(fontSize: 20)),
+                    Padding(padding: EdgeInsetsDirectional.only(end: 175)),
+                    Text(Strings.lieuLabel, style: TextStyle(fontSize: 20)),
                   ],
                 ),
                 const Padding(padding: EdgeInsets.all(10)),
@@ -391,14 +381,17 @@ class _AjoutPageState extends State<AjoutPage> {
                               style: TextStyle(color: Colors.red),
                             );
                           });
+                        } else {
+                          setState(() {
+                            _labelErrType = const Text('');
+                          });
                         }
                         setState(() {
                           _dropdownvalueType = newValue;
                         });
                       },
                     ),
-                    const Padding(
-                        padding: EdgeInsetsDirectional.only(end: 100)),
+                    const Padding(padding: EdgeInsetsDirectional.only(end: 50)),
                     DropdownButton(
                       value: _dropdownvalueEtat,
                       icon: const Icon(Icons.keyboard_arrow_down),
@@ -418,21 +411,81 @@ class _AjoutPageState extends State<AjoutPage> {
                               style: TextStyle(color: Colors.red),
                             );
                           });
+                        } else {
+                          setState(() {
+                            _labelErrEtat = const Text('');
+                          });
                         }
                         setState(() {
                           _dropdownvalueEtat = newValue;
                         });
                       },
                     ),
+                    const Padding(padding: EdgeInsetsDirectional.only(end: 50)),
+                    DropdownButton(
+                      menuMaxHeight: 300,
+                      value: _dropdownvalueLieu,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: Strings.itemsLieu
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        _idLieu = Strings.itemsLieu.indexOf(newValue!);
+                        if (Strings.itemsLieu.indexOf(newValue) == 0) {
+                          setState(() {
+                            _labelErrLieu = const Text(
+                              Strings.errorLieuLabel,
+                              style: TextStyle(color: Colors.red),
+                            );
+                          });
+                        } else {
+                          setState(() {
+                            _labelErrLieu = const Text('');
+                          });
+                        }
+                        setState(() {
+                          _dropdownvalueLieu = newValue;
+                        });
+                      },
+                    ),
                   ],
                 ),
+                const Padding(padding: EdgeInsets.all(10)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    _idLieu == Strings.itemsLieu.length - 1
+                        ? SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.18,
+                            child: TextFormField(
+                              controller: fieldDetailsAutres,
+                              decoration: const InputDecoration(
+                                  labelText: Strings.detailsLieuAutresLabel),
+                              validator: (valeur) {
+                                if (valeur == null || valeur.isEmpty) {
+                                  return Strings.emptyInputStr;
+                                } else {
+                                  setState(() {
+                                    _detailsAutre = valeur;
+                                  });
+                                }
+                              },
+                            ),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Padding(padding: EdgeInsetsDirectional.only(top: 10)),
                     _labelErrType,
-                    const Padding(
-                        padding: EdgeInsetsDirectional.only(end: 100)),
-                    _labelErrEtat
+                    _labelErrEtat,
+                    _labelErrLieu,
                   ],
                 ),
                 Row(
@@ -522,7 +575,6 @@ class _AjoutPageState extends State<AjoutPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       sendRequest();
-                      clearTexts();
                     }
                   },
                   child: const Text("Valider"),

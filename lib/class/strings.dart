@@ -38,15 +38,18 @@ class Strings {
   static const String marqueLabel = "Marque";
   static const String modeleLabel = "Modèle";
   static const String numInventaireLabel = "Numéro d'inventaire";
+  static const String detailsLieuAutresLabel =
+      "Détails sur le lieu de stockage";
   static const String numSerieLabel = "Numéro de série";
-  static const String lieuInstallationLabel = "Lieu d'installation";
   static const String dateAchatLabel = "Date d'achat: ";
   static const String dateGarantieLabel = "Date de fin de garantie: ";
   static const String remarquesLabel = "Remarques";
   static const String typeLabel = "Type:";
   static const String etatLabel = "Etat:";
+  static const String lieuLabel = "Lieu:";
   static const String errorTypeLabel = "Veuillez choisir un type";
   static const String errorEtatLabel = "Veuillez choisir un état";
+  static const String errorLieuLabel = "Veuillez choisir un lieu";
   static const String uploadImgStr =
       'L\'upload d\'images passe par URL, vous pouvez utiliser le site "postimages" pour téléverser une image en URL.';
   static const String uploadImgLabel = "URL Image: ";

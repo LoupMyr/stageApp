@@ -104,12 +104,14 @@ class Tools {
       String etatId,
       String numSerie,
       String numInventaire,
-      String lieuInstallation) async {
+      String lieuId,
+      String detailsAutres) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
     Map<String, dynamic> dateA = {};
     Map<String, dynamic> dateG = {};
     Map<String, dynamic> rem = {};
+    Map<String, dynamic> details = {};
     if (dateAchat.isNotEmpty) {
       dateA = {
         "dateAchat": dateAchat,
@@ -125,6 +127,11 @@ class Tools {
         "remarques": remarques,
       };
     }
+    if (detailsAutres.isNotEmpty) {
+      details = {
+        "detailTypeAutres": detailsAutres,
+      };
+    }
 
     final Map<String, dynamic> body = {
       "marque": marque,
@@ -136,8 +143,11 @@ class Tools {
       "etat": '/stageAppWeb/public/api/etats/$etatId',
       "numSerie": numSerie,
       "numInventaire": numInventaire,
-      "lieuInstallation": lieuInstallation
+      "lieuInstallation": '/stageAppWeb/public/api/lieus/$lieuId',
+      ...details,
     };
+
+    print(body.toString());
 
     return await http.post(
       Uri.parse(

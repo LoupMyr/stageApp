@@ -103,7 +103,7 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   void createList() {
     _listMateriels.clear();
     _tab.clear();
-    for (var elt in _materiels['hydra:member']) {
+    for (var elt in _materiels['hydra:member'].reversed) {
       try {
         if (elt['dateAchat'].isNotEmpty && elt['dateAchat'] != null) {
           List<String> temp = elt['dateAchat'].split('-');

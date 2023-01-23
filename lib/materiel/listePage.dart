@@ -40,7 +40,7 @@ class ListePageState extends State<ListePage> {
 
   Widget buildTab() {
     List<Widget> tab = List.empty(growable: true);
-    for (var elt in _materiels['hydra:member']) {
+    for (var elt in _materiels['hydra:member'].reversed) {
       var type;
       for (var i in _types['hydra:member']) {
         if (elt['type'] == i['@id']) {

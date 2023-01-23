@@ -84,7 +84,7 @@ class SearchByTypePageState extends State<SearchByTypePage> {
         ),
       );
     }
-    for (var elt in _listM['hydra:member']) {
+    for (var elt in _listM['hydra:member'].reversed) {
       List<String> temp = elt['type'].split('/');
       int idType = int.parse(temp[temp.length - 1]);
       if (idType == _idSelec) {

@@ -85,7 +85,7 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
         ),
       );
     } else {
-      for (var elt in _listM['hydra:member']) {
+      for (var elt in _listM['hydra:member'].reversed) {
         List<String> temp = elt['etat'].split('/');
         int idEtat = int.parse(temp[temp.length - 1]);
         if (idEtat == _idSelec) {

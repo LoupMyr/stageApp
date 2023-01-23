@@ -109,13 +109,21 @@ class MaterielPageState extends State<MaterielPage> {
       ),
     );
     tab.add(addGap());
+    String lieuStr = _lieu['libelle'].toString();
+    if (_lieu['libelle'].toString() == 'Autres') {
+      try {
+        lieuStr = _materiel['detailTypeAutres'];
+      } catch (e) {
+        lieuStr = 'Autres \n Pas de spécification';
+      }
+    }
     tab.add(
       Container(
         decoration: BoxDecoration(border: _border),
         height: 100,
         width: MediaQuery.of(context).size.width / 7,
         child: Text(
-          _lieu['libelle'],
+          lieuStr,
           style: _textStyle,
           textAlign: TextAlign.center,
         ),

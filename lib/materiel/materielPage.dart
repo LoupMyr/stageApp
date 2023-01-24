@@ -135,10 +135,6 @@ class MaterielPageState extends State<MaterielPage> {
 
   Widget createSecondArray() {
     List<Widget> tab = List.empty(growable: true);
-    String dateAchat = ' / ';
-    String dateFinGarantie = ' / ';
-    String remarques = ' / ';
-
     tab.add(
       SizedBox(
         height: 100,

@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: _navbar,
             title: Text(
               widget.title,
-              style: TextStyle(fontSize: 30),
+              style: const TextStyle(fontSize: 30),
             ),
             centerTitle: true,
           ),

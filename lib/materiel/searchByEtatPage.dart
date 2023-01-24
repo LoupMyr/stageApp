@@ -21,7 +21,6 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
   final Tools _tools = Tools();
   var _listM;
   var _listT;
-  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -97,16 +96,21 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
           }
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
-          tab.add(Widgets.createRow(
+          tab.add(Widgets.createRowElt(
               elt, type, _textStyleHeaders, tableau, img, context));
           tab.add(
-            SizedBox(
-              height: 100,
-              width: MediaQuery.of(context).size.width / 5,
-              child: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () => deleteElt(elt['id'].toString()),
-              ),
+            Row(
+              children: [
+                SizedBox(
+                  height: 100,
+                  width: MediaQuery.of(context).size.width / 5,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => deleteElt(elt['id'].toString()),
+                  ),
+                ),
+                Widgets.createEditOption(context, tableau),
+              ],
             ),
           );
         }
@@ -183,6 +187,12 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => setState(() {
+                recupMateriels();
+              }),
+          tooltip: 'Actualiser',
+          child: const Icon(Icons.refresh_outlined)),
     );
   }
 }

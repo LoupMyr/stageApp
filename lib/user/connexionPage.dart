@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:stage/class/local.dart';
 import 'package:stage/class/strings.dart';
@@ -20,8 +22,8 @@ class ConnexionPageState extends State<ConnexionPage> {
   String _email = '';
   String _mdp = '';
   bool _isChecked = false;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -56,19 +58,19 @@ class ConnexionPageState extends State<ConnexionPage> {
 
   void _loadUserEmailPassword() async {
     try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      var _email = _prefs.getString("email") ?? "";
-      var _password = _prefs.getString("password") ?? "";
-      var _remeberMe = _prefs.getBool("remember_me") ?? false;
-      if (_remeberMe) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var email = prefs.getString("email") ?? "";
+      var password = prefs.getString("password") ?? "";
+      var remeberMe = prefs.getBool("remember_me") ?? false;
+      if (remeberMe) {
         setState(() {
           _isChecked = true;
         });
-        _emailController.text = _email ?? "";
-        _passwordController.text = _password ?? "";
+        _emailController.text = email ?? "";
+        _passwordController.text = password ?? "";
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 

@@ -90,7 +90,7 @@ class Widgets {
     return tab;
   }
 
-  static Widget createRow(var elt, var type, TextStyle ts,
+  static Widget createRowElt(var elt, var type, TextStyle ts,
       List<dynamic> tableau, AssetImage img, BuildContext context) {
     SizedBox sizedbox = const SizedBox();
     try {
@@ -190,6 +190,19 @@ class Widgets {
       title: Text(
         title,
         style: const TextStyle(fontSize: 30),
+      ),
+    );
+  }
+
+  static Widget createEditOption(BuildContext context, List<dynamic> tableau) {
+    return SizedBox(
+      child: SizedBox(
+        height: 100,
+        width: MediaQuery.of(context).size.width / 5,
+        child: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () => Navigator.pushNamed(context, '/routeAjout',
+                arguments: tableau)),
       ),
     );
   }

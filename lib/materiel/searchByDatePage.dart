@@ -118,16 +118,21 @@ class SearchByDatePageState extends State<SearchByDatePage> {
             _listMateriels.add(elt);
             AssetImage img = _tools.findImg(type['libelle']);
             List<dynamic> tableau = [elt, type];
-            _tab.add(Widgets.createRow(
+            _tab.add(Widgets.createRowElt(
                 elt, type, _textStyleHeaders, tableau, img, context));
             _tab.add(
-              SizedBox(
-                height: 100,
-                width: MediaQuery.of(context).size.width / 5,
-                child: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => deleteElt(elt['id'].toString()),
-                ),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => deleteElt(elt['id'].toString()),
+                    ),
+                  ),
+                  Widgets.createEditOption(context, tableau),
+                ],
               ),
             );
           }
@@ -277,8 +282,24 @@ class SearchByDatePageState extends State<SearchByDatePage> {
         ),
       ),
       floatingActionButton: _isSelected
-          ? FloatingActionButton(
-              onPressed: donwloadPdf, child: const Icon(Icons.download))
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed: donwloadPdf,
+                  child: const Icon(Icons.download),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: FloatingActionButton(
+                      onPressed: () => setState(() {
+                            recupMateriels();
+                          }),
+                      tooltip: 'Actualiser',
+                      child: const Icon(Icons.refresh_outlined)),
+                ),
+              ],
+            )
           : null,
     );
   }

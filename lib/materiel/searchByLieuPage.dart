@@ -21,7 +21,6 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
   final Tools _tools = Tools();
   var _listM;
   var _listT;
-  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget _col = Column(children: []);
@@ -89,16 +88,22 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
           }
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
-          tab.add(Widgets.createRow(
+          tab.add(Widgets.createRowElt(
               elt, type, _textStyleHeaders, tableau, img, context));
           tab.add(
-            SizedBox(
-              height: 100,
-              width: MediaQuery.of(context).size.width / 5,
-              child: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () => deleteElt(elt['id'].toString()),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 100,
+                  width: MediaQuery.of(context).size.width / 5,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => deleteElt(elt['id'].toString()),
+                  ),
+                ),
+                Widgets.createEditOption(context, tableau),
+              ],
             ),
           );
         }
@@ -166,6 +171,12 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => setState(() {
+                recupMateriels();
+              }),
+          tooltip: 'Actualiser',
+          child: const Icon(Icons.refresh_outlined)),
     );
   }
 }

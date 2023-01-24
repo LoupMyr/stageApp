@@ -19,7 +19,6 @@ class ListePageState extends State<ListePage> {
   var _types;
   final Tools _tools = Tools();
   bool _recupDataBool = false;
-  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -49,11 +48,11 @@ class ListePageState extends State<ListePage> {
       }
       List<dynamic> tableau = [elt, type];
       AssetImage img = _tools.findImg(type['libelle']);
-      tab.add(Widgets.createRow(
+      tab.add(Widgets.createRowElt(
           elt, type, _textStyleHeaders, tableau, img, context));
       tab.add(
         Row(
-          children: <Widget>[
+          children: [
             SizedBox(
               height: 100,
               width: MediaQuery.of(context).size.width / 5,
@@ -62,14 +61,7 @@ class ListePageState extends State<ListePage> {
                 onPressed: () => deleteElt(elt['id'].toString()),
               ),
             ),
-            SizedBox(
-              height: 100,
-              width: MediaQuery.of(context).size.width / 5,
-              child: IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => Navigator.pushNamed(context, '/routeAjout',
-                      arguments: tableau)),
-            ),
+            Widgets.createEditOption(context, tableau),
           ],
         ),
       );
@@ -79,67 +71,10 @@ class ListePageState extends State<ListePage> {
     );
   }
 
-  Future<void> buildDeletePopUp(String id) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(Strings.deleteEltTitle),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: const <Widget>[
-                  Text(Strings.deleteStr),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text(Strings.yesButtonStr),
-                onPressed: () {
-                  deleteElt(id);
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text(Strings.cancelButtonStr),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void deleteElt(String id) async {
-    for (var elt in _materiels['hydra:member']) {
-      if (elt['id'].toString() == id) {
-        if (elt['photos'].isNotEmpty) {
-          List<int> tabIdPhoto = List.empty(growable: true);
-          for (int i = 0; i < elt['photos'].length; i++) {
-            List<String> temp = elt['photos'][i].split('/');
-            int id = int.parse(temp[temp.length - 1]);
-            tabIdPhoto.add(id);
-          }
-          for (int i = 0; i < tabIdPhoto.length; i++) {
-            await _tools.deletePhoto(tabIdPhoto[i].toString());
-          }
-        }
-      }
-    }
-    var response = await _tools.deleteMateriel(id);
-    if (response.statusCode == 204) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.deleteEltSuccessful),
-      ));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.errorHappened),
-      ));
-    }
+  Future<void> deleteElt(String id) async {
+    await Widgets.buildDeletePopUp(id, _materiels, _scaffoldKey);
     setState(() {
-      buildTab();
+      recupMateriels();
     });
   }
 
@@ -205,6 +140,12 @@ class ListePageState extends State<ListePage> {
                 child: Column(children: children),
               ),
             ),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () => setState(() {
+                      recupMateriels();
+                    }),
+                tooltip: 'Actualiser',
+                child: const Icon(Icons.refresh_outlined)),
           );
         });
   }

@@ -146,9 +146,6 @@ class Tools {
       "lieuInstallation": '/stageAppWeb/public/api/lieus/$lieuId',
       ...details,
     };
-
-    print(body.toString());
-
     return await http.post(
       Uri.parse(
           'https://s3-4428.nuage-peda.fr/stageAppWeb/public/api/materiels'),
@@ -322,7 +319,6 @@ class Tools {
         "detailTypeAutres": detailsAutres,
       };
     }
-
     final Map<String, dynamic> body = {
       "marque": marque,
       "modele": modele,
@@ -344,7 +340,7 @@ class Tools {
           'Content-Type': 'application/merge-patch+json',
           "Authorization": "Bearer ${token!}"
         },
-        body: body);
+        body: convert.jsonEncode(body));
   }
 
 //*********//
@@ -401,6 +397,18 @@ class Tools {
         img = const AssetImage('assets/board.png');
 
         break;
+      case 'Tablette':
+        img = const AssetImage('assets/tablet.png');
+
+        break;
+      case 'Téléphone fixe':
+        img = const AssetImage('assets/tel-fixe.png');
+
+        break;
+      case 'Téléphone mobile':
+        img = const AssetImage('assets/tel-portable.png');
+
+        break;
     }
     return img;
   }
@@ -413,11 +421,11 @@ class Tools {
     return estAdmin;
   }
 
-  List<List<dynamic>> sortByType(var _types, List<dynamic> _listMateriels) {
+  List<List<dynamic>> sortByType(var types, List<dynamic> listMateriels) {
     List<List<dynamic>> tabSorted = List.generate(
-        _types['hydra:member'].length, (index) => List.empty(growable: true));
-    for (var type in _types['hydra:member']) {
-      for (var materiel in _listMateriels) {
+        types['hydra:member'].length, (index) => List.empty(growable: true));
+    for (var type in types['hydra:member']) {
+      for (var materiel in listMateriels) {
         List<String> temp = materiel['type'].split('/');
         int idType = int.parse(temp[temp.length - 1]);
         if (idType == type['id']) {

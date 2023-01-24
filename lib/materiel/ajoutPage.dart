@@ -47,7 +47,9 @@ class _AjoutPageState extends State<AjoutPage> {
   final fieldRemarques = TextEditingController();
   final fieldDetailsAutres = TextEditingController();
   bool _estEdit = false;
+  bool _hasRecup = false;
   String _idMateriel = '-1';
+  List<dynamic> _tabArg = List.empty(growable: true);
 
   void clearUrl() {
     fieldImages.clear();
@@ -120,7 +122,7 @@ class _AjoutPageState extends State<AjoutPage> {
                   .add('/stageAppWeb/public/api/photos/${postTemp['id']}');
             }
           }
-          var reponse = await _tool.patchMaterielPhoto(
+          await _tool.patchMaterielPhoto(
               tabUriPhotos, materiel['id'].toString());
         }
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -140,6 +142,9 @@ class _AjoutPageState extends State<AjoutPage> {
       Widgets.buildNonAdmin(context);
       return;
     }
+    if (_idLieu != Strings.itemsLieu.length - 1) {
+      _detailsAutre = '';
+    }
     var response = await _tool.patchMateriel(
         idMateriel,
         _marque,
@@ -153,7 +158,7 @@ class _AjoutPageState extends State<AjoutPage> {
         _numInventaire,
         _idLieu.toString(),
         _detailsAutre);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       var materiel = convert.jsonDecode(response.body);
       clearTexts();
       if (_listUrl.isNotEmpty) {
@@ -169,12 +174,12 @@ class _AjoutPageState extends State<AjoutPage> {
                 .add('/stageAppWeb/public/api/photos/${postTemp['id']}');
           }
         }
-        var reponse = await _tool.patchMaterielPhoto(
-            tabUriPhotos, materiel['id'].toString());
+        await _tool.patchMaterielPhoto(tabUriPhotos, materiel['id'].toString());
       }
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.materialAdded),
+        content: Text(Strings.materialEdited),
       ));
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(Strings.errorHappened),
@@ -218,7 +223,7 @@ class _AjoutPageState extends State<AjoutPage> {
   }
 
   SizedBox createFieldDetails() {
-    SizedBox sizedbox = SizedBox();
+    SizedBox sizedbox = const SizedBox();
     if (_idLieu == Strings.itemsLieu.length - 1) {
       sizedbox = SizedBox(
         width: MediaQuery.of(context).size.width * 0.18,
@@ -241,43 +246,49 @@ class _AjoutPageState extends State<AjoutPage> {
     return sizedbox;
   }
 
+  void fillFields() {
+    widget.title = 'Modification';
+    fieldMarque.value = TextEditingValue(text: _tabArg[0]['marque']);
+    fieldModele.value = TextEditingValue(text: _tabArg[0]['modele']);
+    fieldNumInventaire.value =
+        TextEditingValue(text: _tabArg[0]['numInventaire']);
+    fieldNumSerie.value = TextEditingValue(text: _tabArg[0]['numSerie']);
+    _idEtat = _tool.splitUri(_tabArg[0]['etat']);
+    _idType = _tool.splitUri(_tabArg[0]['type']);
+    _idLieu = _tool.splitUri(_tabArg[0]['lieuInstallation']);
+    _dropdownvalueType = Strings.itemsType[_idType];
+    _dropdownvalueEtat = Strings.itemsEtat[_idEtat];
+    _dropdownvalueLieu = Strings.itemsLieu[_idLieu];
+    createFieldDetails();
+    try {
+      fieldDetailsAutres.value =
+          TextEditingValue(text: _tabArg[0]['detailTypeAutres']);
+    } catch (e) {}
+    try {
+      fieldRemarques.value = TextEditingValue(text: _tabArg[0]['remarques']);
+    } catch (e) {}
+    try {
+      _dateAchat = DateFormat('dd-MM-yyyy')
+          .format(DateTime.parse(_tabArg[0]['dateAchat']))
+          .toString();
+    } catch (e) {}
+    try {
+      setState(() {
+        _dateGarantie = DateFormat('dd-MM-yyyy')
+            .format(DateTime.parse(_tabArg[0]['dateFinGaranti']))
+            .toString();
+      });
+    } catch (e) {}
+    _idMateriel = _tabArg[0]['id'].toString();
+    _hasRecup = true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<dynamic> tabArg =
-        ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-    if (tabArg.isNotEmpty) {
+    _tabArg = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    if (_tabArg.isNotEmpty && !_hasRecup) {
       _estEdit = true;
-      widget.title = 'Modification';
-      fieldMarque.text = tabArg[0]['marque'];
-      fieldModele.text = tabArg[0]['modele'];
-      fieldNumInventaire.text = tabArg[0]['numInventaire'];
-      fieldNumSerie.text = tabArg[0]['numSerie'];
-      _idEtat = _tool.splitUri(tabArg[0]['etat']);
-      _idType = _tool.splitUri(tabArg[0]['type']);
-      _idLieu = _tool.splitUri(tabArg[0]['lieuInstallation']);
-      _dropdownvalueType = Strings.itemsType[_idType];
-      _dropdownvalueEtat = Strings.itemsEtat[_idEtat];
-      _dropdownvalueLieu = Strings.itemsLieu[_idLieu];
-      createFieldDetails();
-      try {
-        fieldDetailsAutres.text = tabArg[0]['detailTypeAutres'];
-      } catch (e) {}
-      try {
-        fieldRemarques.text = tabArg[0]['remarques'];
-      } catch (e) {}
-      try {
-        _dateAchat = DateFormat('dd-MM-yyyy')
-            .format(DateTime.parse(tabArg[0]['dateAchat']))
-            .toString();
-      } catch (e) {}
-      try {
-        setState(() {
-          _dateGarantie = DateFormat('dd-MM-yyyy')
-              .format(DateTime.parse(tabArg[0]['dateFinGaranti']))
-              .toString();
-        });
-      } catch (e) {}
-      _idMateriel = tabArg[0]['id'].toString();
+      fillFields();
     }
     return Scaffold(
       appBar: Widgets.createAppBar(widget.title, context),
@@ -598,7 +609,7 @@ class _AjoutPageState extends State<AjoutPage> {
                         decoration: const InputDecoration(
                             labelText: Strings.uploadImgLabel),
                         onFieldSubmitted: (valeur) {
-                          if (valeur == null || valeur.isEmpty) {
+                          if (valeur.isEmpty) {
                             return;
                           } else {
                             setState(() {

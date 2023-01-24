@@ -80,6 +80,9 @@ flutter:
     - assets/serveur.png
     - assets/souris.png
     - assets/switch.png
+    - assets/tablet.png
+    - assets/tel-fixe.png
+    - assets/tel-portable.png
     - assets/wifi.png
     - assets/achicourt.png
 

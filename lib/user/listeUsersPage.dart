@@ -19,7 +19,6 @@ class ListeUsersPageState extends State<ListeUsersPage> {
   final _formEditEmail = GlobalKey<FormState>();
   var _users;
   String _email = '';
-  String _role = '';
   final Tools _tools = Tools();
   bool _recupDataBool = false;
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);

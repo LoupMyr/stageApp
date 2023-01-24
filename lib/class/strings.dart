@@ -27,6 +27,7 @@ class Strings {
   static const String editEmailSuccessful = "Email modifié";
   static const String displayInfos = "Voici vos infomatations:";
   static const String materialAdded = "Matériel ajouté";
+  static const String materialEdited = "Matériel modifié";
   static const String errorHappened = "Une erreur est survenue";
   static const String emptyField = "Champ vide";
   static const String fieldEmpty1 = "Le champ ";
@@ -93,21 +94,22 @@ class Strings {
   static const List<String> tabHeaders = ['Type', 'Marque', 'Modele', 'Année'];
   static const List<String> itemsType = [
     ' ',
-    'Unité centrale',
-    'Ecran',
     'Clavier',
-    'Souris',
-    'Imprimante',
     'Copieur',
-    'NAS',
-    'Serveur',
-    'Switch',
-    'Point accès wifi',
+    'Ecran',
     'ENI',
-    'TBI',
-    'Téléphone mobile',
+    'Imprimante',
+    'NAS',
+    'Point accès wifi',
+    'Serveur',
+    'Souris',
+    'Switch',
     'Tablette',
-    'Autres'
+    'TBI',
+    'Téléphone fixe',
+    'Téléphone mobile',
+    'Unité centrale',
+    'Autres',
   ];
   static const List<String> itemsEtat = [
     ' ',
@@ -118,9 +120,22 @@ class Strings {
   ];
   static const List<String> itemsLieu = [
     ' ',
+    'Animathèque',
+    'Centre Socioculturel',
+    'Centre Technique',
+    'Ecole de Musique',
+    'Ecole Jean Macé Elémentaire',
+    'Ecole Jean Macé Maternelle',
+    'Ecole Leopold Sedar Senghor',
+    'Ecole Léopold Bernard',
+    'Ecole Michel Darras',
+    'Mairie',
+    'Maison des Sociétés',
     'Médiathèque',
-    "Mairie d'Achicourt",
-    'Rdm',
-    'Autres'
+    'Relais Petite Enfance',
+    'Salle Gustave Desailly',
+    'Salle Leo Lagrange',
+    'Salle Mitterrand',
+    'Autres',
   ];
 }

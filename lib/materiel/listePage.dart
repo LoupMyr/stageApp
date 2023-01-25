@@ -23,7 +23,8 @@ class ListePageState extends State<ListePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<String> recupMateriels() async {
-    if (await _tools.checkAdmin() == false) {
+    if (await _tools.checkAdmin() == false &&
+        await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return '';
     }

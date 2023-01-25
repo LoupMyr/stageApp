@@ -26,7 +26,8 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
   Widget _col = Column(children: []);
 
   void recupMateriels() async {
-    if (await _tools.checkAdmin() == false) {
+    if (await _tools.checkAdmin() == false &&
+        await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
     }

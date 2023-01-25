@@ -97,7 +97,7 @@ class ProfilPageState extends State<ProfilPage> {
                       const Padding(padding: EdgeInsets.only(top: 40)),
                       Row(
                         children: <Widget>[
-                          const Text(Strings.emailLabel,
+                          const Text(Strings.emailProfilLabel,
                               style: TextStyle(
                                   fontSize: 20,
                                   decoration: TextDecoration.underline)),
@@ -109,7 +109,7 @@ class ProfilPageState extends State<ProfilPage> {
                       ),
                       Row(
                         children: <Widget>[
-                          const Text(Strings.roleLabel,
+                          const Text(Strings.roleProfilLabel,
                               style: TextStyle(
                                   fontSize: 20,
                                   decoration: TextDecoration.underline)),

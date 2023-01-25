@@ -32,7 +32,8 @@ class MaterielPageState extends State<MaterielPage> {
   String _dateAchat = '';
 
   Future<String> recupEtat() async {
-    if (await _tools.checkAdmin() == false) {
+    if (await _tools.checkAdmin() == false &&
+        await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return '';
     }

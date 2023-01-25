@@ -421,6 +421,14 @@ class Tools {
     return estAdmin;
   }
 
+  Future<bool> checkMods() async {
+    bool estMod = false;
+    if (await Local.storage.read(key: 'role') == "ROLE_MODERATOR") {
+      estMod = true;
+    }
+    return estMod;
+  }
+
   List<List<dynamic>> sortByType(var types, List<dynamic> listMateriels) {
     List<List<dynamic>> tabSorted = List.generate(
         types['hydra:member'].length, (index) => List.empty(growable: true));

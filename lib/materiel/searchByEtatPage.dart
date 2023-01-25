@@ -34,7 +34,8 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
   );
 
   void recupMateriels() async {
-    if (await _tools.checkAdmin() == false) {
+    if (await _tools.checkAdmin() == false &&
+        await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
     }

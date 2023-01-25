@@ -48,6 +48,8 @@ class Strings {
   static const String typeLabel = "Type:";
   static const String etatLabel = "Etat:";
   static const String lieuLabel = "Lieu:";
+  static const String roleProfilLabel = "Rôle: ";
+  static const String emailProfilLabel = "Email: ";
   static const String errorTypeLabel = "Veuillez choisir un type";
   static const String errorEtatLabel = "Veuillez choisir un état";
   static const String errorLieuLabel = "Veuillez choisir un lieu";

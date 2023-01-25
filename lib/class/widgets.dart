@@ -15,7 +15,7 @@ class Widgets {
               child: ListBody(
                 children: const <Widget>[
                   Text(
-                      'Vous n\'êtes pas administrateur, impossible de continuer'),
+                      'Vous n\'avez pas les permissions requises pour continuer.'),
                 ],
               ),
             ),

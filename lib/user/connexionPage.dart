@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:stage/class/local.dart';
 import 'package:stage/class/strings.dart';

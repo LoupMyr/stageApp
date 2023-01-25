@@ -40,7 +40,7 @@ class ListePageState extends State<ListePage> {
 
   Widget buildTab() {
     List<Widget> tab = List.empty(growable: true);
-    for (var elt in _materiels['hydra:member'].reversed) {
+    for (var elt in _materiels['hydra:member']) {
       var type;
       for (var i in _types['hydra:member']) {
         if (elt['type'] == i['@id']) {
@@ -89,10 +89,6 @@ class ListePageState extends State<ListePage> {
             if (_recupDataBool) {
               children = <Widget>[
                 const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: Widgets.createHeaders(context),
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

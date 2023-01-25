@@ -84,7 +84,7 @@ class SearchByTypePageState extends State<SearchByTypePage> {
         ),
       );
     }
-    for (var elt in _listM['hydra:member'].reversed) {
+    for (var elt in _listM['hydra:member']) {
       List<String> temp = elt['type'].split('/');
       int idType = int.parse(temp[temp.length - 1]);
       if (idType == _idSelec) {
@@ -168,10 +168,6 @@ class SearchByTypePageState extends State<SearchByTypePage> {
                 },
               ),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-              // Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     children: Widgets.createHeaders(context),
-              //     ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Center(

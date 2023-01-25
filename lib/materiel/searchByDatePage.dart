@@ -104,7 +104,7 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   void createList() {
     _listMateriels.clear();
     _tab.clear();
-    for (var elt in _materiels['hydra:member'].reversed) {
+    for (var elt in _materiels['hydra:member']) {
       try {
         if (elt['dateAchat'].isNotEmpty && elt['dateAchat'] != null) {
           List<String> temp = elt['dateAchat'].split('-');
@@ -268,10 +268,6 @@ class SearchByDatePageState extends State<SearchByDatePage> {
                   : const Text(Strings.yearEmptyStr),
               const Padding(padding: EdgeInsets.all(10)),
               const Divider(thickness: 2),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: Widgets.createHeaders(context),
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

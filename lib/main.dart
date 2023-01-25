@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stage/materiel/searchByLieuPage.dart';
+import 'package:stage/materiel/searchWithFilters.dart';
 import 'package:stage/user/connexionPage.dart';
 import 'package:stage/user/inscriptionPage.dart';
 import 'package:stage/materiel/listePage.dart';
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
               const SearchByDatePage(title: "Recherche par Année"),
           '/routeByLieu': (BuildContext context) =>
               const SearchByLieuPage(title: "Recherche par Lieu"),
+          '/routeByFiltres': (BuildContext context) =>
+              const SearchWithFiltersPage(title: "Recherche par filtres"),
           '/routeInscription': (BuildContext context) =>
               const InscriptionPage(title: "Inscription"),
           '/routeListeUsers': (BuildContext context) =>

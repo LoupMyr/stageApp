@@ -6,21 +6,28 @@ import 'dart:convert' as convert;
 
 import 'package:stage/class/widgets.dart';
 
-class SearchByEtatPage extends StatefulWidget {
-  const SearchByEtatPage({super.key, required this.title});
+class SearchWithFiltersPage extends StatefulWidget {
+  const SearchWithFiltersPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<SearchByEtatPage> createState() => SearchByEtatPageState();
+  State<SearchWithFiltersPage> createState() => SearchWithFiltersPageState();
 }
 
-class SearchByEtatPageState extends State<SearchByEtatPage> {
-  String _dropdownvalue = ' ';
-  int _idSelec = -1;
+class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
+  String _dropdownvalueLieu = ' ';
+  String _dropdownvalueType = ' ';
+  String _dropdownvalueEtat = ' ';
+  String _dropdownvalueAnnee = ' ';
+  int _idLieuSelec = -1;
+  int _idTypeSelec = -1;
+  int _idEtatSelec = -1;
+  int _idAnneeSelec = -1;
   final Tools _tools = Tools();
   var _listM;
   var _listT;
+  List<dynamic> _listElt = List.empty(growable: true);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,7 +41,7 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
   );
 
   void recupMateriels() async {
-    if (await _tools.checkAdmin() == false &&
+     if (await _tools.checkAdmin() == false &&
         await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
@@ -76,20 +83,23 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
   }
 
   void buildList() {
+    if(_idEtatSelec < 0){
+      print("etat");
+      search('etat', _idEtatSelec);
+    }
+    if(_idLieuSelec < 0){
+      searchDate();
+    }
+    if(_idAnneeSelec < 0){
+      search('dateAchat', _idAnneeSelec);
+    }
+    if(_idTypeSelec < 0){
+      search('type', _idTypeSelec);
+    }
     List<Widget> tab = List.empty(growable: true);
-    if (_idSelec == 0) {
-      tab.add(
-        const Text(
-          Strings.noSelectionStr,
-          style: TextStyle(fontSize: 25),
-        ),
-      );
-    } else {
-      for (var elt in _listM['hydra:member']) {
-        List<String> temp = elt['etat'].split('/');
-        int idEtat = int.parse(temp[temp.length - 1]);
-        if (idEtat == _idSelec) {
-          var type;
+    if(_idTypeSelec > 0 || _idEtatSelec > 0 || _idLieuSelec > 0 || _idAnneeSelec > 0){
+    var type;
+    for(var elt in _listElt){
           for (var t in _listT['hydra:member']) {
             if (t['@id'] == elt['type']) {
               type = t;
@@ -114,21 +124,34 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
               ],
             ),
           );
-        }
+    }
+    }else{
+      tab.add(const Text('Aucune selection'));
+    }
+  }
+
+  void searchDate(){
+    
+  }
+
+  void search(String recherche, int idSelec){
+    for(var elt in _listM['hydra:member']){
+      List<String> temp = elt[recherche].split('/');
+      print(temp);
+      int idSearch = int.parse(temp[temp.length - 1]);
+      if(idSearch == idSelec){
+        _listElt.add(elt);
       }
     }
-    if (tab.isEmpty) {
-      tab.add(Text(
-        Strings.emptyEltByEtat + _dropdownvalue.toLowerCase(),
-        style: const TextStyle(fontSize: 25),
-      ));
+    for(var elt in _listElt){
+      List<String> temp = elt[recherche].split('/');
+      int idSearch = int.parse(temp[temp.length - 1]);
+      if(idSearch != idSelec){
+        _listElt.remove(elt);
+      }
     }
-    setState(() {
-      _col = Column(
-        children: tab,
-      );
-    });
   }
+
 
   Future<void> deleteElt(String id) async {
     await Widgets.buildDeletePopUp(id, _listM, _scaffoldKey);
@@ -150,13 +173,17 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
             children: <Widget>[
               const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
               const Text(
-                Strings.etatTitle,
+                'Choisissez vos filtres:',
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
               const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+              const Text('Etat: '),
               DropdownButton(
-                value: _dropdownvalue,
+                value: _dropdownvalueEtat,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 items: Strings.itemsEtat
                     .map<DropdownMenuItem<String>>((String value) {
@@ -166,13 +193,52 @@ class SearchByEtatPageState extends State<SearchByEtatPage> {
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
-                  _idSelec = Strings.itemsEtat.indexOf(newValue!);
+                  _idEtatSelec = Strings.itemsEtat.indexOf(newValue!);
                   setState(() {
-                    _dropdownvalue = newValue;
+                    _dropdownvalueEtat = newValue;
                     recupMateriels();
                   });
                 },
               ),
+              const Text('Type:'),
+              DropdownButton(
+                value: _dropdownvalueType,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: Strings.itemsType
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  _idTypeSelec = Strings.itemsType.indexOf(newValue!);
+                  setState(() {
+                    _dropdownvalueType = newValue;
+                    recupMateriels();
+                  });
+                },
+              ),
+              const Text('Lieu:'),
+              DropdownButton(
+                value: _dropdownvalueLieu,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: Strings.itemsLieu
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  _idLieuSelec = Strings.itemsLieu.indexOf(newValue!);
+                  setState(() {
+                    _dropdownvalueLieu = newValue;
+                    recupMateriels();
+                  });
+                },
+              ),
+              ],),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

@@ -77,7 +77,7 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
         ),
       );
     } else {
-      for (var elt in _listM['hydra:member'].reversed) {
+      for (var elt in _listM['hydra:member']) {
         List<String> temp = elt['lieuInstallation'].split('/');
         int idLieu = int.parse(temp[temp.length - 1]);
         if (idLieu == _idSelec) {

@@ -86,27 +86,55 @@ class _MyHomePageState extends State<MyHomePage> {
                   Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.05)),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: ElevatedButton(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/routeListe'),
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: const BorderSide(color: Colors.black),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/routeListe'),
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: const BorderSide(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            Strings.listButtonStr,
+                            textAlign: TextAlign.center,
+                            style: _textStyle,
                           ),
                         ),
                       ),
-                      child: Text(
-                        Strings.listButtonStr,
-                        textAlign: TextAlign.center,
-                        style: _textStyle,
+                      const Padding(padding: EdgeInsets.all(10)),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/routeByFiltres'),
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: const BorderSide(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'Recherche par filtres',
+                            textAlign: TextAlign.center,
+                            style: _textStyle,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   SizedBox.fromSize(
                       size: Size.fromHeight(

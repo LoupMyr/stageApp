@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
-
+import 'package:intl/intl.dart';
 import 'package:stage/class/widgets.dart';
 
 class SearchWithFiltersPage extends StatefulWidget {
@@ -23,14 +23,14 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   int _idLieuSelec = -1;
   int _idTypeSelec = -1;
   int _idEtatSelec = -1;
-  int _idAnneeSelec = -1;
+  String _anneeSelec = '';
   final Tools _tools = Tools();
   var _listM;
   var _listT;
   List<dynamic> _listElt = List.empty(growable: true);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  DateTime _selectedDate = DateTime.now();
   Widget _col = Column(
     children: const <Widget>[
       Text(
@@ -39,6 +39,34 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
       ),
     ],
   );
+
+  selectYear() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(Strings.selectYearTitle),
+          content: SizedBox(
+            width: 300,
+            height: 300,
+            child: YearPicker(
+              firstDate: DateTime(DateTime.now().year - 100, 1),
+              lastDate: DateTime(DateTime.now().year + 100, 1),
+              initialDate: DateTime.now(),
+              selectedDate: _selectedDate,
+              onChanged: (DateTime dateTime) {
+                setState(() {
+                  _anneeSelec = dateTime.year.toString();
+                  recupMateriels();
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   void recupMateriels() async {
      if (await _tools.checkAdmin() == false &&
@@ -83,23 +111,25 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   }
 
   void buildList() {
-    if(_idEtatSelec < 0){
-      print("etat");
+    _listElt.clear();
+    if(_idEtatSelec > 0){
       search('etat', _idEtatSelec);
     }
-    if(_idLieuSelec < 0){
-      searchDate();
+    if(_idLieuSelec > 0){
+      search('lieuInstallation', _idLieuSelec);
     }
-    if(_idAnneeSelec < 0){
-      search('dateAchat', _idAnneeSelec);
+    if(_anneeSelec != ''){
+      searchAnnee();
     }
-    if(_idTypeSelec < 0){
+    if(_idTypeSelec > 0){
       search('type', _idTypeSelec);
     }
+    deleteConditions();
     List<Widget> tab = List.empty(growable: true);
-    if(_idTypeSelec > 0 || _idEtatSelec > 0 || _idLieuSelec > 0 || _idAnneeSelec > 0){
-    var type;
-    for(var elt in _listElt){
+    if(_idTypeSelec > 0 || _idEtatSelec > 0 || _idLieuSelec > 0 || _anneeSelec.isNotEmpty){
+      if(_listElt.isNotEmpty){
+        var type;
+        for(var elt in _listElt){
           for (var t in _listT['hydra:member']) {
             if (t['@id'] == elt['type']) {
               type = t;
@@ -107,8 +137,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
           }
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
-          tab.add(Widgets.createRowElt(
-              elt, type, _textStyleHeaders, tableau, img, context));
+          tab.add(Widgets.createRowElt(elt, type, _textStyleHeaders, tableau, img, context));
           tab.add(
             Row(
               children: [
@@ -124,34 +153,100 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
               ],
             ),
           );
-    }
+        }
+      }else{
+        tab.add(const Text('Aucun matériel ne correspond à ces critères.'));  
+      }
     }else{
-      tab.add(const Text('Aucune selection'));
+      tab.add(const Text('Aucune selection.'));
     }
+    setState(() {
+      _col = Column(
+        children: tab,
+      );
+    });
   }
 
-  void searchDate(){
-    
+  void searchAnnee(){
+    for(var elt in _listM['hydra:member']){
+      try{
+        String anneeElt = (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat']))).toString();
+        if(anneeElt == _anneeSelec){
+          if(!checkIfAlreadyInList(elt['id'])){
+            _listElt.add(elt);
+        }
+        }
+      }catch(e){}
+    }
   }
 
   void search(String recherche, int idSelec){
     for(var elt in _listM['hydra:member']){
       List<String> temp = elt[recherche].split('/');
-      print(temp);
       int idSearch = int.parse(temp[temp.length - 1]);
       if(idSearch == idSelec){
-        _listElt.add(elt);
+        if(!checkIfAlreadyInList(elt['id'])){
+          _listElt.add(elt);
+        }
       }
     }
-    for(var elt in _listElt){
-      List<String> temp = elt[recherche].split('/');
-      int idSearch = int.parse(temp[temp.length - 1]);
-      if(idSearch != idSelec){
+  }
+
+  void deleteConditions(){
+    List<dynamic> eltDelete = List.empty(growable:true);
+    if(_listElt.isNotEmpty){
+      for(var elt in _listElt){
+        if(_idEtatSelec > 0){
+          List<String> temp = elt['etat'].split('/');
+          int idSearch = int.parse(temp[temp.length - 1]);
+          if(idSearch != _idEtatSelec){
+            eltDelete.add(elt);
+          }
+        }
+        if(_idTypeSelec > 0){
+          List<String> temp = elt['type'].split('/');
+          int idSearch = int.parse(temp[temp.length - 1]);
+          if(idSearch != _idTypeSelec){
+            eltDelete.add(elt);
+          }
+        }
+        if(_idLieuSelec > 0){
+          List<String> temp = elt['lieuInstallation'].split('/');
+          int idSearch = int.parse(temp[temp.length - 1]);
+          if(idSearch != _idLieuSelec){
+            eltDelete.add(elt);
+          }
+        }
+        if(_anneeSelec.isNotEmpty){
+          try{
+            String anneeElt = (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat']))).toString();
+            if(anneeElt != _anneeSelec){
+              eltDelete.add(elt);
+            }
+          }catch(e){
+            eltDelete.add(elt);
+          }
+        }
+      }
+    }
+    if(eltDelete.isNotEmpty){
+      for(var elt in eltDelete){
         _listElt.remove(elt);
       }
     }
   }
 
+  bool checkIfAlreadyInList(var idCheck){
+    bool result = false;
+    if(_listElt.isNotEmpty){
+      for(var elt in _listElt){
+        if(elt['id'] == idCheck){
+          result = true;
+        }
+      }
+    }
+    return result;
+  }
 
   Future<void> deleteElt(String id) async {
     await Widgets.buildDeletePopUp(id, _listM, _scaffoldKey);
@@ -238,6 +333,16 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
                   });
                 },
               ),
+              Text('Année d\'achat: '),
+              IconButton(
+                hoverColor: Colors.transparent,
+                onPressed: selectYear,
+                icon: const Icon(
+                  Icons.calendar_today,
+                  size: 25,
+                ),
+              ),
+              Text(_anneeSelec),
               ],),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               SingleChildScrollView(

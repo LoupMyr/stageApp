@@ -21,7 +21,7 @@ class SearchByTypePageState extends State<SearchByTypePage> {
   final Tools _tools = Tools();
   var _listM;
   var _type;
-  final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
+  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget _col = Column(
     children: const <Widget>[
@@ -91,12 +91,12 @@ class SearchByTypePageState extends State<SearchByTypePage> {
         AssetImage img = _tools.findImg(_type['libelle']);
         List<dynamic> tableau = [elt, _type];
         tab.add(Widgets.createRowElt(
-            elt, _type, _textStyleHeaders, tableau, img, context));
+            elt, _type, _textStyle, tableau, img, context));
         tab.add(
           Row(
             children: [
               SizedBox(
-                height: 100,
+                height: 50,
                 width: MediaQuery.of(context).size.width / 5,
                 child: IconButton(
                   icon: const Icon(Icons.delete),

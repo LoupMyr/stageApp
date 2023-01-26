@@ -24,7 +24,7 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   bool _isSelected = false;
   final Tools _tools = Tools();
   final TextStyle _ts = const TextStyle(fontSize: 20);
-  final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
+  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   var _materiels;
   var _types;
   Column _col = Column(children: const <Widget>[]);
@@ -120,12 +120,12 @@ class SearchByDatePageState extends State<SearchByDatePage> {
             AssetImage img = _tools.findImg(type['libelle']);
             List<dynamic> tableau = [elt, type];
             _tab.add(Widgets.createRowElt(
-                elt, type, _textStyleHeaders, tableau, img, context));
+                elt, type, _textStyle, tableau, img, context));
             _tab.add(
               Row(
                 children: [
                   SizedBox(
-                    height: 100,
+                    height: 50,
                     width: MediaQuery.of(context).size.width / 5,
                     child: IconButton(
                       icon: const Icon(Icons.delete),

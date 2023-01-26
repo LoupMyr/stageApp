@@ -95,7 +95,7 @@ class Widgets {
     SizedBox sizedbox = const SizedBox();
     try {
       sizedbox = SizedBox(
-        height: 100,
+        height: 50,
         width: MediaQuery.of(context).size.width / 9,
         child: Center(
           child: Text(
@@ -107,7 +107,7 @@ class Widgets {
       );
     } catch (e) {
       sizedbox = SizedBox(
-        height: 100,
+        height: 50,
         width: MediaQuery.of(context).size.width / 9,
         child: const Center(child: Icon(Icons.question_mark, size: 40)),
       );
@@ -125,7 +125,7 @@ class Widgets {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: 100,
+              height: 60,
               width: MediaQuery.of(context).size.width / 9,
               child: Center(
                   child: Image(
@@ -134,7 +134,7 @@ class Widgets {
               )),
             ),
             SizedBox(
-              height: 100,
+              height: 50,
               width: MediaQuery.of(context).size.width / 9,
               child: Center(
                 child: Text(
@@ -145,7 +145,7 @@ class Widgets {
               ),
             ),
             SizedBox(
-              height: 100,
+              height: 50,
               width: MediaQuery.of(context).size.width / 6,
               child: Center(
                 child:
@@ -153,7 +153,7 @@ class Widgets {
               ),
             ),
             SizedBox(
-              height: 100,
+              height: 50,
               width: MediaQuery.of(context).size.width / 6,
               child: Center(
                 child:
@@ -197,7 +197,7 @@ class Widgets {
   static Widget createEditOption(BuildContext context, List<dynamic> tableau) {
     return SizedBox(
       child: SizedBox(
-        height: 100,
+        height: 50,
         width: MediaQuery.of(context).size.width / 5,
         child: IconButton(
             icon: const Icon(Icons.edit),

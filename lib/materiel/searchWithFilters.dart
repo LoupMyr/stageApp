@@ -28,7 +28,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   var _listM;
   var _listT;
   List<dynamic> _listElt = List.empty(growable: true);
-  final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
+  final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   DateTime _selectedDate = DateTime.now();
   Widget _col = Column(
@@ -137,12 +137,12 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
           }
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
-          tab.add(Widgets.createRowElt(elt, type, _textStyleHeaders, tableau, img, context));
+          tab.add(Widgets.createRowElt(elt, type, _textStyle, tableau, img, context));
           tab.add(
             Row(
               children: [
                 SizedBox(
-                  height: 100,
+                  height: 50,
                   width: MediaQuery.of(context).size.width / 5,
                   child: IconButton(
                     icon: const Icon(Icons.delete),

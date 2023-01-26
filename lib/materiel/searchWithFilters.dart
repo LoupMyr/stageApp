@@ -88,6 +88,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
       _listT = convert.jsonDecode(responseT.body);
+      _listM = _tools.sortListByDateAchat(_listM['hydra:member']);
       buildList();
     } else {
       setState(() {
@@ -168,7 +169,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   }
 
   void searchAnnee(){
-    for(var elt in _listM['hydra:member']){
+    for(var elt in _listM){
       try{
         String anneeElt = (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat']))).toString();
         if(anneeElt == _anneeSelec){
@@ -181,7 +182,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   }
 
   void search(String recherche, int idSelec){
-    for(var elt in _listM['hydra:member']){
+    for(var elt in _listM){
       List<String> temp = elt[recherche].split('/');
       int idSearch = int.parse(temp[temp.length - 1]);
       if(idSearch == idSelec){

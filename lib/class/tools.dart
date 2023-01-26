@@ -450,7 +450,7 @@ class Tools {
 
   Future<void> deleteElt(String id, var listMateriels,
       GlobalKey<ScaffoldState> scaffoldKey) async {
-    for (var elt in listMateriels['hydra:member']) {
+    for (var elt in listMateriels) {
       if (elt['id'].toString() == id) {
         if (elt['photos'].isNotEmpty) {
           List<int> tabIdPhoto = List.empty(growable: true);
@@ -482,5 +482,25 @@ class Tools {
   int splitUri(String str) {
     List<String> temp = str.split('/');
     return int.parse(temp[temp.length - 1]);
+  }
+
+  List<dynamic> sortListByDateAchat(List<dynamic> list) {
+    List<dynamic> tabEltSansDate = List.empty(growable: true);
+    for (var elt in list) {
+      try {
+        String dateTest = elt['dateAchat'];
+      } catch (e) {
+        tabEltSansDate.add(elt);
+      }
+    }
+    for (var elt in tabEltSansDate) {
+      list.remove(elt);
+    }
+    list.sort((a, b) {
+      return DateTime.parse(b['dateAchat'])
+          .compareTo(DateTime.parse(a['dateAchat']));
+    });
+    list = list + tabEltSansDate;
+    return list;
   }
 }

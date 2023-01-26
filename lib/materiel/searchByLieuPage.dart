@@ -45,6 +45,8 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
       _listT = convert.jsonDecode(responseT.body);
+      _listM = _tools.sortListByDateAchat(_listM['hydra:member']);
+
       buildList();
     } else {
       setState(() {
@@ -77,7 +79,7 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
         ),
       );
     } else {
-      for (var elt in _listM['hydra:member']) {
+      for (var elt in _listM) {
         List<String> temp = elt['lieuInstallation'].split('/');
         int idLieu = int.parse(temp[temp.length - 1]);
         if (idLieu == _idSelec) {

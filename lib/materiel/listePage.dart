@@ -32,6 +32,7 @@ class ListePageState extends State<ListePage> {
     var responseT = await _tools.getTypes();
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _materiels = convert.jsonDecode(responseM.body);
+      _materiels = _tools.sortListByDateAchat(_materiels['hydra:member']);
       _types = convert.jsonDecode(responseT.body);
       _recupDataBool = true;
     }
@@ -40,7 +41,7 @@ class ListePageState extends State<ListePage> {
 
   Widget buildTab() {
     List<Widget> tab = List.empty(growable: true);
-    for (var elt in _materiels['hydra:member']) {
+    for (var elt in _materiels) {
       var type;
       for (var i in _types['hydra:member']) {
         if (elt['type'] == i['@id']) {

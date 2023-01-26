@@ -53,6 +53,8 @@ class SearchByTypePageState extends State<SearchByTypePage> {
     if (responseM.statusCode == 200 && responseT.statusCode == 200) {
       _listM = convert.jsonDecode(responseM.body);
       _type = convert.jsonDecode(responseType.body);
+      _listM = _tools.sortListByDateAchat(_listM['hydra:member']);
+
       buildList();
     } else {
       setState(() {
@@ -84,7 +86,7 @@ class SearchByTypePageState extends State<SearchByTypePage> {
         ),
       );
     }
-    for (var elt in _listM['hydra:member']) {
+    for (var elt in _listM) {
       List<String> temp = elt['type'].split('/');
       int idType = int.parse(temp[temp.length - 1]);
       if (idType == _idSelec) {

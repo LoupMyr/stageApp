@@ -104,7 +104,8 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   void createList() {
     _listMateriels.clear();
     _tab.clear();
-    for (var elt in _materiels['hydra:member']) {
+    _materiels = _tools.sortListByDateAchat(_materiels['hydra:member']);
+    for (var elt in _materiels) {
       try {
         if (elt['dateAchat'].isNotEmpty && elt['dateAchat'] != null) {
           List<String> temp = elt['dateAchat'].split('-');
@@ -283,12 +284,14 @@ class SearchByDatePageState extends State<SearchByDatePage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
+                  heroTag: 'btnDownload',
                   onPressed: donwloadPdf,
                   child: const Icon(Icons.download),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: FloatingActionButton(
+                      heroTag: 'btnRefresh',
                       onPressed: () => setState(() {
                             recupMateriels();
                           }),

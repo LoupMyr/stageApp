@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stage/materiel/grapheAchatPerAnneePage.dart';
 import 'package:stage/materiel/searchByLieuPage.dart';
 import 'package:stage/materiel/searchWithFilters.dart';
 import 'package:stage/user/connexionPage.dart';
@@ -25,13 +26,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Gestion de stock',
+        title: 'Gestion stock',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Colors.teal,
         ),
         home: const SplashScreen(title: 'Connexion'),
-        darkTheme: ThemeData.dark(),
         routes: <String, WidgetBuilder>{
           '/routeHome': (BuildContext context) =>
               const MyHomePage(title: "Inventaire du parc informatique"),
@@ -61,6 +61,9 @@ class MyApp extends StatelessWidget {
               const QrCodePage(title: "QR Code"),
           '/routeProfil': (BuildContext context) =>
               const ProfilPage(title: "Votre profil"),
+          '/routeGraphePerAnnee': (BuildContext context) =>
+              const GrapheAchatPerAnneePage(
+                  title: "Graphe des achats par année"),
         });
   }
 }

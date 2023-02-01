@@ -249,9 +249,20 @@ class SearchByDatePageState extends State<SearchByDatePage> {
           child: Column(
             children: <Widget>[
               const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-              Text(
-                Strings.selectYearTitle,
-                style: _ts,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    Strings.selectYearTitle,
+                    style: _ts,
+                  ),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+                  ElevatedButton.icon(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/routeGraphePerAnnee'),
+                      icon: const Icon(Icons.align_vertical_bottom_outlined),
+                      label: const Text('Vue graphique'))
+                ],
               ),
               IconButton(
                 hoverColor: Colors.transparent,

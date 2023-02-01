@@ -19,7 +19,6 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   String _dropdownvalueLieu = ' ';
   String _dropdownvalueType = ' ';
   String _dropdownvalueEtat = ' ';
-  String _dropdownvalueAnnee = ' ';
   int _idLieuSelec = -1;
   int _idTypeSelec = -1;
   int _idEtatSelec = -1;
@@ -69,7 +68,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   }
 
   void recupMateriels() async {
-     if (await _tools.checkAdmin() == false &&
+    if (await _tools.checkAdmin() == false &&
         await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
@@ -113,24 +112,27 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
 
   void buildList() {
     _listElt.clear();
-    if(_idEtatSelec > 0){
+    if (_idEtatSelec > 0) {
       search('etat', _idEtatSelec);
     }
-    if(_idLieuSelec > 0){
+    if (_idLieuSelec > 0) {
       search('lieuInstallation', _idLieuSelec);
     }
-    if(_anneeSelec != ''){
+    if (_anneeSelec != '') {
       searchAnnee();
     }
-    if(_idTypeSelec > 0){
+    if (_idTypeSelec > 0) {
       search('type', _idTypeSelec);
     }
     deleteConditions();
     List<Widget> tab = List.empty(growable: true);
-    if(_idTypeSelec > 0 || _idEtatSelec > 0 || _idLieuSelec > 0 || _anneeSelec.isNotEmpty){
-      if(_listElt.isNotEmpty){
+    if (_idTypeSelec > 0 ||
+        _idEtatSelec > 0 ||
+        _idLieuSelec > 0 ||
+        _anneeSelec.isNotEmpty) {
+      if (_listElt.isNotEmpty) {
         var type;
-        for(var elt in _listElt){
+        for (var elt in _listElt) {
           for (var t in _listT['hydra:member']) {
             if (t['@id'] == elt['type']) {
               type = t;
@@ -138,7 +140,8 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
           }
           AssetImage img = _tools.findImg(type['libelle']);
           List<dynamic> tableau = [elt, type];
-          tab.add(Widgets.createRowElt(elt, type, _textStyle, tableau, img, context));
+          tab.add(Widgets.createRowElt(
+              elt, type, _textStyle, tableau, img, context));
           tab.add(
             Row(
               children: [
@@ -155,10 +158,10 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
             ),
           );
         }
-      }else{
-        tab.add(const Text('Aucun matériel ne correspond à ces critères.'));  
+      } else {
+        tab.add(const Text('Aucun matériel ne correspond à ces critères.'));
       }
-    }else{
+    } else {
       tab.add(const Text('Aucune selection.'));
     }
     setState(() {
@@ -168,80 +171,84 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
     });
   }
 
-  void searchAnnee(){
-    for(var elt in _listM){
-      try{
-        String anneeElt = (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat']))).toString();
-        if(anneeElt == _anneeSelec){
-          if(!checkIfAlreadyInList(elt['id'])){
+  void searchAnnee() {
+    for (var elt in _listM) {
+      try {
+        String anneeElt =
+            (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat'])))
+                .toString();
+        if (anneeElt == _anneeSelec) {
+          if (!checkIfAlreadyInList(elt['id'])) {
             _listElt.add(elt);
+          }
         }
-        }
-      }catch(e){}
+      } catch (e) {}
     }
   }
 
-  void search(String recherche, int idSelec){
-    for(var elt in _listM){
+  void search(String recherche, int idSelec) {
+    for (var elt in _listM) {
       List<String> temp = elt[recherche].split('/');
       int idSearch = int.parse(temp[temp.length - 1]);
-      if(idSearch == idSelec){
-        if(!checkIfAlreadyInList(elt['id'])){
+      if (idSearch == idSelec) {
+        if (!checkIfAlreadyInList(elt['id'])) {
           _listElt.add(elt);
         }
       }
     }
   }
 
-  void deleteConditions(){
-    List<dynamic> eltDelete = List.empty(growable:true);
-    if(_listElt.isNotEmpty){
-      for(var elt in _listElt){
-        if(_idEtatSelec > 0){
+  void deleteConditions() {
+    List<dynamic> eltDelete = List.empty(growable: true);
+    if (_listElt.isNotEmpty) {
+      for (var elt in _listElt) {
+        if (_idEtatSelec > 0) {
           List<String> temp = elt['etat'].split('/');
           int idSearch = int.parse(temp[temp.length - 1]);
-          if(idSearch != _idEtatSelec){
+          if (idSearch != _idEtatSelec) {
             eltDelete.add(elt);
           }
         }
-        if(_idTypeSelec > 0){
+        if (_idTypeSelec > 0) {
           List<String> temp = elt['type'].split('/');
           int idSearch = int.parse(temp[temp.length - 1]);
-          if(idSearch != _idTypeSelec){
+          if (idSearch != _idTypeSelec) {
             eltDelete.add(elt);
           }
         }
-        if(_idLieuSelec > 0){
+        if (_idLieuSelec > 0) {
           List<String> temp = elt['lieuInstallation'].split('/');
           int idSearch = int.parse(temp[temp.length - 1]);
-          if(idSearch != _idLieuSelec){
+          if (idSearch != _idLieuSelec) {
             eltDelete.add(elt);
           }
         }
-        if(_anneeSelec.isNotEmpty){
-          try{
-            String anneeElt = (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat']))).toString();
-            if(anneeElt != _anneeSelec){
+        if (_anneeSelec.isNotEmpty) {
+          try {
+            String anneeElt =
+                (DateFormat('yyyy').format(DateTime.parse(elt['dateAchat'])))
+                    .toString();
+            if (anneeElt != _anneeSelec) {
               eltDelete.add(elt);
             }
-          }catch(e){
+          } catch (e) {
             eltDelete.add(elt);
           }
         }
       }
     }
-    if(eltDelete.isNotEmpty){
-      for(var elt in eltDelete){
+    if (eltDelete.isNotEmpty) {
+      for (var elt in eltDelete) {
         _listElt.remove(elt);
       }
     }
   }
 
-  bool checkIfAlreadyInList(var idCheck){
+  bool checkIfAlreadyInList(var idCheck) {
     bool result = false;
-    if(_listElt.isNotEmpty){
-      for(var elt in _listElt){
-        if(elt['id'] == idCheck){
+    if (_listElt.isNotEmpty) {
+      for (var elt in _listElt) {
+        if (elt['id'] == idCheck) {
           result = true;
         }
       }
@@ -276,75 +283,76 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
               const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:[
-              const Text('Etat: '),
-              DropdownButton(
-                value: _dropdownvalueEtat,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: Strings.itemsEtat
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  _idEtatSelec = Strings.itemsEtat.indexOf(newValue!);
-                  setState(() {
-                    _dropdownvalueEtat = newValue;
-                    recupMateriels();
-                  });
-                },
+                children: [
+                  const Text('Etat: '),
+                  DropdownButton(
+                    value: _dropdownvalueEtat,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: Strings.itemsEtat
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      _idEtatSelec = Strings.itemsEtat.indexOf(newValue!);
+                      setState(() {
+                        _dropdownvalueEtat = newValue;
+                        recupMateriels();
+                      });
+                    },
+                  ),
+                  const Text('Type:'),
+                  DropdownButton(
+                    value: _dropdownvalueType,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: Strings.itemsType
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      _idTypeSelec = Strings.itemsType.indexOf(newValue!);
+                      setState(() {
+                        _dropdownvalueType = newValue;
+                        recupMateriels();
+                      });
+                    },
+                  ),
+                  const Text('Lieu:'),
+                  DropdownButton(
+                    value: _dropdownvalueLieu,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: Strings.itemsLieu
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      _idLieuSelec = Strings.itemsLieu.indexOf(newValue!);
+                      setState(() {
+                        _dropdownvalueLieu = newValue;
+                        recupMateriels();
+                      });
+                    },
+                  ),
+                  Text('Année d\'achat: '),
+                  IconButton(
+                    hoverColor: Colors.transparent,
+                    onPressed: selectYear,
+                    icon: const Icon(
+                      Icons.calendar_today,
+                      size: 25,
+                    ),
+                  ),
+                  Text(_anneeSelec),
+                ],
               ),
-              const Text('Type:'),
-              DropdownButton(
-                value: _dropdownvalueType,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: Strings.itemsType
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  _idTypeSelec = Strings.itemsType.indexOf(newValue!);
-                  setState(() {
-                    _dropdownvalueType = newValue;
-                    recupMateriels();
-                  });
-                },
-              ),
-              const Text('Lieu:'),
-              DropdownButton(
-                value: _dropdownvalueLieu,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: Strings.itemsLieu
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  _idLieuSelec = Strings.itemsLieu.indexOf(newValue!);
-                  setState(() {
-                    _dropdownvalueLieu = newValue;
-                    recupMateriels();
-                  });
-                },
-              ),
-              Text('Année d\'achat: '),
-              IconButton(
-                hoverColor: Colors.transparent,
-                onPressed: selectYear,
-                icon: const Icon(
-                  Icons.calendar_today,
-                  size: 25,
-                ),
-              ),
-              Text(_anneeSelec),
-              ],),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

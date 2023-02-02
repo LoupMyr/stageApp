@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stage/class/strings.dart';
 import 'package:stage/class/tools.dart';
 import 'dart:convert' as convert;
 import 'package:stage/class/widgets.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class MaterielPage extends StatefulWidget {
   const MaterielPage({super.key, required this.title});
@@ -19,6 +23,8 @@ class MaterielPage extends StatefulWidget {
 class MaterielPageState extends State<MaterielPage> {
   List<dynamic> _tab = List.empty(growable: true);
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
+  final pw.TextStyle _tsPdf = pw.TextStyle(
+      fontWeight: pw.FontWeight.bold, decoration: pw.TextDecoration.underline);
   final TextStyle _textStyleHeaders = const TextStyle(fontSize: 30);
   final Border _border =
       const Border(left: BorderSide(color: Colors.black, width: 3));
@@ -331,6 +337,145 @@ class MaterielPageState extends State<MaterielPage> {
     );
   }
 
+  Future<void> donwloadPdf() async {
+    final pdf = createPdf();
+    Directory pathDoc = await getApplicationDocumentsDirectory();
+    await _tools.checkArboresence(pathDoc.path);
+    try {
+      final file = File(
+          '${pathDoc.path}/gestionStock/pdfFiches/fiche-technique-${_type['libelle'].toLowerCase()}.pdf');
+      await file.writeAsBytes(await pdf.save());
+    } catch (e) {
+      var temp = await getTemporaryDirectory();
+      final file = File(
+          '${temp.path}/fiche-technique-${_type['libelle'].toLowerCase()}.pdf');
+      await file.writeAsBytes(await pdf.save());
+    }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text(Strings.pdfDownloadSuccessful),
+    ));
+  }
+
+  pw.Document createPdf() {
+    final pdf = pw.Document();
+    String lieuStr = _lieu['libelle'].toString();
+    String dateAchat = '';
+    String dateFinGarantie = '';
+    String remarques = '';
+    if (_lieu['libelle'].toString() == 'Autres') {
+      try {
+        lieuStr = _materiel['detailTypeAutres'];
+      } catch (e) {
+        lieuStr = 'Autres \n Pas de spécification';
+      }
+    }
+    try {
+      dateAchat = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(_materiel['dateAchat']))
+          .toString();
+    } catch (e) {
+      dateAchat = 'Pas spécifié';
+    }
+    try {
+      dateFinGarantie = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(_materiel['dateFinGaranti']))
+          .toString();
+    } catch (e) {
+      dateFinGarantie = 'Pas spécifié';
+    }
+    try {
+      remarques = _materiel['remarques'];
+    } catch (e) {
+      remarques = 'Aucune';
+    }
+    pw.Widget padding =
+        pw.Padding(padding: pw.EdgeInsets.symmetric(vertical: 10));
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Center(
+          child: pw.Column(
+            children: [
+              pw.Text('Fiche technique',
+                  style: pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold,
+                      fontSize: 35,
+                      decoration: pw.TextDecoration.underline)),
+              pw.Padding(padding: const pw.EdgeInsets.symmetric(vertical: 30)),
+              pw.Divider(thickness: 2),
+              pw.Text(
+                'Type:',
+                style: _tsPdf,
+              ),
+              pw.Text(_type['libelle']),
+              padding,
+              pw.Text(
+                'Etat: \n',
+                style: _tsPdf,
+              ),
+              pw.Text(_etat['libelle']),
+              padding,
+              pw.Text(
+                'Marque: \n',
+                style: _tsPdf,
+              ),
+              pw.Text(_materiel['marque']),
+              padding,
+              pw.Text(
+                'Modele: \n',
+                style: _tsPdf,
+              ),
+              pw.Text(_materiel['modele']),
+              padding,
+              pw.Text(
+                'Numéro de série: \n',
+                style: _tsPdf,
+                textAlign: pw.TextAlign.center,
+              ),
+              pw.Text(_materiel['numSerie']),
+              padding,
+              pw.Text(
+                'Numéro d\'inventaire: \n',
+                style: _tsPdf,
+                textAlign: pw.TextAlign.center,
+              ),
+              pw.Text(_materiel['numInventaire']),
+              padding,
+              pw.Text(
+                'Lieu d\'installation: \n',
+                style: _tsPdf,
+                textAlign: pw.TextAlign.center,
+              ),
+              pw.Text(lieuStr),
+              padding,
+              pw.Text(
+                'Date d\'achat: \n',
+                style: _tsPdf,
+                textAlign: pw.TextAlign.center,
+              ),
+              pw.Text(dateAchat),
+              padding,
+              pw.Text(
+                'Date de fin de garantie: \n',
+                style: _tsPdf,
+                textAlign: pw.TextAlign.center,
+              ),
+              pw.Text(dateFinGarantie),
+              padding,
+              pw.Text(
+                'Remarques: \n',
+                style: _tsPdf,
+                textAlign: pw.TextAlign.center,
+              ),
+              pw.Text(remarques),
+              pw.Divider(thickness: 2),
+            ],
+          ),
+        ),
+      ),
+    );
+    return pdf;
+  }
+
   @override
   Widget build(BuildContext context) {
     _tab = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
@@ -340,6 +485,10 @@ class MaterielPageState extends State<MaterielPage> {
       future: recupEtat(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         List<Widget> children;
+        FloatingActionButton fab = FloatingActionButton(
+          onPressed: () => null,
+          heroTag: 'null',
+        );
         if (snapshot.hasData) {
           if (_recupDataBool) {
             children = [
@@ -444,6 +593,12 @@ class MaterielPageState extends State<MaterielPage> {
               addGap(),
               createImg(),
             ];
+            fab = FloatingActionButton(
+              onPressed: donwloadPdf,
+              heroTag: 'downloadFichePdf',
+              tooltip: 'Télécharger en PDF',
+              child: const Icon(Icons.download),
+            );
           } else {
             recupEtat();
             children = [
@@ -494,6 +649,7 @@ class MaterielPageState extends State<MaterielPage> {
                   children: children),
             ),
           ),
+          floatingActionButton: fab,
         );
       },
     );

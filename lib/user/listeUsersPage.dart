@@ -100,12 +100,66 @@ class ListeUsersPageState extends State<ListeUsersPage> {
                 ],
               ),
             ),
-            const Padding(padding: EdgeInsets.only(right: 20)),
+            const Padding(padding: EdgeInsets.only(right: 15)),
+            IconButton(
+                onPressed: () => deleteUserMenu(user['id'].toString()),
+                icon: const Icon(Icons.delete_forever)),
           ],
         ),
       );
     }
     return tab;
+  }
+
+  Future<void> deleteUserMenu(String id) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(Strings.emptyField),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('Êtes vous sûr de vouloir supprimer cet utilisateur ?'),
+                  Text('Cette action est irréversible.'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(Strings.yesButtonStr),
+                onPressed: () {
+                  deleteUser(id);
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(Strings.cancelButtonStr),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> deleteUser(String id) async {
+    var response = await _tools.deleteUser(id);
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Compte supprimé'),
+      ));
+      setState(() {
+        recupUsers();
+      });
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${Strings.errorStr} ${response.statusCode}'),
+      ));
+    }
   }
 
   void refreshPerm(String role) {

@@ -169,9 +169,16 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   Future<void> donwloadPdf() async {
     final pdf = createPdf();
     Directory pathDoc = await getApplicationDocumentsDirectory();
-    final file = File(
-        '${pathDoc.path}/gestionStock/pdfRecap/recap-stock-${_annee.toString()}.pdf');
-    await file.writeAsBytes(await pdf.save());
+    await _tools.checkArboresence(pathDoc.path);
+    try {
+      final file = File(
+          '${pathDoc.path}/gestionStock/pdfRecap/recap-stock-${_annee.toString()}.pdf');
+      await file.writeAsBytes(await pdf.save());
+    } catch (e) {
+      Directory temp = await getTemporaryDirectory();
+      final file = File('${temp.path}/recap-stock-${_annee.toString()}.pdf');
+      await file.writeAsBytes(await pdf.save());
+    }
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text(Strings.pdfDownloadSuccessful),
     ));

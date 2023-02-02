@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stage/class/strings.dart';
+import 'package:stage/class/tools.dart';
 import 'package:stage/class/widgets.dart';
 
 class QrCodePage extends StatefulWidget {
@@ -24,6 +25,7 @@ class QrCodePageState extends State<QrCodePage> {
   List<dynamic> _tab = List.empty(growable: true);
   var _materiel;
   var _type;
+  Tools _tools = Tools();
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,7 @@ class QrCodePageState extends State<QrCodePage> {
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       Directory directoryDoc = await getApplicationDocumentsDirectory();
+      await _tools.checkArboresence(directoryDoc.path);
       try {
         final file = await File(
                 '${directoryDoc.path}/gestionStock/qrCodes/QRCode-${_type['libelle']}-${_materiel['id']}.png')

@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'dart:convert' as convert;
 import 'package:stage/class/local.dart';
 import 'package:stage/class/strings.dart';
@@ -231,6 +233,13 @@ class Tools {
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
+  Future<http.Response> deleteUser(String id) async {
+    await updateToken();
+    String? token = await Local.storage.read(key: 'token');
+    return await http.delete(
+        Uri.parse('$_url/stageAppWeb/public/api/users/$id'),
+        headers: <String, String>{"Authorization": "Bearer ${token!}"});
+  }
 //*******//
 // PATCH //
 //*******//
@@ -509,5 +518,29 @@ class Tools {
       role = 'ROLE_MODERATOR';
     }
     return role;
+  }
+
+  Future<void> createArboresence(String pathDoc) async {
+    await Directory('$pathDoc/gestionStock').create();
+    await Directory('$pathDoc/gestionStock/qrCodes').create();
+    await Directory('$pathDoc/gestionStock/pdfRecap').create();
+    await Directory('$pathDoc/gestionStock/pdfFiches').create();
+  }
+
+  Future<void> checkArboresence(String pathDoc) async {
+    final dirMain = Directory('${pathDoc}/gestionStock');
+    if (!await dirMain.exists()) {
+      await createArboresence(pathDoc);
+    } else {
+      if (!await Directory('${dirMain.path}/qrCodes').exists()) {
+        await Directory('${dirMain.path}/qrCodes').create();
+      }
+      if (!await Directory('${dirMain.path}/pdfFiches').exists()) {
+        await Directory('${dirMain.path}/pdfFiches').create();
+      }
+      if (!await Directory('${dirMain.path}/pdfRecap').exists()) {
+        await Directory('${dirMain.path}/pdfRecap').create();
+      }
+    }
   }
 }

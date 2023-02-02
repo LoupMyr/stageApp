@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:stage/class/local.dart';
 import 'package:stage/class/strings.dart';
-import 'dart:io';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -14,7 +12,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextStyle _textStyle = const TextStyle(fontSize: 20);
+  final TextStyle _textStyle =
+      const TextStyle(fontSize: 20, color: Colors.black);
   List<Widget> _navbar = List.empty(growable: true);
 
   Future<String> checkUser() async {
@@ -91,50 +90,69 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                          onPressed: () =>
-                              Navigator.pushNamed(context, '/routeListe'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: const BorderSide(color: Colors.black),
-                              ),
-                            ),
+                      MaterialButton(
+                        padding: EdgeInsets.all(8.0),
+                        textColor: Colors.black,
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image:
+                                    AssetImage('assets/buttons/checklist.png'),
+                                fit: BoxFit.cover,
+                                opacity: 0.5),
+                            borderRadius: BorderRadius.circular(18.0),
                           ),
-                          child: Text(
-                            Strings.listButtonStr,
-                            textAlign: TextAlign.center,
-                            style: _textStyle,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(Strings.listButtonStr,
+                                  textAlign: TextAlign.center,
+                                  style: _textStyle),
+                            ],
                           ),
                         ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/routeListe');
+                        },
                       ),
                       const Padding(padding: EdgeInsets.all(10)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                          onPressed: () =>
-                              Navigator.pushNamed(context, '/routeByFiltres'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: const BorderSide(color: Colors.black),
-                              ),
-                            ),
+                      MaterialButton(
+                        padding: const EdgeInsets.all(8.0),
+                        textColor: Colors.black,
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: AssetImage('assets/buttons/filter.png'),
+                                fit: BoxFit.cover,
+                                opacity: 0.5),
+                            borderRadius: BorderRadius.circular(18.0),
                           ),
-                          child: Text(
-                            'Recherche par filtres',
-                            textAlign: TextAlign.center,
-                            style: _textStyle,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Recherche par filtres',
+                                  textAlign: TextAlign.center,
+                                  style: _textStyle),
+                            ],
                           ),
                         ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/routeByFiltres');
+                        },
                       ),
                     ],
                   ),
@@ -144,44 +162,70 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/routeByType'),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            child: Text(Strings.searchTypeButtonStr,
-                                textAlign: TextAlign.center,
-                                style: _textStyle)),
+                      MaterialButton(
+                        padding: const EdgeInsets.all(8.0),
+                        textColor: Colors.black,
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image:
+                                    AssetImage('assets/buttons/multiImg.png'),
+                                fit: BoxFit.cover,
+                                opacity: 0.5),
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(Strings.searchTypeButtonStr,
+                                  textAlign: TextAlign.center,
+                                  style: _textStyle),
+                            ],
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/routeByType');
+                        },
                       ),
                       const Padding(padding: EdgeInsets.all(10)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/routeByEtat'),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            child: Text(Strings.searchEtatButtonStr,
-                                textAlign: TextAlign.center,
-                                style: _textStyle)),
+                      MaterialButton(
+                        padding: const EdgeInsets.all(8.0),
+                        textColor: Colors.black,
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image:
+                                    AssetImage('assets/buttons/brokenPc.jpg'),
+                                fit: BoxFit.cover,
+                                opacity: 0.5),
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(Strings.searchEtatButtonStr,
+                                  textAlign: TextAlign.center,
+                                  style: _textStyle),
+                            ],
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/routeByEtat');
+                        },
                       ),
                     ],
                   ),
@@ -189,67 +233,103 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/routeByLieu'),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            child: Text(Strings.searchPlaceButtonStr,
-                                textAlign: TextAlign.center,
-                                style: _textStyle)),
+                      MaterialButton(
+                        padding: const EdgeInsets.all(8.0),
+                        textColor: Colors.black,
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image: AssetImage('assets/buttons/mairie.jpg'),
+                                fit: BoxFit.cover,
+                                opacity: 0.5),
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(Strings.searchPlaceButtonStr,
+                                  textAlign: TextAlign.center,
+                                  style: _textStyle),
+                            ],
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/routeByLieu');
+                        },
                       ),
                       const Padding(padding: EdgeInsets.all(10)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/routeByDate'),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            child: Text(Strings.searchYearButtonStr,
-                                textAlign: TextAlign.center,
-                                style: _textStyle)),
+                      MaterialButton(
+                        padding: const EdgeInsets.all(8.0),
+                        textColor: Colors.black,
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                                image:
+                                    AssetImage('assets/buttons/calendar.jpg'),
+                                fit: BoxFit.cover,
+                                opacity: 0.5),
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(Strings.searchYearButtonStr,
+                                  textAlign: TextAlign.center,
+                                  style: _textStyle),
+                            ],
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/routeByDate');
+                        },
                       ),
                     ],
                   ),
                   SizedBox.fromSize(
                       size: Size.fromHeight(
                           MediaQuery.of(context).size.height * 0.05)),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: ElevatedButton(
-                        onPressed: () => Navigator.pushNamed(
-                            context, '/routeAjout', arguments: []),
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: const BorderSide(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                        child: Text(Strings.addEltButtonStr,
-                            textAlign: TextAlign.center, style: _textStyle)),
+                  MaterialButton(
+                    padding: const EdgeInsets.all(8.0),
+                    textColor: Colors.black,
+                    elevation: 8.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: const BorderSide(color: Colors.black),
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/buttons/multiImg.png'),
+                            fit: BoxFit.cover),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(Strings.addEltButtonStr,
+                              textAlign: TextAlign.center, style: _textStyle),
+                        ],
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/routeAjout',
+                          arguments: []);
+                    },
                   ),
                   Padding(
                       padding: EdgeInsets.only(

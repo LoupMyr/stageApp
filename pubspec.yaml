@@ -86,6 +86,12 @@ flutter:
     - assets/tel-portable.png
     - assets/wifi.png
     - assets/achicourt.png
+    - assets/buttons/checklist.png
+    - assets/buttons/brokenPc.jpg
+    - assets/buttons/calendar.jpg
+    - assets/buttons/mairie.jpg
+    - assets/buttons/filter.png
+    - assets/buttons/multiImg.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

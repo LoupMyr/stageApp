@@ -32,6 +32,7 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   final List<Widget> _tab = List.empty(growable: true);
   List<List<dynamic>> _tabSorted = List.empty(growable: true);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _boolAdmin = false;
 
   selectYear() {
     showDialog(
@@ -63,8 +64,8 @@ class SearchByDatePageState extends State<SearchByDatePage> {
   }
 
   Future<void> recupMateriels() async {
-    if (await _tools.checkAdmin() == false &&
-        await _tools.checkMods() == false) {
+    _boolAdmin = await _tools.checkAdmin();
+    if (!_boolAdmin && await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
     }
@@ -122,21 +123,23 @@ class SearchByDatePageState extends State<SearchByDatePage> {
             List<dynamic> tableau = [elt, type];
             _tab.add(Widgets.createRowElt(
                 elt, type, _textStyle, tableau, img, context));
-            _tab.add(
-              Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => deleteElt(elt['id'].toString()),
+            if (_boolAdmin) {
+              _tab.add(
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 5,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => deleteElt(elt['id'].toString()),
+                      ),
                     ),
-                  ),
-                  Widgets.createEditOption(context, tableau),
-                ],
-              ),
-            );
+                    Widgets.createEditOption(context, tableau),
+                  ],
+                ),
+              );
+            }
           }
         }
       } catch (e) {}

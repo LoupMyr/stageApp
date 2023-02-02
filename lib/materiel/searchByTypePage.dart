@@ -31,10 +31,11 @@ class SearchByTypePageState extends State<SearchByTypePage> {
       ),
     ],
   );
+  bool _boolAdmin = false;
 
   void recupMateriels() async {
-    if (await _tools.checkAdmin() == false &&
-        await _tools.checkMods() == false) {
+    _boolAdmin = await _tools.checkAdmin();
+    if (!_boolAdmin && await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
     }
@@ -94,21 +95,23 @@ class SearchByTypePageState extends State<SearchByTypePage> {
         List<dynamic> tableau = [elt, _type];
         tab.add(Widgets.createRowElt(
             elt, _type, _textStyle, tableau, img, context));
-        tab.add(
-          Row(
-            children: [
-              SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width / 5,
-                child: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => deleteElt(elt['id'].toString()),
+        if (_boolAdmin) {
+          tab.add(
+            Row(
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width / 5,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => deleteElt(elt['id'].toString()),
+                  ),
                 ),
-              ),
-              Widgets.createEditOption(context, tableau),
-            ],
-          ),
-        );
+                Widgets.createEditOption(context, tableau),
+              ],
+            ),
+          );
+        }
       }
     }
     if (tab.isEmpty) {

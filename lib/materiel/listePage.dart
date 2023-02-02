@@ -21,10 +21,11 @@ class ListePageState extends State<ListePage> {
   bool _recupDataBool = false;
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _boolAdmin = false;
 
   Future<String> recupMateriels() async {
-    if (await _tools.checkAdmin() == false &&
-        await _tools.checkMods() == false) {
+    _boolAdmin = await _tools.checkAdmin();
+    if (!_boolAdmin && await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return '';
     }
@@ -52,21 +53,23 @@ class ListePageState extends State<ListePage> {
       AssetImage img = _tools.findImg(type['libelle']);
       tab.add(
           Widgets.createRowElt(elt, type, _textStyle, tableau, img, context));
-      tab.add(
-        Row(
-          children: [
-            SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width / 5,
-              child: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () => deleteElt(elt['id'].toString()),
+      if (_boolAdmin) {
+        tab.add(
+          Row(
+            children: [
+              SizedBox(
+                height: 50,
+                width: MediaQuery.of(context).size.width / 5,
+                child: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => deleteElt(elt['id'].toString()),
+                ),
               ),
-            ),
-            Widgets.createEditOption(context, tableau),
-          ],
-        ),
-      );
+              Widgets.createEditOption(context, tableau),
+            ],
+          ),
+        );
+      }
     }
     return Column(
       children: tab,

@@ -24,10 +24,11 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
   final TextStyle _textStyle = const TextStyle(fontSize: 20);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget _col = Column(children: []);
+  bool _boolAdmin = false;
 
   void recupMateriels() async {
-    if (await _tools.checkAdmin() == false &&
-        await _tools.checkMods() == false) {
+    _boolAdmin = await _tools.checkAdmin();
+    if (!_boolAdmin && await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
     }
@@ -93,22 +94,24 @@ class SearchByLieuPageState extends State<SearchByLieuPage> {
           List<dynamic> tableau = [elt, type];
           tab.add(Widgets.createRowElt(
               elt, type, _textStyle, tableau, img, context));
-          tab.add(
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => deleteElt(elt['id'].toString()),
+          if (_boolAdmin) {
+            tab.add(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => deleteElt(elt['id'].toString()),
+                    ),
                   ),
-                ),
-                Widgets.createEditOption(context, tableau),
-              ],
-            ),
-          );
+                  Widgets.createEditOption(context, tableau),
+                ],
+              ),
+            );
+          }
         }
       }
     }

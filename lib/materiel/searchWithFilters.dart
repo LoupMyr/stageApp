@@ -38,6 +38,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
       ),
     ],
   );
+  bool _boolAdmin = false;
 
   selectYear() {
     showDialog(
@@ -68,8 +69,8 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
   }
 
   void recupMateriels() async {
-    if (await _tools.checkAdmin() == false &&
-        await _tools.checkMods() == false) {
+    _boolAdmin = await _tools.checkAdmin();
+    if (!_boolAdmin && await _tools.checkMods() == false) {
       Widgets.buildNonAdmin(context);
       return;
     }
@@ -142,21 +143,23 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
           List<dynamic> tableau = [elt, type];
           tab.add(Widgets.createRowElt(
               elt, type, _textStyle, tableau, img, context));
-          tab.add(
-            Row(
-              children: [
-                SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width / 5,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => deleteElt(elt['id'].toString()),
+          if (_boolAdmin) {
+            tab.add(
+              Row(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width / 5,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => deleteElt(elt['id'].toString()),
+                    ),
                   ),
-                ),
-                Widgets.createEditOption(context, tableau),
-              ],
-            ),
-          );
+                  Widgets.createEditOption(context, tableau),
+                ],
+              ),
+            );
+          }
         }
       } else {
         tab.add(const Text('Aucun matériel ne correspond à ces critères.'));

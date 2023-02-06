@@ -271,7 +271,7 @@ class SearchByDatePageState extends State<SearchByDatePage> {
                       onPressed: () =>
                           Navigator.pushNamed(context, '/routeGraphePerAnnee'),
                       icon: const Icon(Icons.align_vertical_bottom_outlined),
-                      label: const Text('Vue graphique'))
+                      label: const Text(Strings.graphView))
                 ],
               ),
               IconButton(
@@ -316,7 +316,7 @@ class SearchByDatePageState extends State<SearchByDatePage> {
                       onPressed: () => setState(() {
                             recupMateriels();
                           }),
-                      tooltip: 'Actualiser',
+                      tooltip: Strings.refresh,
                       child: const Icon(Icons.refresh_outlined)),
                 ),
               ],

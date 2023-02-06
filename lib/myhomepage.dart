@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var role = await Local.storage.read(key: 'role');
     _navbar.add(IconButton(
       padding: const EdgeInsets.only(right: 20),
-      tooltip: 'Profil',
+      tooltip: Strings.tooltipProfil,
       onPressed: () => Navigator.pushNamed(context, '/routeProfil'),
       icon: const Icon(Icons.person_outline),
       iconSize: 35,
@@ -30,11 +30,11 @@ class _MyHomePageState extends State<MyHomePage> {
     if (role == 'ROLE_ADMIN') {
       _navbar.add(IconButton(
         padding: const EdgeInsets.only(right: 20),
-        tooltip: 'Administration',
+        tooltip: Strings.tooltipAdmin,
         onPressed: () => Navigator.pushNamed(context, '/routeListeUsers'),
         icon: const Icon(Icons.admin_panel_settings),
         iconSize: 35,
-      ));
+      )); 
     }
     return '';
   }
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MaterialButton(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         textColor: Colors.black,
                         elevation: 8.0,
                         shape: RoundedRectangleBorder(
@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Recherche par filtres',
+                              Text(Strings.filterLabelbtn,
                                   textAlign: TextAlign.center,
                                   style: _textStyle),
                             ],
@@ -316,7 +316,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage('assets/buttons/multiImg.png'),
-                            fit: BoxFit.cover),
+                            fit: BoxFit.cover,
+                            opacity: 0.5),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

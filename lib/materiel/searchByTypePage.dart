@@ -187,7 +187,7 @@ class SearchByTypePageState extends State<SearchByTypePage> {
           onPressed: () => setState(() {
                 recupMateriels();
               }),
-          tooltip: 'Actualiser',
+          tooltip: Strings.refresh,
           child: const Icon(Icons.refresh_outlined)),
     );
   }

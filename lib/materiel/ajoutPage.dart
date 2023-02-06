@@ -118,8 +118,7 @@ class _AjoutPageState extends State<AjoutPage> {
 
             if (post.statusCode == 201) {
               var postTemp = convert.jsonDecode(post.body);
-              tabUriPhotos
-                  .add('/stageAppWeb/public/api/photos/${postTemp['id']}');
+              tabUriPhotos.add('/stageApi/public/api/photos/${postTemp['id']}');
             }
           }
           await _tool.patchMaterielPhoto(
@@ -129,8 +128,8 @@ class _AjoutPageState extends State<AjoutPage> {
           content: Text(Strings.materialAdded),
         ));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(Strings.errorHappened),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('${Strings.errorHappened} ${response.statusCode}'),
         ));
         log(response.statusCode.toString());
       }
@@ -162,16 +161,14 @@ class _AjoutPageState extends State<AjoutPage> {
       var materiel = convert.jsonDecode(response.body);
       clearTexts();
       if (_listUrl.isNotEmpty) {
-        String uriMateriel =
-            '/stageAppWeb/public/api/materiels/${materiel['id']}';
+        String uriMateriel = '/stageApi/public/api/materiels/${materiel['id']}';
         List<String> tabUriPhotos = List.empty(growable: true);
         for (int i = 0; i < _listUrl.length; i++) {
           var post = await _tool.postPhoto(_listUrl[i], uriMateriel);
 
           if (post.statusCode == 201) {
             var postTemp = convert.jsonDecode(post.body);
-            tabUriPhotos
-                .add('/stageAppWeb/public/api/photos/${postTemp['id']}');
+            tabUriPhotos.add('/stageApi/public/api/photos/${postTemp['id']}');
           }
         }
         await _tool.patchMaterielPhoto(tabUriPhotos, materiel['id'].toString());
@@ -181,10 +178,9 @@ class _AjoutPageState extends State<AjoutPage> {
       ));
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(Strings.errorHappened),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${Strings.errorHappened} ${response.statusCode}'),
       ));
-      log(response.statusCode.toString());
     }
   }
 

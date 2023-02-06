@@ -162,10 +162,10 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
           }
         }
       } else {
-        tab.add(const Text('Aucun matériel ne correspond à ces critères.'));
+        tab.add(const Text(Strings.noMaterials));
       }
     } else {
-      tab.add(const Text('Aucune selection.'));
+      tab.add(const Text(Strings.noSelectionStr));
     }
     setState(() {
       _col = Column(
@@ -279,7 +279,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
             children: <Widget>[
               const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
               const Text(
-                'Choisissez vos filtres:',
+                Strings.selectYourFilters,
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -287,7 +287,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Etat: '),
+                  const Text(Strings.etatLabel),
                   DropdownButton(
                     value: _dropdownvalueEtat,
                     icon: const Icon(Icons.keyboard_arrow_down),
@@ -306,7 +306,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
                       });
                     },
                   ),
-                  const Text('Type:'),
+                  const Text(Strings.typeLabel),
                   DropdownButton(
                     value: _dropdownvalueType,
                     icon: const Icon(Icons.keyboard_arrow_down),
@@ -325,7 +325,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
                       });
                     },
                   ),
-                  const Text('Lieu:'),
+                  const Text(Strings.lieuLabel),
                   DropdownButton(
                     value: _dropdownvalueLieu,
                     icon: const Icon(Icons.keyboard_arrow_down),
@@ -344,7 +344,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
                       });
                     },
                   ),
-                  Text('Année d\'achat: '),
+                  const Text(Strings.dateAchatLabel),
                   IconButton(
                     hoverColor: Colors.transparent,
                     onPressed: selectYear,
@@ -371,7 +371,7 @@ class SearchWithFiltersPageState extends State<SearchWithFiltersPage> {
           onPressed: () => setState(() {
                 recupMateriels();
               }),
-          tooltip: 'Actualiser',
+          tooltip: Strings.refresh,
           child: const Icon(Icons.refresh_outlined)),
     );
   }

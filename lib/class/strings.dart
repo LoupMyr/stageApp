@@ -45,9 +45,9 @@ class Strings {
   static const String dateAchatLabel = "Date d'achat: ";
   static const String dateGarantieLabel = "Date de fin de garantie: ";
   static const String remarquesLabel = "Remarques";
-  static const String typeLabel = "Type:";
-  static const String etatLabel = "Etat:";
-  static const String lieuLabel = "Lieu:";
+  static const String typeLabel = "Type: ";
+  static const String etatLabel = "Etat: ";
+  static const String lieuLabel = "Lieu: ";
   static const String roleProfilLabel = "Rôle: ";
   static const String emailProfilLabel = "Email: ";
   static const String errorTypeLabel = "Veuillez choisir un type";
@@ -93,6 +93,21 @@ class Strings {
   static const String lieuTitle =
       "Recherchez un lieu parmi ceux présenté ici pour retrouver \ntous les matériels entreposé dans ce dernier.";
   static const String pdfDownloadSuccessful = "PDF récapitulatif téléchagé.";
+  static const String tooltipAdmin = 'Administration';
+  static const String tooltipProfil = 'Profil';
+  static const String filterLabelbtn = 'Recherche par filtres';
+  static const String invalidSelection =
+      'Aucune selection ou selection invalide';
+  static const String titleGraphe = 'Matériels acheté entre';
+  static const String total = 'Total:';
+  static const String selectYear = 'Selectionner un interval:';
+  static const String firstYear = 'Année de début';
+  static const String lastYear = 'Année de fin';
+  static const String graphView = 'Vue graphique';
+  static const String refresh = 'Vue graphique';
+  static const String noMaterials =
+      'Aucun matériel ne correspond à ces critères.';
+  static const String selectYourFilters = 'Choisissez vos filtres:';
   static const List<String> tabHeaders = ['Type', 'Marque', 'Modele', 'Année'];
   static const List<String> itemsType = [
     ' ',

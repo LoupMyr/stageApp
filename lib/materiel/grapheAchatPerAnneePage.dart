@@ -31,7 +31,7 @@ class GrapheAchatPerAnneePageState extends State<GrapheAchatPerAnneePage> {
   Column _column = Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: const <Widget>[
-      Text('Aucune selection ou selection invalide'),
+      Text(Strings.invalidSelection),
     ],
   );
 
@@ -117,7 +117,7 @@ class GrapheAchatPerAnneePageState extends State<GrapheAchatPerAnneePage> {
       _column = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const <Widget>[
-          Text('Aucune selection ou selection invalide'),
+          Text(Strings.invalidSelection),
         ],
       );
       setState(() {
@@ -150,7 +150,7 @@ class GrapheAchatPerAnneePageState extends State<GrapheAchatPerAnneePage> {
           child: SizedBox(
             child: SfCartesianChart(
               title: ChartTitle(
-                  text: 'Matériels acheté entre $_anneeDebut et $_anneeFin',
+                  text: '${Strings.titleGraphe} $_anneeDebut - $_anneeFin',
                   textStyle: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20)),
               primaryXAxis: CategoryAxis(
@@ -166,7 +166,7 @@ class GrapheAchatPerAnneePageState extends State<GrapheAchatPerAnneePage> {
                     dataSource: _listTotal,
                     xValueMapper: (AchatPerYear data, index) => data.getAnnee(),
                     yValueMapper: (AchatPerYear data, index) => data.getTotal(),
-                    name: 'Total:',
+                    name: Strings.total,
                     color: const Color.fromRGBO(8, 142, 255, 1))
               ],
             ),
@@ -186,12 +186,12 @@ class GrapheAchatPerAnneePageState extends State<GrapheAchatPerAnneePage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            const Text('Selectionner un interval:'),
+            const Text(Strings.selectYear),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 IconButton(
-                  tooltip: 'Année de début',
+                  tooltip: Strings.firstYear,
                   hoverColor: Colors.transparent,
                   onPressed: selectYearDebut,
                   icon: const Icon(
@@ -201,7 +201,7 @@ class GrapheAchatPerAnneePageState extends State<GrapheAchatPerAnneePage> {
                 ),
                 const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
                 IconButton(
-                  tooltip: 'Année de fin',
+                  tooltip: Strings.lastYear,
                   hoverColor: Colors.transparent,
                   onPressed: selectYearFin,
                   icon: const Icon(

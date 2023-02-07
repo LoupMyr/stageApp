@@ -137,9 +137,7 @@ class ListePageState extends State<ListePage> {
             key: _scaffoldKey,
             appBar: Widgets.createAppBar(widget.title, context),
             body: SingleChildScrollView(
-              child: Center(
-                child: Column(children: children),
-              ),
+              child: Column(children: children),
             ),
             floatingActionButton: FloatingActionButton(
                 onPressed: () => setState(() {

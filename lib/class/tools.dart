@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'dart:convert' as convert;
 import 'package:stage/class/local.dart';
 import 'package:stage/class/strings.dart';
 
 class Tools {
-  final String _url = 'http://s3-4428.nuage-peda.fr';
+  final String _url = //'http://localhost/stageApi'
+      'http://s3-4428.nuage-peda.fr/stageAppWeb';
   //**********//
   //   GET   //
   //*********//
@@ -15,43 +15,42 @@ class Tools {
   Future<http.Response> getMateriels() async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.get(Uri.parse('$_url/stageAppWeb/public/api/materiels'),
+    return await http.get(Uri.parse('$_url/public/api/materiels'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getTypes() async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.get(Uri.parse('$_url/stageAppWeb/public/api/types'),
+    return await http.get(Uri.parse('$_url/public/api/types'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getType(int id) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.get(
-        Uri.parse('$_url/stageAppWeb/public/api/types/${id.toString()}'),
+    return await http.get(Uri.parse('$_url/public/api/types/${id.toString()}'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getEtats() async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.get(Uri.parse('$_url/stageAppWeb/public/api/etats'),
+    return await http.get(Uri.parse('$_url/public/api/etats'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getUsers() async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.get(Uri.parse('$_url/stageAppWeb/public/api/users'),
+    return await http.get(Uri.parse('$_url/public/api/users'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> getEtatById(int id) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    String url = '$_url/stageAppWeb/public/api/etats/${id.toString()}';
+    String url = '$_url/public/api/etats/${id.toString()}';
     var response = await http.get(Uri.parse(url),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
     return response;
@@ -61,7 +60,7 @@ class Tools {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
     var response = await http.get(
-        Uri.parse('$_url/stageAppWeb/public/api/lieus/${id.toString()}'),
+        Uri.parse('$_url/public/api/lieus/${id.toString()}'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
     return response;
   }
@@ -71,7 +70,7 @@ class Tools {
     String? token = await Local.storage.read(key: 'token');
     String? id = await Local.storage.read(key: 'id');
     var response = await http.get(
-        Uri.parse('$_url/stageAppWeb/public/api/users/${id.toString()}'),
+        Uri.parse('$_url/public/api/users/${id.toString()}'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
     return response;
   }
@@ -79,7 +78,7 @@ class Tools {
   Future<http.Response> getPhotos() async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.get(Uri.parse('$_url/stageAppWeb/public/api/photos'),
+    return await http.get(Uri.parse('$_url/public/api/photos'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
@@ -132,15 +131,15 @@ class Tools {
       ...dateA,
       ...dateG,
       ...rem,
-      "type": '/stageAppWeb/public/api/types/$typeId',
-      "etat": '/stageAppWeb/public/api/etats/$etatId',
+      "type": '/stageApi/public/api/types/$typeId',
+      "etat": '/stageApi/public/api/etats/$etatId',
       "numSerie": numSerie,
       "numInventaire": numInventaire,
-      "lieuInstallation": '/stageAppWeb/public/api/lieus/$lieuId',
+      "lieuInstallation": '/stageApi/public/api/lieus/$lieuId',
       ...details,
     };
     return await http.post(
-      Uri.parse('$_url/stageAppWeb/public/api/materiels'),
+      Uri.parse('$_url/public/api/materiels'),
       headers: <String, String>{
         "Authorization": "Bearer ${token!}",
         'Accept': 'application/json',
@@ -156,7 +155,7 @@ class Tools {
       "password": mdp,
     };
     var response = await http.post(
-      Uri.parse('$_url/stageAppWeb/public/api/authentication_token'),
+      Uri.parse('$_url/public/api/authentication_token'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -172,7 +171,7 @@ class Tools {
       "password": await Local.storage.read(key: 'password'),
     };
     var response = await http.post(
-      Uri.parse('$_url/stageAppWeb/public/api/authentication_token'),
+      Uri.parse('$_url/public/api/authentication_token'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -191,7 +190,7 @@ class Tools {
     };
 
     var response = await http.post(
-      Uri.parse('$_url/stageAppWeb/public/api/users'),
+      Uri.parse('$_url/public/api/users'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -204,7 +203,7 @@ class Tools {
   Future<http.Response> postPhoto(String url, String uri) async {
     final Map<String, dynamic> body = {"url": url, "password": uri};
     return await http.post(
-      Uri.parse('$_url/stageAppWeb/public/api/photos'),
+      Uri.parse('$_url/public/api/photos'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -220,24 +219,21 @@ class Tools {
   Future<http.Response> deleteMateriel(String id) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.delete(
-        Uri.parse('$_url/stageAppWeb/public/api/materiels/$id'),
+    return await http.delete(Uri.parse('$_url/public/api/materiels/$id'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> deletePhoto(String id) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.delete(
-        Uri.parse('$_url/stageAppWeb/public/api/photos/$id'),
+    return await http.delete(Uri.parse('$_url/public/api/photos/$id'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 
   Future<http.Response> deleteUser(String id) async {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.delete(
-        Uri.parse('$_url/stageAppWeb/public/api/users/$id'),
+    return await http.delete(Uri.parse('$_url/public/api/users/$id'),
         headers: <String, String>{"Authorization": "Bearer ${token!}"});
   }
 //*******//
@@ -248,7 +244,7 @@ class Tools {
     var json = convert.jsonEncode(<String, dynamic>{"email": email});
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.patch(Uri.parse('$_url/stageAppWeb/public/api/users/$id'),
+    return await http.patch(Uri.parse('$_url/public/api/users/$id'),
         headers: <String, String>{
           'Accept': 'application/ld+json',
           'Content-Type': 'application/merge-patch+json',
@@ -263,7 +259,7 @@ class Tools {
     });
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
-    return await http.patch(Uri.parse('$_url/stageAppWeb/public/api/users/$id'),
+    return await http.patch(Uri.parse('$_url/public/api/users/$id'),
         headers: <String, String>{
           'Accept': 'application/ld+json',
           'Content-Type': 'application/merge-patch+json',
@@ -277,8 +273,7 @@ class Tools {
     await updateToken();
     String? token = await Local.storage.read(key: 'token');
     var json = convert.jsonEncode(<String, dynamic>{"photos": listUriPhotos});
-    return await http.patch(
-        Uri.parse('$_url/stageAppWeb/public/api/materiels/$idMateriel'),
+    return await http.patch(Uri.parse('$_url/public/api/materiels/$idMateriel'),
         headers: <String, String>{
           'Accept': 'application/ld+json',
           'Content-Type': 'application/merge-patch+json',
@@ -332,15 +327,14 @@ class Tools {
       ...dateA,
       ...dateG,
       ...rem,
-      "type": '/stageAppWeb/public/api/types/$typeId',
-      "etat": '/stageAppWeb/public/api/etats/$etatId',
+      "type": '/stageApi/public/api/types/$typeId',
+      "etat": '/stageApi/public/api/etats/$etatId',
       "numSerie": numSerie,
       "numInventaire": numInventaire,
-      "lieuInstallation": '/stageAppWeb/public/api/lieus/$lieuId',
+      "lieuInstallation": '/stageApi/public/api/lieus/$lieuId',
       ...details,
     };
-    return await http.patch(
-        Uri.parse('$_url/stageAppWeb/public/api/materiels/$idMateriel'),
+    return await http.patch(Uri.parse('$_url/public/api/materiels/$idMateriel'),
         headers: <String, String>{
           'Accept': 'application/ld+json',
           'Content-Type': 'application/merge-patch+json',

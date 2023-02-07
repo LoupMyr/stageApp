@@ -111,7 +111,7 @@ class _AjoutPageState extends State<AjoutPage> {
         clearTexts();
         if (_listUrl.isNotEmpty) {
           String uriMateriel =
-              '/stageAppWeb/public/api/materiels/${materiel['id']}';
+              '/stageApi/public/api/materiels/${materiel['id']}';
           List<String> tabUriPhotos = List.empty(growable: true);
           for (int i = 0; i < _listUrl.length; i++) {
             var post = await _tool.postPhoto(_listUrl[i], uriMateriel);

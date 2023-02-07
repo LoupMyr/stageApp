@@ -35,7 +35,10 @@ class MaterielPageState extends State<MaterielPage> {
   var _etat;
   var _lieu;
   var _photos;
+  String _lieuStr = '';
   String _dateAchat = '';
+  String _dateFinGarantie = '';
+  String _remarques = '';
 
   Future<String> recupEtat() async {
     if (await _tools.checkAdmin() == false &&
@@ -63,251 +66,97 @@ class MaterielPageState extends State<MaterielPage> {
     return '';
   }
 
-  Widget createFirstArray() {
+  Widget createArray() {
     List<Widget> tab = List.empty(growable: true);
-    tab.add(
-      SizedBox(
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: Text(
-          _type['libelle'],
-          style: _textStyle,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-    tab.add(addGap());
-    tab.add(
-      Container(
-        decoration: BoxDecoration(border: _border),
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: Text(
-          _etat['libelle'],
-          style: _textStyle,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-    tab.add(addGap());
-    tab.add(
-      Container(
-        decoration: BoxDecoration(border: _border),
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: Text(
-          _materiel['marque'],
-          style: _textStyle,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-    tab.add(addGap());
-    tab.add(
-      Container(
-        decoration: BoxDecoration(border: _border),
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: Text(
-          _materiel['modele'],
-          style: _textStyle,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-    tab.add(addGap());
-    String lieuStr = _lieu['libelle'].toString();
-    if (_lieu['libelle'].toString() == 'Autres') {
-      try {
-        lieuStr = _materiel['detailTypeAutres'];
-      } catch (e) {
-        lieuStr = 'Autres \n Pas de spécification';
-      }
-    }
-    tab.add(
-      Container(
-        decoration: BoxDecoration(border: _border),
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: Text(
-          lieuStr,
-          style: _textStyle,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
+    findFields();
+    tab.add(createText('Type:', _etat['libelle']));
 
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: tab);
+    tab.add(addGap());
+    tab.add(createText('Etat:', _type['libelle']));
+
+    tab.add(addGap());
+    tab.add(createText('Marque:', _materiel['marque']));
+
+    tab.add(addGap());
+    tab.add(createText('Modele:', _materiel['modele']));
+
+    tab.add(addGap());
+    tab.add(createText('Lieu d\'installation', _lieuStr));
+
+    tab.add(addGap());
+    tab.add(createText('Numéro de série:', _materiel['numSerie']));
+
+    tab.add(addGap());
+    tab.add(createText('Numéro d\'inventaire', _materiel['numInventaire']));
+
+    tab.add(addGap());
+    tab.add(createText('Date d\'achat', _dateAchat));
+
+    tab.add(addGap());
+    tab.add(createText('Date fin de garantie', _dateFinGarantie));
+
+    tab.add(addGap());
+    tab.add(createText('Remarques:', _remarques));
+
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: tab),
+    );
   }
 
-  Widget createSecondArray() {
-    List<Widget> tab = List.empty(growable: true);
-    tab.add(
-      SizedBox(
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: SingleChildScrollView(
-          child: Text(_materiel['numSerie'],
-              style: _textStyle, textAlign: TextAlign.center),
-        ),
-      ),
+  RichText createText(String title, String content) {
+    return RichText(
+      text: TextSpan(
+          text: title,
+          style: const TextStyle(
+              decoration: TextDecoration.underline,
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold),
+          children: <TextSpan>[
+            TextSpan(
+              text: ' $content',
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.normal),
+            )
+          ]),
     );
-    tab.add(addGap());
-    tab.add(
-      Container(
-        decoration: BoxDecoration(border: _border),
-        height: 100,
-        width: MediaQuery.of(context).size.width / 7,
-        child: SingleChildScrollView(
-          child: Text(_materiel['numInventaire'],
-              style: _textStyle, textAlign: TextAlign.center),
-        ),
-      ),
-    );
-    tab.add(addGap());
+  }
+
+  void findFields() {
+    if (_lieu['libelle'].toString() == 'Autres') {
+      try {
+        _lieuStr = _materiel['detailTypeAutres'];
+      } catch (e) {
+        _lieuStr = 'Autres \n Pas de spécification';
+      }
+    }
     try {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: Text(
-              DateFormat('yyyy-MM-dd')
-                  .format(DateTime.parse(_materiel['dateAchat']))
-                  .toString(),
-              style: _textStyle,
-              textAlign: TextAlign.center),
-        ),
-      );
       _dateAchat = DateFormat('yyyy-MM-dd')
           .format(DateTime.parse(_materiel['dateAchat']))
           .toString();
     } catch (e) {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: const <Widget>[
-                    Icon(Icons.question_mark, size: 40),
-                  ],
-                ),
-              ]),
-        ),
-      );
+      _dateAchat = ' / ';
     }
-    tab.add(addGap());
     try {
-      tab.add(
-        Container(
-          decoration: const BoxDecoration(
-              border: Border(
-                  left: BorderSide(color: Colors.black, width: 3),
-                  right: BorderSide(color: Colors.black, width: 3))),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 6,
-          child: Text(
-            DateFormat('yyyy-MM-dd')
-                .format(DateTime.parse(_materiel['dateFinGaranti']))
-                .toString(),
-            style: _textStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+      _dateFinGarantie = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(_materiel['dateFinGaranti']))
+          .toString();
     } catch (e) {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(Icons.question_mark, size: 40),
-                  ],
-                ),
-              ]),
-        ),
-      );
+      _dateFinGarantie = ' / ';
     }
-    tab.add(addGap());
-    String dataStr = createDataStr();
-    List<dynamic> list = [dataStr, _materiel, _type];
-    tab.add(
-      SizedBox(
-        width: MediaQuery.of(context).size.width * 0.09,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2)),
-            width: MediaQuery.of(context).size.width * 0.1,
-            child: InkWell(
-              onTap: () =>
-                  Navigator.pushNamed(context, "/routeQrcode", arguments: list),
-              child: QrImage(
-                data: dataStr,
-                size: 100,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
     try {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                _materiel['remarques'],
-                style: const TextStyle(fontSize: 15),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      );
+      _remarques = _materiel['remarques'];
     } catch (e) {
-      tab.add(
-        Container(
-          decoration: BoxDecoration(border: _border),
-          height: 100,
-          width: MediaQuery.of(context).size.width / 7,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  Icon(Icons.question_mark, size: 40),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
+      _remarques = ' / ';
     }
-
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: tab);
   }
 
   String createDataStr() {
     String dataStr =
-        '${_materiel['marque']} ${_materiel['modele']}\nN° serie: ${_materiel['numSerie']}\nN° inventaire: ${_materiel['numInventaire']}\n${_materiel['lieuInstallation']}\nDate facture: $_dateAchat';
+        '${_materiel['marque']} ${_materiel['modele']}\nN° serie: ${_materiel['numSerie']}\nN° inventaire: ${_materiel['numInventaire']}\n$_lieuStr\nDate facture: $_dateAchat';
     return dataStr;
   }
 
@@ -315,26 +164,55 @@ class MaterielPageState extends State<MaterielPage> {
     return const Padding(padding: EdgeInsets.all(10));
   }
 
-  Widget createImg() {
-    List<Widget> tabImg = List.empty(growable: true);
+  List<Widget> createAssets() {
+    List<Widget> tabWidget = List.empty(growable: true);
+    String dataStr = createDataStr();
+    tabWidget.add(
+      const Padding(padding: EdgeInsets.symmetric(vertical: 50)),
+    );
+    List<dynamic> list = [dataStr, _materiel, _type];
     if (_materiel['photos'].isNotEmpty) {
       for (var elt in _photos['hydra:member']) {
         if (elt['materiel'] == _materiel['@id']) {
           String imgUrl = elt['url'];
-          tabImg.add(
-            Image(
-              image: NetworkImage(imgUrl),
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: MediaQuery.of(context).size.width * 0.3,
+          tabWidget.add(
+            InkWell(
+              onTap: () => Navigator.pushNamed(context, "/routeImage",
+                  arguments: imgUrl),
+              child: Image(
+                image: NetworkImage(imgUrl),
+                height: MediaQuery.of(context).size.height * 0.3,
+                width: MediaQuery.of(context).size.width * 0.25,
+              ),
             ),
           );
         }
       }
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: tabImg,
+    tabWidget.add(
+      const Padding(padding: EdgeInsets.symmetric(vertical: 50)),
     );
+    tabWidget.add(
+      SizedBox(
+        width: MediaQuery.of(context).size.width * 0.13,
+        height: MediaQuery.of(context).size.height * 0.2,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2)),
+            child: InkWell(
+              onTap: () =>
+                  Navigator.pushNamed(context, "/routeQrcode", arguments: list),
+              child: QrImage(
+                data: dataStr,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    return tabWidget;
   }
 
   Future<void> donwloadPdf() async {
@@ -359,37 +237,8 @@ class MaterielPageState extends State<MaterielPage> {
   pw.Document createPdf() {
     final pdf = pw.Document();
     String lieuStr = _lieu['libelle'].toString();
-    String dateAchat = '';
-    String dateFinGarantie = '';
-    String remarques = '';
-    if (_lieu['libelle'].toString() == 'Autres') {
-      try {
-        lieuStr = _materiel['detailTypeAutres'];
-      } catch (e) {
-        lieuStr = 'Autres \n Pas de spécification';
-      }
-    }
-    try {
-      dateAchat = DateFormat('yyyy-MM-dd')
-          .format(DateTime.parse(_materiel['dateAchat']))
-          .toString();
-    } catch (e) {
-      dateAchat = 'Pas spécifié';
-    }
-    try {
-      dateFinGarantie = DateFormat('yyyy-MM-dd')
-          .format(DateTime.parse(_materiel['dateFinGaranti']))
-          .toString();
-    } catch (e) {
-      dateFinGarantie = 'Pas spécifié';
-    }
-    try {
-      remarques = _materiel['remarques'];
-    } catch (e) {
-      remarques = 'Aucune';
-    }
     pw.Widget padding =
-        pw.Padding(padding: pw.EdgeInsets.symmetric(vertical: 10));
+        pw.Padding(padding: const pw.EdgeInsets.symmetric(vertical: 10));
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) => pw.Center(
@@ -452,21 +301,21 @@ class MaterielPageState extends State<MaterielPage> {
                 style: _tsPdf,
                 textAlign: pw.TextAlign.center,
               ),
-              pw.Text(dateAchat),
+              pw.Text(_dateAchat),
               padding,
               pw.Text(
                 'Date de fin de garantie: \n',
                 style: _tsPdf,
                 textAlign: pw.TextAlign.center,
               ),
-              pw.Text(dateFinGarantie),
+              pw.Text(_dateFinGarantie),
               padding,
               pw.Text(
                 'Remarques: \n',
                 style: _tsPdf,
                 textAlign: pw.TextAlign.center,
               ),
-              pw.Text(remarques),
+              pw.Text(_remarques),
               pw.Divider(thickness: 2),
             ],
           ),
@@ -485,114 +334,17 @@ class MaterielPageState extends State<MaterielPage> {
       future: recupEtat(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         List<Widget> children;
-        FloatingActionButton fab = FloatingActionButton(
-          onPressed: () => null,
+        List<Widget> childrenAssets;
+        FloatingActionButton fab = const FloatingActionButton(
+          onPressed: null,
           heroTag: 'null',
         );
         if (snapshot.hasData) {
           if (_recupDataBool) {
             children = [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.typeHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.etatHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.marqueHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.modeleHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(
-                      Strings.lieuInstallationHeader,
-                      style: _textStyleHeaders,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              createFirstArray(),
-              addGap(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.numSerieHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.numInventaireHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.dateAchatHeader,
-                        style: _textStyleHeaders,
-                        overflow: TextOverflow.fade,
-                        textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.dateGarantieHeader,
-                        style: _textStyleHeaders,
-                        overflow: TextOverflow.fade,
-                        textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.qrCodeHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                  addGap(),
-                  SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width / 7,
-                    child: Text(Strings.remarquesHeader,
-                        style: _textStyleHeaders, textAlign: TextAlign.center),
-                  ),
-                ],
-              ),
-              const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-              createSecondArray(),
-              addGap(),
-              addGap(),
-              createImg(),
+              createArray(),
             ];
+            childrenAssets = createAssets();
             fab = FloatingActionButton(
               onPressed: donwloadPdf,
               heroTag: 'downloadFichePdf',
@@ -603,16 +355,17 @@ class MaterielPageState extends State<MaterielPage> {
             recupEtat();
             children = [
               const SpinKitThreeInOut(
-                color: Colors.teal,
+                color: Colors.orange,
                 size: 100,
-              )
+              ),
             ];
+            childrenAssets = [];
           }
         } else if (snapshot.hasError) {
           children = [
             const Icon(
               Icons.error_outline,
-              color: Colors.red,
+              color: Colors.teal,
               size: 125,
             ),
             const Text(
@@ -621,32 +374,35 @@ class MaterielPageState extends State<MaterielPage> {
               textAlign: TextAlign.center,
             )
           ];
+          childrenAssets = [];
         } else {
           children = [
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 3,
-            ),
             Row(
-              children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width / 2.2)),
-                const SpinKitThreeInOut(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                SpinKitThreeInOut(
                   color: Colors.teal,
                   size: 100,
                 ),
               ],
             ),
           ];
+          childrenAssets = [];
         }
         return Scaffold(
           appBar: Widgets.createAppBar(widget.title, context),
           body: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: children),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: children,
+                ),
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 50)),
+                Column(
+                  children: childrenAssets,
+                ),
+              ],
             ),
           ),
           floatingActionButton: fab,

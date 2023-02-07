@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stage/materiel/grapheAchatPerAnneePage.dart';
+import 'package:stage/materiel/imgPage.dart';
 import 'package:stage/materiel/searchByLieuPage.dart';
 import 'package:stage/materiel/searchWithFilters.dart';
 import 'package:stage/user/connexionPage.dart';
@@ -59,6 +60,8 @@ class MyApp extends StatelessWidget {
               const ConnexionPage(title: "Connexion"),
           '/routeQrcode': (BuildContext context) =>
               const QrCodePage(title: "QR Code"),
+          '/routeImage': (BuildContext context) =>
+              const ImgPage(title: "Image"),
           '/routeProfil': (BuildContext context) =>
               const ProfilPage(title: "Votre profil"),
           '/routeGraphePerAnnee': (BuildContext context) =>

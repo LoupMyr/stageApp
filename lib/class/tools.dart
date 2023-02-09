@@ -6,8 +6,9 @@ import 'package:stage/class/local.dart';
 import 'package:stage/class/strings.dart';
 
 class Tools {
-  final String _url = //'http://localhost/stageApi'
-      'http://s3-4428.nuage-peda.fr/stageAppWeb';
+  final String _url = 'http://localhost/stageApi';
+  //'http://s3-4428.nuage-peda.fr/stageAppWeb';
+
   //**********//
   //   GET   //
   //*********//
